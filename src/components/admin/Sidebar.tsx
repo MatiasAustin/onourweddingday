@@ -47,7 +47,7 @@ export function Sidebar() {
 
       <div className="border-t border-secondary/50 p-4">
         <div className="flex items-center gap-x-4 px-4 py-3 rounded-xl hover:bg-secondary/20 transition-colors">
-          <UserButton afterSignOutUrl="/" />
+          <UserButton />
           <div className="flex flex-col">
             <span className="text-sm font-medium text-foreground">Admin Account</span>
             <span className="text-xs text-foreground/50">Manage Profile</span>

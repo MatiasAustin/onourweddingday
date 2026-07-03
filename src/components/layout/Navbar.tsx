@@ -1,7 +1,10 @@
 import Link from "next/link";
-import { UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
-export default function Navbar() {
+export default async function Navbar() {
+  const { userId } = await auth();
+
   return (
     <nav className="fixed w-full z-50 bg-background/80 backdrop-blur-md border-b border-secondary/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,20 +23,23 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <SignedOut>
-              <Link href="/sign-in" className="text-foreground/80 hover:text-primary transition-colors font-medium">
-                Log In
-              </Link>
-              <Link href="/sign-up" className="bg-primary text-white px-5 py-2.5 rounded-full font-medium hover:bg-primary-light transition-colors shadow-sm">
-                Get Started
-              </Link>
-            </SignedOut>
-            <SignedIn>
-              <Link href="/dashboard" className="text-foreground/80 hover:text-primary transition-colors font-medium mr-4">
-                Dashboard
-              </Link>
-              <UserButton afterSignOutUrl="/" />
-            </SignedIn>
+            {userId ? (
+              <>
+                <Link href="/dashboard" className="text-foreground/80 hover:text-primary transition-colors font-medium mr-4">
+                  Dashboard
+                </Link>
+                <UserButton />
+              </>
+            ) : (
+              <>
+                <Link href="/sign-in" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+                  Log In
+                </Link>
+                <Link href="/sign-up" className="bg-primary text-white px-5 py-2.5 rounded-full font-medium hover:bg-primary-light transition-colors shadow-sm">
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
