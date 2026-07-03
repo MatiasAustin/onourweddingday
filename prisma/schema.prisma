@@ -8,12 +8,12 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  clerkId   String   @unique // Links to Clerk authentication
-  email     String   @unique
-  role      Role     @default(CLIENT)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(uuid())
+  supabaseId String   @unique // Links to Supabase authentication
+  email      String   @unique
+  role       Role     @default(CLIENT)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   invitations Invitation[]
 }

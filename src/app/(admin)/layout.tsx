@@ -1,5 +1,5 @@
 import { Sidebar } from "@/components/admin/Sidebar";
-import { auth } from "@clerk/nextjs/server";
+import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
 export default async function AdminLayout({
@@ -7,14 +7,15 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
-  
-  if (!userId) {
-    redirect("/sign-in");
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
   }
 
-  // In a real production app, we would verify the user role via Prisma here
-  // const user = await prisma.user.findUnique({ where: { clerkId: userId } });
+  // TODO: Fetch user role from database if needed
+  // const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } });
   // if (user?.role !== "ADMIN") redirect("/");
 
   return (

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
+
 import "./globals.css";
 
 const inter = Inter({
@@ -24,7 +24,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
       <html
         lang="en"
         className={`${inter.variable} ${playfair.variable} h-full antialiased`}
@@ -33,6 +32,5 @@ export default function RootLayout({
           {children}
         </body>
       </html>
-    </ClerkProvider>
   );
 }

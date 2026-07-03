@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, LayoutTemplate, ShoppingCart, Users, Settings, LogOut, Paintbrush } from "lucide-react";
-import { UserButton } from "@clerk/nextjs";
+
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -46,13 +46,11 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t border-secondary/50 p-4">
-        <div className="flex items-center gap-x-4 px-4 py-3 rounded-xl hover:bg-secondary/20 transition-colors">
-          <UserButton />
-          <div className="flex flex-col">
-            <span className="text-sm font-medium text-foreground">Admin Account</span>
-            <span className="text-xs text-foreground/50">Manage Profile</span>
-          </div>
-        </div>
+        <form action="/auth/signout" method="post">
+          <button type="submit" className="w-full flex items-center gap-x-4 px-4 py-3 rounded-xl hover:bg-secondary/20 transition-colors text-left text-red-500 hover:text-red-600">
+            <span className="text-sm font-medium">Log out</span>
+          </button>
+        </form>
       </div>
     </div>
   );

@@ -1,17 +1,20 @@
 import { EditorSidebar } from "@/components/editor/EditorSidebar";
 import { EditorProvider } from "@/components/editor/EditorContext";
-import { auth } from "@clerk/nextjs/server";
+import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
 export default async function EditorLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ invitationId: string }>;
 }) {
-  const { userId } = await auth();
-  
-  if (!userId) {
-    redirect("/sign-in");
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
   }
 
   // The Visual Builder Layout has the Sidebar on the left
