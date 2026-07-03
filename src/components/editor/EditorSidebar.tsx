@@ -2,8 +2,44 @@
 
 import { Save, Eye, ArrowLeft, Settings2, Layers, Type, Palette } from "lucide-react";
 import Link from "next/link";
+import { useEditor } from "./EditorContext";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { SortableBlockItem } from "./SortableBlockItem";
 
 export function EditorSidebar() {
+  const { blocks, setBlocks, moveBlock } = useEditor();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = blocks.findIndex((block) => block.id === active.id);
+      const newIndex = blocks.findIndex((block) => block.id === over.id);
+      moveBlock(oldIndex, newIndex);
+    }
+  }
+
   return (
     <div className="flex h-screen w-80 flex-col border-r border-secondary/50 bg-white shadow-xl z-50">
       
@@ -39,22 +75,29 @@ export function EditorSidebar() {
         </button>
       </div>
 
-      {/* Content Area (Placeholder for Drag and Drop list) */}
+      {/* Content Area - DndContext wrap */}
       <div className="flex-1 overflow-y-auto p-4 bg-secondary/5">
         <div className="text-xs font-bold text-foreground/40 uppercase tracking-wider mb-4 px-2">Active Blocks</div>
         
-        <div className="space-y-3">
-          {/* Example of draggable items */}
-          {["Hero Section", "Our Story", "Photo Gallery", "RSVP Form"].map((block) => (
-            <div key={block} className="bg-white p-4 rounded-xl border border-secondary/50 shadow-sm cursor-move hover:border-primary transition-colors flex items-center justify-between">
-              <span className="font-medium text-sm">{block}</span>
-              <Settings2 className="w-4 h-4 text-foreground/40" />
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={blocks.map((b) => b.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="space-y-3">
+              {blocks.map((block) => (
+                <SortableBlockItem key={block.id} block={block} />
+              ))}
             </div>
-          ))}
-        </div>
+          </SortableContext>
+        </DndContext>
         
-        <button className="w-full mt-6 py-3 border-2 border-dashed border-secondary/80 rounded-xl text-primary font-medium text-sm hover:bg-secondary/20 transition-colors">
-          + Add Section
+        <button className="w-full mt-6 py-3 border-2 border-dashed border-secondary/80 rounded-xl text-primary font-medium text-sm hover:bg-secondary/20 transition-colors flex items-center justify-center gap-2">
+          <span>+ Add Section</span>
         </button>
       </div>
       
