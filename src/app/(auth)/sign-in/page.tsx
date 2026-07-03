@@ -1,8 +1,8 @@
-import { login, signup } from "./actions";
+import { login } from "./actions";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-export default async function LoginPage({
+export default async function SignInPage({
   searchParams,
 }: {
   searchParams: Promise<{ message: string }>;
@@ -18,7 +18,7 @@ export default async function LoginPage({
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-secondary/50">
         <div className="text-center mb-8">
           <h1 className="font-serif text-3xl font-bold text-primary tracking-tight mb-2">Welcome Back</h1>
-          <p className="text-foreground/60 text-sm">Sign in to your account or create a new one.</p>
+          <p className="text-foreground/60 text-sm">Sign in to your account to continue.</p>
         </div>
 
         <form className="flex flex-col gap-4">
@@ -52,21 +52,19 @@ export default async function LoginPage({
             </div>
           )}
 
-          <div className="flex gap-4 mt-4">
+          <div className="mt-4">
             <button
               formAction={login}
-              className="flex-1 bg-primary text-white py-3 rounded-xl font-medium hover:bg-primary-light transition-colors shadow-sm"
+              className="w-full bg-primary text-white py-3 rounded-xl font-medium hover:bg-primary-light transition-colors shadow-sm"
             >
               Log In
             </button>
-            <button
-              formAction={signup}
-              className="flex-1 bg-white border border-secondary text-foreground hover:bg-secondary/10 py-3 rounded-xl font-medium transition-colors"
-            >
-              Sign Up
-            </button>
           </div>
         </form>
+        
+        <p className="mt-6 text-center text-sm text-foreground/60">
+          Don't have an account? <Link href="/sign-up" className="text-primary font-medium hover:underline">Sign up</Link>
+        </p>
       </div>
     </div>
   );

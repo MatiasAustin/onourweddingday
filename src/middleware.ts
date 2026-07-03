@@ -38,7 +38,7 @@ export async function middleware(request: NextRequest) {
       request.nextUrl.pathname.startsWith('/editor'))
   ) {
     const url = request.nextUrl.clone()
-    url.pathname = '/login'
+    url.pathname = '/sign-in'
     return NextResponse.redirect(url)
   }
 

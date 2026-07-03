@@ -199,7 +199,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/login" className="block text-center w-full bg-secondary/50 text-foreground py-3.5 rounded-xl font-medium hover:bg-secondary transition-colors">
+              <Link href="/sign-up" className="block text-center w-full bg-secondary/50 text-foreground py-3.5 rounded-xl font-medium hover:bg-secondary transition-colors">
                 Get Started
               </Link>
             </motion.div>
@@ -225,7 +225,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/login" className="block text-center w-full bg-white text-primary py-3.5 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-md">
+              <Link href="/sign-up" className="block text-center w-full bg-white text-primary py-3.5 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-md">
                 Upgrade Now
               </Link>
             </motion.div>
