@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 export async function signup(formData: FormData) {
   const supabase = await createClient()
