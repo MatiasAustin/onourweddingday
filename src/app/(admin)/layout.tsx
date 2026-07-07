@@ -1,6 +1,5 @@
 import { Sidebar } from "@/components/admin/Sidebar";
 import { createClient } from "@/utils/supabase/server";
-import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export default async function AdminLayout({
@@ -15,7 +14,7 @@ export default async function AdminLayout({
     redirect("/sign-in");
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } });
+  const { data: dbUser } = await supabase.from('User').select('*').eq('supabaseId', user.id).single();
   
   if (!dbUser || dbUser.role !== "ADMIN") {
     // Redirect non-admins to a normal user dashboard (or home for now)

@@ -4,7 +4,6 @@ import { useState } from "react";
 import { createInvitation, updateInvitationStatus } from "./actions";
 import Link from "next/link";
 import { Plus, Edit, Eye, Globe, Archive, Loader2 } from "lucide-react";
-import { Status } from "@prisma/client";
 
 export function InvitationsClient({ initialInvitations, users, templates }: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,7 +11,7 @@ export function InvitationsClient({ initialInvitations, users, templates }: any)
   const [isCreating, setIsCreating] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  async function handleStatusChange(id: string, newStatus: Status) {
+  async function handleStatusChange(id: string, newStatus: string) {
     setLoadingId(id);
     await updateInvitationStatus(id, newStatus);
     setLoadingId(null);
@@ -78,7 +77,7 @@ export function InvitationsClient({ initialInvitations, users, templates }: any)
                 <td className="px-6 py-4">
                   <select 
                     value={inv.status}
-                    onChange={(e) => handleStatusChange(inv.id, e.target.value as Status)}
+                    onChange={(e) => handleStatusChange(inv.id, e.target.value)}
                     disabled={loadingId === inv.id}
                     className={`text-xs font-medium px-3 py-1 rounded-full outline-none border cursor-pointer
                       ${inv.status === 'PUBLISHED' ? 'bg-green-100 text-green-700 border-green-200' : 

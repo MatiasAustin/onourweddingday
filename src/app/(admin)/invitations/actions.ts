@@ -1,10 +1,10 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
-import { Status } from "@prisma/client";
 
 export async function createInvitation(formData: FormData) {
+  const supabase = await createClient();
   const userId = formData.get("userId") as string;
   const templateId = formData.get("templateId") as string;
   const title = formData.get("title") as string;
@@ -15,28 +15,29 @@ export async function createInvitation(formData: FormData) {
   }
 
   // Check if slug exists
-  const existing = await prisma.invitation.findUnique({ where: { slug } });
+  const { data: existing } = await supabase.from('Invitation').select('id').eq('slug', slug).maybeSingle();
   if (existing) {
     return { error: "Slug already exists. Please choose a different URL slug." };
   }
 
-  const template = await prisma.template.findUnique({
-    where: { id: templateId }
-  });
+  const { data: template } = await supabase.from('Template').select('*').eq('id', templateId).single();
 
   if (!template) return { error: "Template not found" };
 
   try {
-    const invitation = await prisma.invitation.create({
-      data: {
-        userId,
-        templateId,
-        title,
-        slug,
-        status: "DRAFT",
-        settingsJSON: {},
-      }
-    });
+    const { data: invitation, error: createError } = await supabase.from('Invitation').insert({
+      userId,
+      templateId,
+      title,
+      slug,
+      status: "DRAFT",
+      settingsJSON: {},
+      updatedAt: new Date().toISOString()
+    }).select().single();
+
+    if (createError || !invitation) {
+      throw createError || new Error("Failed to create invitation record");
+    }
 
     // Create sections based on template defaultSectionsJSON
     let defaultSections: any[] = [];
@@ -57,8 +58,9 @@ export async function createInvitation(formData: FormData) {
         order: idx,
         contentJSON: section.contentJSON || {},
         animationSettingsJSON: section.animationSettingsJSON || {},
+        updatedAt: new Date().toISOString()
       }));
-      await prisma.section.createMany({ data: sectionData });
+      await supabase.from('Section').insert(sectionData);
     }
 
     revalidatePath("/(admin)/invitations");
@@ -69,12 +71,14 @@ export async function createInvitation(formData: FormData) {
   }
 }
 
-export async function updateInvitationStatus(id: string, status: Status) {
+export async function updateInvitationStatus(id: string, status: string) {
+  const supabase = await createClient();
   try {
-    await prisma.invitation.update({
-      where: { id },
-      data: { status }
-    });
+    await supabase.from('Invitation').update({ 
+      status,
+      updatedAt: new Date().toISOString()
+    }).eq('id', id);
+    
     revalidatePath("/(admin)/invitations");
     return { success: true };
   } catch (error: any) {

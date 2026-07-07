@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Plus, Settings, Trash2, Eye } from "lucide-react";
-// import { prisma } from "@/lib/prisma";
+
 
 export default async function TemplatesPage() {
   // In a real application, fetch from database:

@@ -1,11 +1,10 @@
-import { prisma } from "@/lib/prisma";
 import { Users, LayoutTemplate, Activity, Eye } from "lucide-react";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function DashboardPage() {
-  // In a real app we'd fetch actual stats from Prisma
-  // const userCount = await prisma.user.count();
-  // const templateCount = await prisma.template.count();
-  // const invitationCount = await prisma.invitation.count();
+  const supabase = await createClient();
+  // In a real app we'd fetch actual stats from Supabase
+  // const { count: userCount } = await supabase.from('User').select('*', { count: 'exact', head: true });
   
   const stats = [
     { name: "Total Users", value: "2,405", icon: Users, change: "+4.75%", changeType: "positive" },

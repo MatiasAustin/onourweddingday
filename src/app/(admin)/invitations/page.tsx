@@ -1,27 +1,22 @@
-import { prisma } from "@/lib/prisma";
+import { createClient } from "@/utils/supabase/server";
 import { InvitationsClient } from "./InvitationsClient";
 
 export default async function InvitationsPage() {
-  const invitations = await prisma.invitation.findMany({
-    include: {
-      user: true,
-      template: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    }
-  });
+  const supabase = await createClient();
 
-  const users = await prisma.user.findMany({
-    where: {
-      role: 'CLIENT'
-    },
-    select: { id: true, email: true }
-  });
+  const { data: invitations } = await supabase
+    .from('Invitation')
+    .select('*, user:User(*), template:Template(*)')
+    .order('createdAt', { ascending: false });
 
-  const templates = await prisma.template.findMany({
-    select: { id: true, name: true }
-  });
+  const { data: users } = await supabase
+    .from('User')
+    .select('id, email')
+    .eq('role', 'CLIENT');
+
+  const { data: templates } = await supabase
+    .from('Template')
+    .select('id, name');
 
   return (
     <div>

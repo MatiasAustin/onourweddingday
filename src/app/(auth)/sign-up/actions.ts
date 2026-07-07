@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import { prisma } from '@/lib/prisma'
+
 
 export async function signup(formData: FormData) {
   const supabase = await createClient()
@@ -19,19 +19,17 @@ export async function signup(formData: FormData) {
     redirect('/sign-up?message=Could not create user: ' + error.message)
   }
 
-  // Also create a Prisma user here if needed, but it's better to do it via Supabase webhook or on first login.
-  // For simplicity right now, we create it directly:
+  // Create User record in public schema using Supabase client
   if (authData.user) {
     try {
-      await prisma.user.create({
-        data: {
-          supabaseId: authData.user.id,
-          email: authData.user.email!,
-          role: 'CLIENT'
-        }
+      await supabase.from('User').insert({
+        supabaseId: authData.user.id,
+        email: authData.user.email,
+        role: 'CLIENT',
+        updatedAt: new Date().toISOString()
       });
     } catch (e) {
-      console.error("Prisma user creation failed", e);
+      console.error("User creation failed", e);
     }
   }
 
