@@ -48,18 +48,37 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
   // For now, we rely on the global layout styles defined in layout.tsx
   // const globalSettings = invitation.settingsJSON as any;
 
-  // Check if this invitation uses the 3D cinematic template
+  // Determine which template to render
   if (invitation.templateId === "elegance-3d") {
-    return <Experience data={invitation.settingsJSON || {}} />;
+    return (
+      <Experience data={invitation.settingsJSON || {}}>
+        <main className="w-full flex flex-col items-center py-32 px-8">
+          {invitation.sections.map((section: any) => (
+            <BlockRenderer
+              key={section.id}
+              type={section.type}
+              contentJSON={section.contentJSON}
+              animationSettingsJSON={section.animationSettingsJSON}
+            />
+          ))}
+          
+          {/* If there are no sections added yet, show a beautiful fallback so it's not completely empty */}
+          {(!invitation.sections || invitation.sections.length === 0) && (
+            <div className="max-w-3xl text-center">
+              <h2 className="font-serif text-4xl text-[#500000] mb-4">Informasi Acara</h2>
+              <p className="font-sans text-lg text-[#500000]/70">
+                Detail acara pernikahan sedang dipersiapkan. Silakan kembali lagi nanti untuk melihat pembaruan.
+              </p>
+            </div>
+          )}
+        </main>
+      </Experience>
+    );
   }
 
+  // Default Template Fallback
   return (
     <main className="min-h-screen flex flex-col bg-background text-foreground">
-      {/* 
-        The CMS Engine in action:
-        We iterate through every section defined in the database for this invitation,
-        and dynamically render the correct React component based on the 'type' field.
-      */}
       {invitation.sections.map((section: any) => (
         <BlockRenderer
           key={section.id}

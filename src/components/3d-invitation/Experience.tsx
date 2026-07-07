@@ -17,13 +17,14 @@ function CinematicScene({ data }: { data: any }) {
   useFrame((state) => {
     if (!groupRef.current) return;
     
-    // Intro phase: start at -30, smoothly glide to 0
+    // Intro phase: start at -40, smoothly glide to -15
     const time = state.clock.elapsedTime;
     const progress = Math.min(time / 2.5, 1);
     // Easing function (easeOutExpo)
     const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
     
-    const introZ = THREE.MathUtils.lerp(-30, 0, ease);
+    // Stop at -15 so the text doesn't become overwhelmingly huge
+    const introZ = THREE.MathUtils.lerp(-40, -15, ease);
     groupRef.current.position.z = introZ;
     
     // Fade in text
@@ -76,7 +77,12 @@ function CinematicScene({ data }: { data: any }) {
   );
 }
 
-export default function Experience({ data }: { data: any }) {
+interface ExperienceProps {
+  data: any;
+  children?: React.ReactNode;
+}
+
+export default function Experience({ data, children }: ExperienceProps) {
   const [mounted, setMounted] = useState(false);
   
   useEffect(() => {
@@ -105,7 +111,7 @@ export default function Experience({ data }: { data: any }) {
       <div className="w-full h-screen pointer-events-none"></div>
 
       {/* Regular HTML Content Below */}
-      <div className="relative z-10 bg-[#fff1f2] py-32 px-8 min-h-screen flex flex-col items-center border-t border-[#C8A24C]/20 shadow-[0_-10px_40px_rgba(139,30,36,0.1)]">
+      <div className="relative z-10 bg-[#fff1f2] min-h-screen flex flex-col border-t border-[#C8A24C]/20 shadow-[0_-10px_40px_rgba(139,30,36,0.1)]">
         
         {/* Scroll Indicator */}
         <div className="absolute -top-16 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce opacity-70">
@@ -115,38 +121,8 @@ export default function Experience({ data }: { data: any }) {
           </div>
         </div>
 
-        {/* Date Section */}
-        <div className="max-w-4xl w-full mx-auto text-center mb-32">
-          <div className="font-serif text-9xl text-[#500000] drop-shadow-sm">
-            {data.weddingDate ? new Date(data.weddingDate).getDate() : "15"}
-          </div>
-          <div className="font-script text-6xl text-[#500000]/80 -mt-6 mb-4">
-            {data.weddingDate ? new Date(data.weddingDate).toLocaleString('pt-BR', { month: 'long' }) : "Junho"}
-          </div>
-          <div className="font-serif tracking-widest text-[#500000] text-2xl uppercase">
-            {data.weddingDate ? new Date(data.weddingDate).getFullYear() : "2024"}
-          </div>
-        </div>
-
-        {/* Location & Gift Section */}
-        <div className="max-w-4xl w-full mx-auto flex flex-col md:flex-row gap-8">
-          <div className="flex-1 bg-[#500000] text-white p-12 rounded-[40px] shadow-2xl transition-transform hover:-translate-y-2 duration-500">
-            <h3 className="font-script text-5xl mb-6">Cerimônia</h3>
-            <p className="font-serif leading-relaxed opacity-90 whitespace-pre-wrap text-lg">
-              {data.ceremonyLocation || "Paróquia Cristo Profeta\nR. Antônio José de Oliveira, 467\nBarra Funda, Apucarana - PR"}
-            </p>
-          </div>
-          
-          <div className="flex-1 bg-white/80 backdrop-blur-md p-12 rounded-[40px] shadow-2xl border border-white transition-transform hover:-translate-y-2 duration-500">
-            <h3 className="font-script text-5xl text-[#500000] mb-6">Presentes</h3>
-            <p className="font-serif text-lg leading-relaxed text-[#500000]/80 mb-6">
-              Caso queira nos presentear, sugerimos contribuir através do PIX:
-            </p>
-            <div className="font-mono text-xl text-center bg-[#fff1f2] p-4 rounded-xl text-[#500000] border border-[#500000]/20 select-all">
-              {data.pixKey || "41 998798618"}
-            </div>
-          </div>
-        </div>
+        {/* CMS Sections go here */}
+        {children}
 
       </div>
     </div>
