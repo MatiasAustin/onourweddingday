@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Save, Image as ImageIcon, Link as LinkIcon, Palette, Type, Users, MapPin, Music, HeartHandshake, Eye, CheckCircle2, ChevronRight, LayoutTemplate, Map, Settings2, BarChart3, Search, PlayCircle } from "lucide-react";
+import { Save, Image as ImageIcon, Link as LinkIcon, Palette, Type, Users, MapPin, Music, HeartHandshake, Eye, CheckCircle2, ChevronRight, LayoutTemplate, Map, Settings2, BarChart3, Search, PlayCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { createInvitation } from "../actions";
 
 interface Props {
   templates: any[];
@@ -13,36 +14,39 @@ interface Props {
 export default function NewInvitationForm({ templates, users }: Props) {
   const router = useRouter();
   const [activeSection, setActiveSection] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
     userId: "",
     templateId: "elegance-3d", // default
+    
+    // settingsJSON fields
     brideName: "",
     groomName: "",
     weddingDate: "",
     venue: "",
-    primaryColor: "#8B1E24",
-    secondaryColor: "#C8A24C",
-    musicUrl: "",
-    pixKey: ""
+    pixKey: "",
+    
+    // Background URLs
+    heroBgUrl: "",
+    quoteBgUrl: "",
+    coupleBgUrl: "",
+    eventBgUrl: "",
+    galleryBgUrl: "",
+    giftBgUrl: "",
+    rsvpBgUrl: "",
+    footerBgUrl: ""
   });
 
   const sections = [
     { id: 1, title: "Basic Information", icon: LayoutTemplate },
     { id: 2, title: "Invitation URL", icon: LinkIcon },
     { id: 3, title: "Template Selection", icon: Eye },
-    { id: 4, title: "Color Customization", icon: Palette },
-    { id: 5, title: "Typography", icon: Type },
-    { id: 6, title: "Wedding Information", icon: HeartHandshake },
-    { id: 7, title: "Story Timeline", icon: Map },
-    { id: 8, title: "Gallery", icon: ImageIcon },
-    { id: 9, title: "Music", icon: Music },
-    { id: 10, title: "Gift & Delivery", icon: MapPin }, // Combined Gift & Delivery
-    { id: 11, title: "Guest Management", icon: Users },
-    { id: 12, title: "SEO Settings", icon: Search },
-    { id: 13, title: "Analytics", icon: BarChart3 },
-    { id: 14, title: "Advanced Settings", icon: Settings2 },
+    { id: 4, title: "Wedding Information", icon: HeartHandshake },
+    { id: 5, title: "Background Assets", icon: ImageIcon },
   ];
 
   const handleInputChange = (e: any) => {
@@ -55,6 +59,52 @@ export default function NewInvitationForm({ templates, users }: Props) {
         ...prev,
         slug: prev.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
       }));
+    }
+  };
+
+  const handlePublish = async () => {
+    setIsSubmitting(true);
+    setError("");
+
+    if (!formData.title || !formData.slug || !formData.userId || !formData.templateId) {
+      setError("Please fill in all required basic fields (Title, Slug, Client, Template).");
+      setIsSubmitting(false);
+      return;
+    }
+
+    const payload = new FormData();
+    payload.append("userId", formData.userId);
+    payload.append("templateId", formData.templateId);
+    payload.append("title", formData.title);
+    payload.append("slug", formData.slug);
+    
+    // Pack all other fields into settingsJSON
+    const settingsJSON = {
+      brideName: formData.brideName,
+      groomName: formData.groomName,
+      weddingDate: formData.weddingDate,
+      venue: formData.venue,
+      pixKey: formData.pixKey,
+      heroBgUrl: formData.heroBgUrl,
+      quoteBgUrl: formData.quoteBgUrl,
+      coupleBgUrl: formData.coupleBgUrl,
+      eventBgUrl: formData.eventBgUrl,
+      galleryBgUrl: formData.galleryBgUrl,
+      giftBgUrl: formData.giftBgUrl,
+      rsvpBgUrl: formData.rsvpBgUrl,
+      footerBgUrl: formData.footerBgUrl
+    };
+    
+    payload.append("settingsJSON", JSON.stringify(settingsJSON));
+
+    const result = await createInvitation(payload);
+    
+    if (result.error) {
+      setError(result.error);
+      setIsSubmitting(false);
+    } else {
+      // Success, go back to dashboard
+      router.push("/invitations");
     }
   };
 
@@ -107,19 +157,23 @@ export default function NewInvitationForm({ templates, users }: Props) {
             <h1 className="text-xl font-serif font-bold text-gray-900">Create New Wedding Invitation</h1>
           </div>
           <div className="flex items-center gap-4">
+            {error && <span className="text-red-500 text-sm font-medium">{error}</span>}
             <button className="px-5 py-2.5 rounded-xl border border-[#8B1E24]/20 text-[#8B1E24] font-medium text-sm hover:bg-[#FAF7F2] transition-colors">
               Save Draft
             </button>
-            <button className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#8B1E24] to-[#a32830] text-white font-medium text-sm shadow-lg shadow-[#8B1E24]/30 hover:shadow-[#8B1E24]/50 transition-all flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#C8A24C]" />
-              Publish Product
+            <button 
+              onClick={handlePublish}
+              disabled={isSubmitting}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#8B1E24] to-[#a32830] text-white font-medium text-sm shadow-lg shadow-[#8B1E24]/30 hover:shadow-[#8B1E24]/50 transition-all flex items-center gap-2 disabled:opacity-50"
+            >
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4 text-[#C8A24C]" />}
+              {isSubmitting ? "Publishing..." : "Publish Product"}
             </button>
           </div>
         </header>
 
         {/* Scrollable Form Workspace */}
         <main className="flex-1 overflow-y-auto p-8 relative">
-          {/* Subtle Batik background decoration */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] opacity-[0.03] pointer-events-none" style={{ filter: 'sepia(1) hue-rotate(320deg) saturate(3)' }}></div>
           
           <div className="max-w-4xl mx-auto space-y-8 relative z-10 pb-32">
@@ -135,7 +189,7 @@ export default function NewInvitationForm({ templates, users }: Props) {
                 
                 <div className="grid grid-cols-2 gap-6">
                   <div className="col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Product / Project Name</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Product / Project Name *</label>
                     <input 
                       type="text" 
                       name="title" 
@@ -146,7 +200,7 @@ export default function NewInvitationForm({ templates, users }: Props) {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Assign Client</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Assign Client *</label>
                     <select 
                       name="userId" 
                       value={formData.userId} 
@@ -156,25 +210,6 @@ export default function NewInvitationForm({ templates, users }: Props) {
                       <option value="">Select client account...</option>
                       {users.map(u => <option key={u.id} value={u.id}>{u.email}</option>)}
                     </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Wedding Theme</label>
-                    <select className="w-full px-5 py-3 rounded-xl border border-[#C8A24C]/40 bg-[#FAF7F2] text-[#8B1E24] font-medium focus:ring-2 focus:ring-[#C8A24C] transition-all appearance-none">
-                      <option>Modern Javanese Red</option>
-                      <option>Classic Gold Javanese</option>
-                      <option>Minimalist Wayang</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="mt-8 pt-8 border-t border-gray-100">
-                  <label className="block text-sm font-semibold text-gray-700 mb-4">Product Thumbnail Cover</label>
-                  <div className="border-2 border-dashed border-[#C8A24C]/40 rounded-2xl p-10 flex flex-col items-center justify-center bg-[#FAF7F2]/50 hover:bg-[#FAF7F2] transition-colors cursor-pointer group">
-                    <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <ImageIcon className="w-6 h-6 text-[#8B1E24]" />
-                    </div>
-                    <p className="text-gray-600 font-medium text-sm">Drag and drop cover image here</p>
-                    <p className="text-gray-400 text-xs mt-1">Recommended size: 1200 x 630px (WebP/JPG)</p>
                   </div>
                 </div>
               </div>
@@ -187,7 +222,7 @@ export default function NewInvitationForm({ templates, users }: Props) {
                   <LinkIcon className="w-6 h-6 text-[#C8A24C]" />
                   Invitation URL
                 </h3>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Custom URL Slug</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Custom URL Slug *</label>
                 <div className="flex gap-4">
                   <div className="flex-1 flex items-center bg-gray-50 border border-gray-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-[#8B1E24]/30 focus-within:border-[#8B1E24] transition-all">
                     <span className="px-5 py-3 text-gray-400 font-medium border-r border-gray-200 bg-white">myinvite.com/</span>
@@ -203,9 +238,6 @@ export default function NewInvitationForm({ templates, users }: Props) {
                   <button onClick={generateSlug} className="px-6 py-3 bg-[#FAF7F2] text-[#8B1E24] border border-[#C8A24C]/30 rounded-xl font-medium hover:bg-[#C8A24C]/10 transition-colors">
                     Generate
                   </button>
-                  <button className="px-6 py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors">
-                    Check Availability
-                  </button>
                 </div>
               </div>
             </div>
@@ -220,10 +252,8 @@ export default function NewInvitationForm({ templates, users }: Props) {
                 <div className="grid grid-cols-2 gap-6">
                   {templates.map((tmpl) => (
                     <div key={tmpl.id} className={`border-2 rounded-2xl p-2 cursor-pointer transition-all ${formData.templateId === tmpl.id ? 'border-[#8B1E24] bg-[#FAF7F2]' : 'border-transparent bg-gray-50 hover:bg-gray-100'}`} onClick={() => setFormData(prev => ({...prev, templateId: tmpl.id}))}>
-                      <div className="aspect-[4/3] bg-gray-200 rounded-xl mb-4 overflow-hidden relative group">
-                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button className="bg-white text-gray-900 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"><PlayCircle className="w-4 h-4" /> Preview</button>
-                         </div>
+                      <div className="aspect-[4/3] bg-gray-200 rounded-xl mb-4 overflow-hidden relative group flex items-center justify-center">
+                         <span className="font-semibold text-gray-500">{tmpl.name}</span>
                       </div>
                       <div className="px-2 pb-2 flex justify-between items-center">
                         <div>
@@ -238,23 +268,96 @@ export default function NewInvitationForm({ templates, users }: Props) {
               </div>
             </div>
 
-            {/* Dummy Placeholders for the rest of the sections to show the scale and UI quality */}
-            {[4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map((id) => (
-              <div key={id} className={`transition-all duration-500 ${activeSection === id ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
-                <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 p-8 min-h-[400px] flex flex-col items-center justify-center text-center">
-                  <div className="w-20 h-20 bg-[#FAF7F2] rounded-full flex items-center justify-center mb-6">
-                     <Settings2 className="w-8 h-8 text-[#C8A24C]" />
+            {/* Section 4: Wedding Information */}
+            <div className={`transition-all duration-500 ${activeSection === 4 ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
+              <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 p-8">
+                <h3 className="text-2xl font-serif text-[#8B1E24] mb-6 flex items-center gap-3">
+                  <HeartHandshake className="w-6 h-6 text-[#C8A24C]" />
+                  Wedding Information
+                </h3>
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Bride Name</label>
+                    <input 
+                      type="text" 
+                      name="brideName" 
+                      value={formData.brideName} 
+                      onChange={handleInputChange} 
+                      className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#8B1E24]/30 focus:border-[#8B1E24] transition-all"
+                      placeholder="e.g., Nova"
+                    />
                   </div>
-                  <h3 className="text-2xl font-serif text-[#8B1E24] mb-2">{sections.find(s => s.id === id)?.title}</h3>
-                  <p className="text-gray-500 max-w-md">This section is part of the premium Javanese SaaS interface. The complex forms for this section are built to mirror Webflow/Shopify standards.</p>
-                  <div className="mt-8 w-full max-w-lg space-y-4">
-                     <div className="h-12 bg-gray-50 rounded-xl animate-pulse"></div>
-                     <div className="h-12 bg-gray-50 rounded-xl animate-pulse w-3/4"></div>
-                     <div className="h-32 bg-gray-50 rounded-xl animate-pulse"></div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Groom Name</label>
+                    <input 
+                      type="text" 
+                      name="groomName" 
+                      value={formData.groomName} 
+                      onChange={handleInputChange} 
+                      className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#8B1E24]/30 focus:border-[#8B1E24] transition-all"
+                      placeholder="e.g., Partner"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Wedding Date</label>
+                    <input 
+                      type="date" 
+                      name="weddingDate" 
+                      value={formData.weddingDate} 
+                      onChange={handleInputChange} 
+                      className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#8B1E24]/30 focus:border-[#8B1E24] transition-all"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">PIX / Bank Account Key</label>
+                    <input 
+                      type="text" 
+                      name="pixKey" 
+                      value={formData.pixKey} 
+                      onChange={handleInputChange} 
+                      className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#8B1E24]/30 focus:border-[#8B1E24] transition-all"
+                      placeholder="e.g., BCA 1234 5678 90 a.n Nova"
+                    />
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Section 5: Background Assets */}
+            <div className={`transition-all duration-500 ${activeSection === 5 ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
+              <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 p-8">
+                <h3 className="text-2xl font-serif text-[#8B1E24] mb-6 flex items-center gap-3">
+                  <ImageIcon className="w-6 h-6 text-[#C8A24C]" />
+                  Background Assets
+                </h3>
+                <p className="text-sm text-gray-500 mb-8">Paste the URL for videos (e.g. .mp4) or images (e.g. .jpg, .webp) to be used as backgrounds for each section. Leave empty to use default.</p>
+                
+                <div className="space-y-6">
+                  {[
+                    { label: "Hero Background URL (Video/Image)", name: "heroBgUrl" },
+                    { label: "Quote Background URL", name: "quoteBgUrl" },
+                    { label: "Couple Section Background URL", name: "coupleBgUrl" },
+                    { label: "Event Section Background URL", name: "eventBgUrl" },
+                    { label: "Gallery Section Background URL", name: "galleryBgUrl" },
+                    { label: "Gift Section Background URL", name: "giftBgUrl" },
+                    { label: "RSVP Section Background URL", name: "rsvpBgUrl" },
+                    { label: "Footer Background URL", name: "footerBgUrl" }
+                  ].map((field) => (
+                    <div key={field.name}>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">{field.label}</label>
+                      <input 
+                        type="url" 
+                        name={field.name} 
+                        value={(formData as any)[field.name]} 
+                        onChange={handleInputChange} 
+                        className="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#8B1E24]/30 focus:border-[#8B1E24] transition-all font-mono text-sm"
+                        placeholder="https://..."
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
 
           </div>
         </main>

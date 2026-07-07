@@ -9,6 +9,16 @@ export async function createInvitation(formData: FormData) {
   const templateId = formData.get("templateId") as string;
   const title = formData.get("title") as string;
   const slug = formData.get("slug") as string;
+  const settingsJSONString = formData.get("settingsJSON") as string;
+  
+  let settingsJSON = {};
+  if (settingsJSONString) {
+    try {
+      settingsJSON = JSON.parse(settingsJSONString);
+    } catch (e) {
+      console.error("Failed to parse settingsJSON", e);
+    }
+  }
 
   if (!userId || !templateId || !title || !slug) {
     return { error: "Missing required fields" };
@@ -31,7 +41,7 @@ export async function createInvitation(formData: FormData) {
       title,
       slug,
       status: "DRAFT",
-      settingsJSON: {},
+      settingsJSON: settingsJSON,
       updatedAt: new Date().toISOString()
     }).select().single();
 

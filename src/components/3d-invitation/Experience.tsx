@@ -37,24 +37,46 @@ export default function Experience({ data, children }: ExperienceProps) {
 
   if (!mounted) return <div className="min-h-screen bg-[#fff1f2]" />;
 
+  // Helper to render backgrounds dynamically
+  const renderBg = (url: string | undefined, defaultBgClass: string, isHero: boolean = false) => {
+    if (!url && isHero) url = "https://cdn.pixabay.com/video/2020/05/21/40003-424103176_large.mp4";
+    if (!url) return <div className={`absolute inset-0 w-full h-full -z-10 ${defaultBgClass}`} />;
+
+    const isVideo = url.endsWith('.mp4') || url.endsWith('.webm') || url.includes('pixabay.com/video');
+    
+    return (
+      <div className={`absolute inset-0 w-full h-full -z-10 ${defaultBgClass}`}>
+        {isVideo ? (
+           <video 
+             autoPlay loop muted playsInline 
+             className={`absolute inset-0 w-full h-full object-cover ${isHero ? 'opacity-60' : 'opacity-30'}`}
+             src={url} 
+           />
+        ) : (
+           <img 
+             src={url} 
+             className={`absolute inset-0 w-full h-full object-cover ${isHero ? 'opacity-60' : 'opacity-30'}`}
+             alt="Background" 
+           />
+        )}
+      </div>
+    );
+  };
+
+  const formattedDate = data.weddingDate 
+    ? new Date(data.weddingDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) 
+    : "15 Juni 2024";
+
   return (
     <div className="w-full bg-[#fff1f2] font-sans text-[#500000] overflow-x-hidden">
       
-      {/* 1. HERO SECTION (Video Background) */}
+      {/* 1. HERO SECTION */}
       <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
-        {/* Placeholder Video Background */}
-        <div className="absolute inset-0 w-full h-full bg-black/40 z-10" />
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="absolute inset-0 w-full h-full object-cover z-0"
-          src="https://cdn.pixabay.com/video/2020/05/21/40003-424103176_large.mp4" 
-        />
+        {renderBg(data.heroBgUrl, "bg-black", true)}
         
+        {/* Content Layer */}
         <motion.div 
-          className="relative z-20 text-center text-white p-8"
+          className="relative z-10 text-center text-white p-8"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
@@ -74,32 +96,38 @@ export default function Experience({ data, children }: ExperienceProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 1 }}
           >
-            {data.weddingDate ? new Date(data.weddingDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : "15 Juni 2024"}
+            {formattedDate}
           </motion.div>
         </motion.div>
       </section>
 
       {/* 2. QUOTE SECTION */}
-      <section className="py-24 px-8 max-w-4xl mx-auto text-center">
-        <motion.div
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          <Quote className="w-12 h-12 mx-auto text-[#C8A24C] mb-8 opacity-50" />
-          <p className="font-serif text-xl md:text-2xl leading-relaxed italic text-[#500000]/80">
-            "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang."
-          </p>
-          <p className="mt-6 font-sans font-semibold tracking-widest text-sm uppercase text-[#C8A24C]">
-            Ar-Rum: 21
-          </p>
-        </motion.div>
+      <section className="relative w-full py-24 px-8 overflow-hidden">
+        {renderBg(data.quoteBgUrl, "bg-[#fff1f2]")}
+
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
+            <Quote className="w-12 h-12 mx-auto text-[#C8A24C] mb-8 opacity-50" />
+            <p className="font-serif text-xl md:text-2xl leading-relaxed italic text-[#500000]/80">
+              "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang."
+            </p>
+            <p className="mt-6 font-sans font-semibold tracking-widest text-sm uppercase text-[#C8A24C]">
+              Ar-Rum: 21
+            </p>
+          </motion.div>
+        </div>
       </section>
 
       {/* 3. COUPLE SECTION */}
-      <section className="py-24 bg-white/50 border-y border-[#C8A24C]/20 px-8">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative w-full py-24 border-y border-[#C8A24C]/20 px-8 overflow-hidden">
+        {renderBg(data.coupleBgUrl, "bg-white/50")}
+
+        <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div 
             className="text-center mb-16"
             variants={fadeInUp}
@@ -112,7 +140,6 @@ export default function Experience({ data, children }: ExperienceProps) {
           </motion.div>
 
           <div className="flex flex-col md:flex-row justify-center items-center gap-16 md:gap-32">
-            {/* Bride */}
             <motion.div 
               className="text-center"
               variants={fadeInUp}
@@ -132,7 +159,6 @@ export default function Experience({ data, children }: ExperienceProps) {
 
             <span className="font-script text-7xl text-[#C8A24C]">&</span>
 
-            {/* Groom */}
             <motion.div 
               className="text-center"
               variants={fadeInUp}
@@ -154,8 +180,10 @@ export default function Experience({ data, children }: ExperienceProps) {
       </section>
 
       {/* 4. EVENT DETAILS SECTION */}
-      <section className="py-24 px-8 relative overflow-hidden">
-        <div className="max-w-5xl mx-auto">
+      <section className="relative w-full py-24 px-8 overflow-hidden">
+        {renderBg(data.eventBgUrl, "bg-[#fff1f2]")}
+
+        <div className="relative z-10 max-w-5xl mx-auto">
           <motion.div 
             className="text-center mb-16"
             variants={fadeInUp}
@@ -168,7 +196,6 @@ export default function Experience({ data, children }: ExperienceProps) {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Akad */}
             <motion.div 
               className="bg-white/70 backdrop-blur-md p-10 rounded-[40px] border border-[#C8A24C]/30 shadow-xl text-center relative overflow-hidden"
               variants={scaleUp}
@@ -180,18 +207,17 @@ export default function Experience({ data, children }: ExperienceProps) {
               <Heart className="w-10 h-10 mx-auto text-[#C8A24C] mb-6" />
               <h3 className="font-script text-5xl mb-4">Akad Nikah</h3>
               <div className="space-y-4 font-serif text-lg text-[#500000]/80">
-                <p className="font-bold text-[#500000]">Sabtu, 15 Juni 2024</p>
+                <p className="font-bold text-[#500000]">{formattedDate}</p>
                 <p>08:00 WIB - Selesai</p>
                 <div className="w-12 h-px bg-[#C8A24C] mx-auto my-4" />
-                <p className="font-bold text-[#500000]">Masjid Agung</p>
-                <p className="text-sm">Jl. Contoh Alamat No. 123, Jakarta</p>
+                <p className="font-bold text-[#500000]">Lokasi Akad</p>
+                <p className="text-sm">{data.venue || "Masjid Agung, Jakarta"}</p>
               </div>
               <button className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#500000] text-white hover:bg-[#8B1E24] transition-colors font-sans text-sm uppercase tracking-wider">
                 <Navigation className="w-4 h-4" /> Buka Peta
               </button>
             </motion.div>
 
-            {/* Resepsi */}
             <motion.div 
               className="bg-[#500000] text-white p-10 rounded-[40px] border border-[#8B1E24] shadow-xl text-center relative overflow-hidden"
               variants={scaleUp}
@@ -203,11 +229,11 @@ export default function Experience({ data, children }: ExperienceProps) {
               <CalendarHeart className="w-10 h-10 mx-auto text-[#C8A24C] mb-6" />
               <h3 className="font-script text-5xl mb-4 text-white">Resepsi</h3>
               <div className="space-y-4 font-serif text-lg text-white/80">
-                <p className="font-bold text-white">Sabtu, 15 Juni 2024</p>
+                <p className="font-bold text-white">{formattedDate}</p>
                 <p>11:00 WIB - 14:00 WIB</p>
                 <div className="w-12 h-px bg-[#C8A24C] mx-auto my-4" />
-                <p className="font-bold text-white">Grand Ballroom Hotel</p>
-                <p className="text-sm">Jl. Contoh Alamat No. 456, Jakarta</p>
+                <p className="font-bold text-white">Lokasi Resepsi</p>
+                <p className="text-sm">{data.venue || "Grand Ballroom, Jakarta"}</p>
               </div>
               <button className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full bg-white text-[#500000] hover:bg-gray-100 transition-colors font-sans text-sm uppercase tracking-wider">
                 <Navigation className="w-4 h-4" /> Buka Peta
@@ -218,8 +244,10 @@ export default function Experience({ data, children }: ExperienceProps) {
       </section>
 
       {/* 5. GALLERY SECTION */}
-      <section className="py-24 px-8 bg-white/30 border-y border-[#C8A24C]/20">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative w-full py-24 px-8 border-y border-[#C8A24C]/20 overflow-hidden">
+        {renderBg(data.galleryBgUrl, "bg-white/30")}
+
+        <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div 
             className="text-center mb-16"
             variants={fadeInUp}
@@ -238,7 +266,6 @@ export default function Experience({ data, children }: ExperienceProps) {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            {/* Dummy Gallery Images */}
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
               <motion.div key={i} variants={fadeInUp} className="aspect-square rounded-2xl overflow-hidden bg-[#500000]/10">
                 <img src={`https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
@@ -249,8 +276,10 @@ export default function Experience({ data, children }: ExperienceProps) {
       </section>
 
       {/* 6. GIFT SECTION */}
-      <section className="py-24 px-8">
-        <div className="max-w-3xl mx-auto text-center">
+      <section className="relative w-full py-24 px-8 overflow-hidden">
+        {renderBg(data.giftBgUrl, "bg-[#fff1f2]")}
+
+        <div className="relative z-10 max-w-3xl mx-auto text-center">
           <motion.div 
             variants={fadeInUp}
             initial="hidden"
@@ -265,9 +294,11 @@ export default function Experience({ data, children }: ExperienceProps) {
             </p>
             
             <div className="bg-white p-8 rounded-3xl border border-[#C8A24C]/30 shadow-lg max-w-sm mx-auto">
-              <h4 className="font-sans font-bold text-xl mb-2 text-[#500000]">BCA</h4>
-              <p className="font-mono text-2xl tracking-widest text-[#500000] mb-4">1234 5678 90</p>
-              <p className="font-serif text-[#500000]/70 mb-6">a.n Nova / Partner</p>
+              <h4 className="font-sans font-bold text-xl mb-2 text-[#500000]">BCA / PIX</h4>
+              <p className="font-mono text-xl tracking-widest text-[#500000] mb-4 break-all">
+                {data.pixKey || "1234 5678 90"}
+              </p>
+              <p className="font-serif text-[#500000]/70 mb-6">a.n {data.brideName || "Nova"} / {data.groomName || "Partner"}</p>
               <button className="px-6 py-2 bg-[#C8A24C]/10 text-[#C8A24C] font-semibold rounded-full hover:bg-[#C8A24C]/20 transition-colors border border-[#C8A24C]/50">
                 Salin Rekening
               </button>
@@ -277,8 +308,10 @@ export default function Experience({ data, children }: ExperienceProps) {
       </section>
 
       {/* 7. RSVP SECTION */}
-      <section className="py-24 px-8 bg-[#500000] text-white">
-        <div className="max-w-2xl mx-auto">
+      <section className="relative w-full py-24 px-8 overflow-hidden">
+        {renderBg(data.rsvpBgUrl, "bg-[#500000]")}
+
+        <div className="relative z-10 max-w-2xl mx-auto text-white">
           <motion.div 
             className="text-center mb-12"
             variants={fadeInUp}
@@ -286,8 +319,8 @@ export default function Experience({ data, children }: ExperienceProps) {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <h2 className="font-script text-6xl mb-4">RSVP</h2>
-            <p className="font-serif text-white/80">Mohon konfirmasi kehadiran Anda sebelum tanggal 10 Juni 2024</p>
+            <h2 className="font-script text-6xl mb-4 text-white">RSVP</h2>
+            <p className="font-serif text-white/80">Mohon konfirmasi kehadiran Anda sebelum tanggal {formattedDate}</p>
           </motion.div>
 
           <motion.form 
@@ -323,14 +356,17 @@ export default function Experience({ data, children }: ExperienceProps) {
       </section>
 
       {/* 8. FOOTER */}
-      <footer className="py-16 text-center border-t border-[#C8A24C]/30 bg-white/50">
+      <footer className="relative w-full py-16 text-center border-t border-[#C8A24C]/30 overflow-hidden">
+        {renderBg(data.footerBgUrl, "bg-white/50")}
+
         <motion.div
+          className="relative z-10"
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <h2 className="font-script text-5xl text-[#500000] mb-4">Nova & Partner</h2>
+          <h2 className="font-script text-5xl text-[#500000] mb-4">{data.brideName || "Nova"} & {data.groomName || "Partner"}</h2>
           <p className="font-sans text-sm text-[#500000]/60 tracking-widest uppercase mb-8">Terima Kasih</p>
           <p className="font-sans text-xs text-[#500000]/40">Powered by OnOurWeddingDay</p>
         </motion.div>
