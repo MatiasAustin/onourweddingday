@@ -69,13 +69,12 @@ export default async function TemplatesPage() {
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <button className="p-2 text-foreground/50 hover:text-primary transition-colors bg-secondary/10 rounded-lg hover:bg-secondary/30" title="Preview">
+                    <button className="p-2 text-foreground/50 hover:text-primary transition-colors bg-secondary/10 rounded-lg hover:bg-secondary/30" title="Preview (Coming Soon)" onClick={() => alert('Template preview coming soon!')}>
                       <Eye className="w-4 h-4" />
                     </button>
-                    {/* Link to the editor using the template id (simulating opening a template in the editor) */}
-                    <Link href={`/editor/${tmpl.id}`} className="p-2 text-foreground/50 hover:text-primary transition-colors bg-secondary/10 rounded-lg hover:bg-secondary/30" title="Edit in Builder">
+                    <button className="p-2 text-foreground/50 hover:text-primary transition-colors bg-secondary/10 rounded-lg hover:bg-secondary/30" title="Edit Template (Coming Soon)" onClick={() => alert('Template editor coming soon! Create an Invitation to edit content.')}>
                       <Settings className="w-4 h-4" />
-                    </Link>
+                    </button>
                     <button className="p-2 text-foreground/50 hover:text-red-500 transition-colors bg-secondary/10 rounded-lg hover:bg-red-50" title="Delete">
                       <Trash2 className="w-4 h-4" />
                     </button>
