@@ -57,7 +57,7 @@ function CinematicScene({ data }: { data: any }) {
 
       {/* SECTION: Names (Z = 0) */}
       <group position={[0, -1, 0]}>
-        <Html center transform distanceFactor={5}>
+        <Html center transform distanceFactor={15}>
           <div ref={section2Ref} className="w-[800px] text-center bg-white/40 backdrop-blur-md p-16 rounded-[40px] border border-white/50 shadow-2xl opacity-0">
             <h2 className="font-script text-7xl text-[#500000]">
               {data.brideName || "Liliane"}
@@ -84,10 +84,10 @@ export default function Experience({ data }: { data: any }) {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-[#fff1f2] font-sans">
+    <div className="w-full min-h-screen font-sans bg-transparent">
       
-      {/* 3D Hero Section */}
-      <div className="w-full h-screen relative overflow-hidden sticky top-0 -z-10">
+      {/* 3D Hero Background */}
+      <div className="fixed inset-0 w-full h-full -z-10 bg-[#fff1f2]">
         {mounted && (
           <Canvas
             camera={{ position: [0, 0, 5], fov: 45 }}
@@ -101,9 +101,20 @@ export default function Experience({ data }: { data: any }) {
         )}
       </div>
 
+      {/* Transparent Spacer to show 3D Canvas */}
+      <div className="w-full h-screen pointer-events-none"></div>
+
       {/* Regular HTML Content Below */}
-      <div className="relative z-10 bg-[#fff1f2] py-32 px-8 min-h-screen flex flex-col items-center">
+      <div className="relative z-10 bg-[#fff1f2] py-32 px-8 min-h-screen flex flex-col items-center border-t border-[#C8A24C]/20 shadow-[0_-10px_40px_rgba(139,30,36,0.1)]">
         
+        {/* Scroll Indicator */}
+        <div className="absolute -top-16 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce opacity-70">
+          <span className="text-[#500000] text-sm font-medium mb-2 tracking-widest uppercase">Scroll</span>
+          <div className="w-5 h-8 border-2 border-[#500000] rounded-full flex justify-center p-1">
+             <div className="w-1 h-2 bg-[#500000] rounded-full animate-pulse"></div>
+          </div>
+        </div>
+
         {/* Date Section */}
         <div className="max-w-4xl w-full mx-auto text-center mb-32">
           <div className="font-serif text-9xl text-[#500000] drop-shadow-sm">
