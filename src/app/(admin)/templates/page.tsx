@@ -2,16 +2,22 @@ import Link from "next/link";
 import { Plus, Settings, Trash2, Eye } from "lucide-react";
 
 
+import { createClient } from "@/utils/supabase/server";
+
 export default async function TemplatesPage() {
-  // In a real application, fetch from database:
-  // const templates = await prisma.template.findMany({ orderBy: { createdAt: "desc" } });
+  const supabase = await createClient();
   
-  // Mock data for scaffolding
-  const templates = [
-    { id: "tmpl-1", name: "Classic Elegance", type: "PREMIUM", status: "PUBLISHED", price: "$49", usage: 124 },
-    { id: "tmpl-2", name: "Modern Minimalist", type: "FREE", status: "PUBLISHED", price: "$0", usage: 890 },
-    { id: "tmpl-3", name: "Floral Romance", type: "PREMIUM", status: "DRAFT", price: "$39", usage: 0 },
-  ];
+  // Fetch templates and their related invitations to count usage
+  const { data: templatesData } = await supabase
+    .from('Template')
+    .select('*, invitations:Invitation(id)')
+    .order('createdAt', { ascending: false });
+
+  const templates = (templatesData || []).map(tmpl => ({
+    ...tmpl,
+    usage: tmpl.invitations ? tmpl.invitations.length : 0,
+    type: tmpl.price ? "PREMIUM" : "FREE" // Fallback if type doesn't exist
+  }));
 
   return (
     <div>

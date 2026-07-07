@@ -3,14 +3,17 @@ import { createClient } from "@/utils/supabase/server";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
-  // In a real app we'd fetch actual stats from Supabase
-  // const { count: userCount } = await supabase.from('User').select('*', { count: 'exact', head: true });
+  
+  // Fetch actual stats from Supabase
+  const { count: userCount } = await supabase.from('User').select('*', { count: 'exact', head: true });
+  const { count: invitationCount } = await supabase.from('Invitation').select('*', { count: 'exact', head: true }).eq('status', 'PUBLISHED');
+  const { count: templateCount } = await supabase.from('Template').select('*', { count: 'exact', head: true });
   
   const stats = [
-    { name: "Total Users", value: "2,405", icon: Users, change: "+4.75%", changeType: "positive" },
-    { name: "Active Invitations", value: "842", icon: Activity, change: "+54.02%", changeType: "positive" },
-    { name: "Templates Available", value: "48", icon: LayoutTemplate, change: "+2", changeType: "neutral" },
-    { name: "Total Page Views", value: "142.8k", icon: Eye, change: "+12.30%", changeType: "positive" },
+    { name: "Total Users", value: (userCount || 0).toString(), icon: Users, change: "", changeType: "neutral" },
+    { name: "Active Invitations", value: (invitationCount || 0).toString(), icon: Activity, change: "", changeType: "neutral" },
+    { name: "Templates Available", value: (templateCount || 0).toString(), icon: LayoutTemplate, change: "", changeType: "neutral" },
+    { name: "Total Page Views", value: "0", icon: Eye, change: "Coming Soon", changeType: "neutral" },
   ];
 
   return (
