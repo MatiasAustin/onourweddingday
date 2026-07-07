@@ -1,81 +1,27 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
-import { Suspense, useRef, useEffect, useState } from "react";
-import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
+import { useEffect, useState } from "react";
+import { motion, Variants } from "framer-motion";
+import { CalendarHeart, Gift, Camera, Heart, Quote, Navigation } from "lucide-react";
 
-interface ExperienceProps {
-  data: any;
-}
+// Reusable Animation Variants
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+};
 
-function CinematicScene({ data }: { data: any }) {
-  const groupRef = useRef<THREE.Group>(null);
-  const section2Ref = useRef<HTMLDivElement>(null);
+const scaleUp: Variants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.8 } }
+};
 
-  useFrame((state) => {
-    if (!groupRef.current) return;
-    
-    // Intro phase: start at -40, smoothly glide to -15
-    const time = state.clock.elapsedTime;
-    const progress = Math.min(time / 2.5, 1);
-    // Easing function (easeOutExpo)
-    const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-    
-    // Stop at -15 so the text doesn't become overwhelmingly huge
-    const introZ = THREE.MathUtils.lerp(-40, -15, ease);
-    groupRef.current.position.z = introZ;
-    
-    // Fade in text
-    if (section2Ref.current) {
-      section2Ref.current.style.opacity = ease.toString();
-    }
-  });
-
-  return (
-    <group ref={groupRef}>
-      {/* Lights */}
-      <ambientLight intensity={0.8} color="#fff1f2" />
-      <directionalLight position={[10, 10, 5]} intensity={1.5} color="#ffe4e6" />
-      <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#fecdd3" />
-      
-      {/* Floating Particles/Petals */}
-      {Array.from({ length: 40 }).map((_, i) => (
-        <mesh 
-          key={i} 
-          position={[
-            (Math.random() - 0.5) * 30, 
-            (Math.random() - 0.5) * 30, 
-            (Math.random() - 0.5) * 20
-          ]}
-          rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}
-        >
-          <planeGeometry args={[0.3, 0.3]} />
-          <meshStandardMaterial color="#881337" side={THREE.DoubleSide} opacity={0.4} transparent />
-        </mesh>
-      ))}
-
-      {/* SECTION: Names (Z = 0) */}
-      <group position={[0, 0, 0]}>
-        <Html center transform distanceFactor={25}>
-          <div ref={section2Ref} className="w-[800px] text-center bg-white/40 backdrop-blur-md p-16 rounded-[40px] border border-white/50 shadow-2xl opacity-0">
-            <h2 className="font-script text-7xl text-[#500000]">
-              {data.brideName || "Liliane"}
-            </h2>
-            <p className="font-serif text-3xl italic text-[#500000]/60 my-4">e</p>
-            <h2 className="font-script text-7xl text-[#500000]">
-              {data.groomName || "Fernando"}
-            </h2>
-            <p className="mt-8 font-serif tracking-widest text-[#500000]/80 uppercase text-sm">
-              Convidam para cerimônia de seu casamento
-            </p>
-          </div>
-        </Html>
-      </group>
-    </group>
-  );
-}
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2 }
+  }
+};
 
 interface ExperienceProps {
   data: any;
@@ -89,75 +35,313 @@ export default function Experience({ data, children }: ExperienceProps) {
     setMounted(true);
   }, []);
 
+  if (!mounted) return <div className="min-h-screen bg-[#fff1f2]" />;
+
   return (
-    <div className="w-full min-h-screen font-sans bg-transparent">
+    <div className="w-full bg-[#fff1f2] font-sans text-[#500000] overflow-x-hidden">
       
-      {/* 3D Hero Background */}
-      <div className="fixed inset-0 w-full h-full -z-10 bg-[#fff1f2]">
-        {mounted && (
-          <Canvas
-            camera={{ position: [0, 0, 5], fov: 45 }}
-            gl={{ antialias: true, alpha: false }}
-          >
-            <color attach="background" args={["#fff1f2"]} />
-            <Suspense fallback={<Html center><div className="font-serif text-[#500000]">Memuat...</div></Html>}>
-              <CinematicScene data={data} />
-            </Suspense>
-          </Canvas>
-        )}
-      </div>
-
-      {/* Transparent Spacer to show 3D Canvas */}
-      <div className="w-full h-screen pointer-events-none"></div>
-
-      {/* Regular HTML Content Below */}
-      <div className="relative z-10 bg-[#fff1f2] min-h-screen flex flex-col border-t border-[#C8A24C]/20 shadow-[0_-10px_40px_rgba(139,30,36,0.1)]">
+      {/* 1. HERO SECTION (Video Background) */}
+      <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
+        {/* Placeholder Video Background */}
+        <div className="absolute inset-0 w-full h-full bg-black/40 z-10" />
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          src="https://cdn.pixabay.com/video/2020/05/21/40003-424103176_large.mp4" 
+        />
         
-        {/* Scroll Indicator */}
-        <div className="absolute -top-16 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce opacity-70">
-          <span className="text-[#500000] text-sm font-medium mb-2 tracking-widest uppercase">Scroll</span>
-          <div className="w-5 h-8 border-2 border-[#500000] rounded-full flex justify-center p-1">
-             <div className="w-1 h-2 bg-[#500000] rounded-full animate-pulse"></div>
-          </div>
-        </div>
-
-        {/* Date Section */}
-        <div className="max-w-4xl w-full mx-auto text-center mb-32">
-          <div className="font-serif text-9xl text-[#500000] drop-shadow-sm">
-            {data.weddingDate ? new Date(data.weddingDate).getDate() : "15"}
-          </div>
-          <div className="font-script text-6xl text-[#500000]/80 -mt-6 mb-4">
-            {data.weddingDate ? new Date(data.weddingDate).toLocaleString('pt-BR', { month: 'long' }) : "Junho"}
-          </div>
-          <div className="font-serif tracking-widest text-[#500000] text-2xl uppercase">
-            {data.weddingDate ? new Date(data.weddingDate).getFullYear() : "2024"}
-          </div>
-        </div>
-
-        {/* Location & Gift Section */}
-        <div className="max-w-4xl w-full mx-auto flex flex-col md:flex-row gap-8 mb-16">
-          <div className="flex-1 bg-[#500000] text-white p-12 rounded-[40px] shadow-2xl transition-transform hover:-translate-y-2 duration-500">
-            <h3 className="font-script text-5xl mb-6">Cerimônia</h3>
-            <p className="font-serif leading-relaxed opacity-90 whitespace-pre-wrap text-lg">
-              {data.ceremonyLocation || "Paróquia Cristo Profeta\nR. Antônio José de Oliveira, 467\nBarra Funda, Apucarana - PR"}
-            </p>
-          </div>
+        <motion.div 
+          className="relative z-20 text-center text-white p-8"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        >
+          <p className="tracking-[0.3em] uppercase text-sm mb-6 text-white/80">The Wedding Of</p>
+          <h1 className="font-script text-8xl md:text-9xl mb-4 drop-shadow-xl">
+            {data.brideName || "Nova"}
+          </h1>
+          <p className="font-serif text-3xl italic my-2 text-white/70">&</p>
+          <h1 className="font-script text-8xl md:text-9xl drop-shadow-xl">
+            {data.groomName || "Partner"}
+          </h1>
           
-          <div className="flex-1 bg-white/80 backdrop-blur-md p-12 rounded-[40px] shadow-2xl border border-white transition-transform hover:-translate-y-2 duration-500">
-            <h3 className="font-script text-5xl text-[#500000] mb-6">Presentes</h3>
-            <p className="font-serif text-lg leading-relaxed text-[#500000]/80 mb-6">
-              Caso queira nos presentear, sugerimos contribuir através do PIX:
-            </p>
-            <div className="font-mono text-xl text-center bg-[#fff1f2] p-4 rounded-xl text-[#500000] border border-[#500000]/20 select-all">
-              {data.pixKey || "41 998798618"}
-            </div>
+          <motion.div 
+            className="mt-16 text-sm tracking-widest uppercase border border-white/30 rounded-full px-6 py-3 inline-block bg-black/20 backdrop-blur-sm"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 1 }}
+          >
+            {data.weddingDate ? new Date(data.weddingDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : "15 Juni 2024"}
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* 2. QUOTE SECTION */}
+      <section className="py-24 px-8 max-w-4xl mx-auto text-center">
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <Quote className="w-12 h-12 mx-auto text-[#C8A24C] mb-8 opacity-50" />
+          <p className="font-serif text-xl md:text-2xl leading-relaxed italic text-[#500000]/80">
+            "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang."
+          </p>
+          <p className="mt-6 font-sans font-semibold tracking-widest text-sm uppercase text-[#C8A24C]">
+            Ar-Rum: 21
+          </p>
+        </motion.div>
+      </section>
+
+      {/* 3. COUPLE SECTION */}
+      <section className="py-24 bg-white/50 border-y border-[#C8A24C]/20 px-8">
+        <div className="max-w-6xl mx-auto">
+          <motion.div 
+            className="text-center mb-16"
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <h2 className="font-script text-6xl text-[#500000]">Mempelai</h2>
+            <p className="font-sans text-sm tracking-widest text-[#C8A24C] uppercase mt-4">Dengan memohon rahmat Allah SWT</p>
+          </motion.div>
+
+          <div className="flex flex-col md:flex-row justify-center items-center gap-16 md:gap-32">
+            {/* Bride */}
+            <motion.div 
+              className="text-center"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <div className="w-64 h-80 mx-auto rounded-t-full border-4 border-[#C8A24C]/30 p-2 mb-6">
+                <div className="w-full h-full rounded-t-full overflow-hidden bg-[#500000]/10">
+                  <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop" alt="Bride" className="w-full h-full object-cover" />
+                </div>
+              </div>
+              <h3 className="font-script text-5xl text-[#500000] mb-2">{data.brideName || "Nova"}</h3>
+              <p className="font-serif text-[#500000]/70 font-medium">Putri dari</p>
+              <p className="font-sans text-sm text-[#500000]/60 mt-1">Bapak Fulan & Ibu Fulanah</p>
+            </motion.div>
+
+            <span className="font-script text-7xl text-[#C8A24C]">&</span>
+
+            {/* Groom */}
+            <motion.div 
+              className="text-center"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <div className="w-64 h-80 mx-auto rounded-t-full border-4 border-[#C8A24C]/30 p-2 mb-6">
+                <div className="w-full h-full rounded-t-full overflow-hidden bg-[#500000]/10">
+                  <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop" alt="Groom" className="w-full h-full object-cover grayscale opacity-80" />
+                </div>
+              </div>
+              <h3 className="font-script text-5xl text-[#500000] mb-2">{data.groomName || "Partner"}</h3>
+              <p className="font-serif text-[#500000]/70 font-medium">Putra dari</p>
+              <p className="font-sans text-sm text-[#500000]/60 mt-1">Bapak Fulan & Ibu Fulanah</p>
+            </motion.div>
           </div>
         </div>
+      </section>
 
-        {/* CMS Sections go here */}
-        {children}
+      {/* 4. EVENT DETAILS SECTION */}
+      <section className="py-24 px-8 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto">
+          <motion.div 
+            className="text-center mb-16"
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <h2 className="font-script text-6xl text-[#500000]">Detail Acara</h2>
+            <p className="font-sans text-sm tracking-widest text-[#C8A24C] uppercase mt-4">Waktu & Tempat Pelaksanaan</p>
+          </motion.div>
 
-      </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Akad */}
+            <motion.div 
+              className="bg-white/70 backdrop-blur-md p-10 rounded-[40px] border border-[#C8A24C]/30 shadow-xl text-center relative overflow-hidden"
+              variants={scaleUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#C8A24C]/10 rounded-bl-full" />
+              <Heart className="w-10 h-10 mx-auto text-[#C8A24C] mb-6" />
+              <h3 className="font-script text-5xl mb-4">Akad Nikah</h3>
+              <div className="space-y-4 font-serif text-lg text-[#500000]/80">
+                <p className="font-bold text-[#500000]">Sabtu, 15 Juni 2024</p>
+                <p>08:00 WIB - Selesai</p>
+                <div className="w-12 h-px bg-[#C8A24C] mx-auto my-4" />
+                <p className="font-bold text-[#500000]">Masjid Agung</p>
+                <p className="text-sm">Jl. Contoh Alamat No. 123, Jakarta</p>
+              </div>
+              <button className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#500000] text-white hover:bg-[#8B1E24] transition-colors font-sans text-sm uppercase tracking-wider">
+                <Navigation className="w-4 h-4" /> Buka Peta
+              </button>
+            </motion.div>
+
+            {/* Resepsi */}
+            <motion.div 
+              className="bg-[#500000] text-white p-10 rounded-[40px] border border-[#8B1E24] shadow-xl text-center relative overflow-hidden"
+              variants={scaleUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <div className="absolute top-0 left-0 w-32 h-32 bg-[#8B1E24] rounded-br-full" />
+              <CalendarHeart className="w-10 h-10 mx-auto text-[#C8A24C] mb-6" />
+              <h3 className="font-script text-5xl mb-4 text-white">Resepsi</h3>
+              <div className="space-y-4 font-serif text-lg text-white/80">
+                <p className="font-bold text-white">Sabtu, 15 Juni 2024</p>
+                <p>11:00 WIB - 14:00 WIB</p>
+                <div className="w-12 h-px bg-[#C8A24C] mx-auto my-4" />
+                <p className="font-bold text-white">Grand Ballroom Hotel</p>
+                <p className="text-sm">Jl. Contoh Alamat No. 456, Jakarta</p>
+              </div>
+              <button className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full bg-white text-[#500000] hover:bg-gray-100 transition-colors font-sans text-sm uppercase tracking-wider">
+                <Navigation className="w-4 h-4" /> Buka Peta
+              </button>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. GALLERY SECTION */}
+      <section className="py-24 px-8 bg-white/30 border-y border-[#C8A24C]/20">
+        <div className="max-w-6xl mx-auto">
+          <motion.div 
+            className="text-center mb-16"
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <Camera className="w-8 h-8 mx-auto text-[#C8A24C] mb-4" />
+            <h2 className="font-script text-6xl text-[#500000]">Galeri Kami</h2>
+          </motion.div>
+
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-4"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {/* Dummy Gallery Images */}
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <motion.div key={i} variants={fadeInUp} className="aspect-square rounded-2xl overflow-hidden bg-[#500000]/10">
+                <img src={`https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 6. GIFT SECTION */}
+      <section className="py-24 px-8">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div 
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <Gift className="w-10 h-10 mx-auto text-[#C8A24C] mb-6" />
+            <h2 className="font-script text-6xl text-[#500000] mb-6">Wedding Gift</h2>
+            <p className="font-serif text-lg text-[#500000]/80 mb-10 leading-relaxed">
+              Doa restu Anda merupakan karunia yang sangat berarti bagi kami. 
+              Namun jika Anda ingin memberikan tanda kasih, dapat melalui:
+            </p>
+            
+            <div className="bg-white p-8 rounded-3xl border border-[#C8A24C]/30 shadow-lg max-w-sm mx-auto">
+              <h4 className="font-sans font-bold text-xl mb-2 text-[#500000]">BCA</h4>
+              <p className="font-mono text-2xl tracking-widest text-[#500000] mb-4">1234 5678 90</p>
+              <p className="font-serif text-[#500000]/70 mb-6">a.n Nova / Partner</p>
+              <button className="px-6 py-2 bg-[#C8A24C]/10 text-[#C8A24C] font-semibold rounded-full hover:bg-[#C8A24C]/20 transition-colors border border-[#C8A24C]/50">
+                Salin Rekening
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 7. RSVP SECTION */}
+      <section className="py-24 px-8 bg-[#500000] text-white">
+        <div className="max-w-2xl mx-auto">
+          <motion.div 
+            className="text-center mb-12"
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <h2 className="font-script text-6xl mb-4">RSVP</h2>
+            <p className="font-serif text-white/80">Mohon konfirmasi kehadiran Anda sebelum tanggal 10 Juni 2024</p>
+          </motion.div>
+
+          <motion.form 
+            className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 flex flex-col gap-6"
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <div>
+              <label className="block font-sans text-sm tracking-wider uppercase mb-2 text-white/80">Nama Anda</label>
+              <input type="text" className="w-full bg-white/5 border border-white/20 rounded-xl p-4 text-white focus:outline-none focus:border-[#C8A24C] transition-colors" placeholder="Masukkan nama..." />
+            </div>
+            <div>
+              <label className="block font-sans text-sm tracking-wider uppercase mb-2 text-white/80">Kehadiran</label>
+              <select className="w-full bg-white/5 border border-white/20 rounded-xl p-4 text-white focus:outline-none focus:border-[#C8A24C] transition-colors appearance-none">
+                <option value="hadir" className="text-black">Ya, Saya akan hadir</option>
+                <option value="tidak" className="text-black">Maaf, Saya tidak bisa hadir</option>
+              </select>
+            </div>
+            <div>
+              <label className="block font-sans text-sm tracking-wider uppercase mb-2 text-white/80">Jumlah Tamu</label>
+              <select className="w-full bg-white/5 border border-white/20 rounded-xl p-4 text-white focus:outline-none focus:border-[#C8A24C] transition-colors appearance-none">
+                <option value="1" className="text-black">1 Orang</option>
+                <option value="2" className="text-black">2 Orang</option>
+              </select>
+            </div>
+            <button type="button" className="w-full py-4 mt-4 bg-[#C8A24C] text-white font-bold tracking-widest uppercase rounded-xl hover:bg-[#b08b3a] transition-colors">
+              Kirim Konfirmasi
+            </button>
+          </motion.form>
+        </div>
+      </section>
+
+      {/* 8. FOOTER */}
+      <footer className="py-16 text-center border-t border-[#C8A24C]/30 bg-white/50">
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <h2 className="font-script text-5xl text-[#500000] mb-4">Nova & Partner</h2>
+          <p className="font-sans text-sm text-[#500000]/60 tracking-widest uppercase mb-8">Terima Kasih</p>
+          <p className="font-sans text-xs text-[#500000]/40">Powered by OnOurWeddingDay</p>
+        </motion.div>
+      </footer>
+
+      {/* Include extra children if injected from admin, just in case */}
+      {children && (
+        <div className="hidden">
+          {children}
+        </div>
+      )}
     </div>
   );
 }
