@@ -9,7 +9,6 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Invitations", href: "/invitations", icon: Paintbrush },
   { name: "Templates", href: "/templates", icon: LayoutTemplate },
-  { name: "Orders", href: "/orders", icon: ShoppingCart },
   { name: "Users", href: "/users", icon: Users },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
