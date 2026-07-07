@@ -18,8 +18,7 @@ export default async function AdminLayout({
   
   if (!dbUser || dbUser.role !== "ADMIN") {
     // Redirect non-admins to a normal user dashboard (or home for now)
-    // redirect("/");
-    // TODO: Temporarily allowing access to dashboard. Remove this comment when ready to enforce admin roles.
+    redirect("/");
   }
 
   return (
