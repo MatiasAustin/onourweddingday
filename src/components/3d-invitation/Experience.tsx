@@ -57,8 +57,8 @@ function CinematicScene({ data }: { data: any }) {
       ))}
 
       {/* SECTION: Names (Z = 0) */}
-      <group position={[0, -1, 0]}>
-        <Html center transform distanceFactor={15}>
+      <group position={[0, 0, 0]}>
+        <Html center transform distanceFactor={25}>
           <div ref={section2Ref} className="w-[800px] text-center bg-white/40 backdrop-blur-md p-16 rounded-[40px] border border-white/50 shadow-2xl opacity-0">
             <h2 className="font-script text-7xl text-[#500000]">
               {data.brideName || "Liliane"}
@@ -118,6 +118,39 @@ export default function Experience({ data, children }: ExperienceProps) {
           <span className="text-[#500000] text-sm font-medium mb-2 tracking-widest uppercase">Scroll</span>
           <div className="w-5 h-8 border-2 border-[#500000] rounded-full flex justify-center p-1">
              <div className="w-1 h-2 bg-[#500000] rounded-full animate-pulse"></div>
+          </div>
+        </div>
+
+        {/* Date Section */}
+        <div className="max-w-4xl w-full mx-auto text-center mb-32">
+          <div className="font-serif text-9xl text-[#500000] drop-shadow-sm">
+            {data.weddingDate ? new Date(data.weddingDate).getDate() : "15"}
+          </div>
+          <div className="font-script text-6xl text-[#500000]/80 -mt-6 mb-4">
+            {data.weddingDate ? new Date(data.weddingDate).toLocaleString('pt-BR', { month: 'long' }) : "Junho"}
+          </div>
+          <div className="font-serif tracking-widest text-[#500000] text-2xl uppercase">
+            {data.weddingDate ? new Date(data.weddingDate).getFullYear() : "2024"}
+          </div>
+        </div>
+
+        {/* Location & Gift Section */}
+        <div className="max-w-4xl w-full mx-auto flex flex-col md:flex-row gap-8 mb-16">
+          <div className="flex-1 bg-[#500000] text-white p-12 rounded-[40px] shadow-2xl transition-transform hover:-translate-y-2 duration-500">
+            <h3 className="font-script text-5xl mb-6">Cerimônia</h3>
+            <p className="font-serif leading-relaxed opacity-90 whitespace-pre-wrap text-lg">
+              {data.ceremonyLocation || "Paróquia Cristo Profeta\nR. Antônio José de Oliveira, 467\nBarra Funda, Apucarana - PR"}
+            </p>
+          </div>
+          
+          <div className="flex-1 bg-white/80 backdrop-blur-md p-12 rounded-[40px] shadow-2xl border border-white transition-transform hover:-translate-y-2 duration-500">
+            <h3 className="font-script text-5xl text-[#500000] mb-6">Presentes</h3>
+            <p className="font-serif text-lg leading-relaxed text-[#500000]/80 mb-6">
+              Caso queira nos presentear, sugerimos contribuir através do PIX:
+            </p>
+            <div className="font-mono text-xl text-center bg-[#fff1f2] p-4 rounded-xl text-[#500000] border border-[#500000]/20 select-all">
+              {data.pixKey || "41 998798618"}
+            </div>
           </div>
         </div>
 
