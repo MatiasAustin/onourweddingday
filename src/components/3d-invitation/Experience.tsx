@@ -30,7 +30,7 @@ function CinematicScene({ data }: { data: any }) {
     // After that, blend into the scroll-based targetZ.
     const time = state.clock.elapsedTime;
     
-    let targetZ = scrollOffset * 80;
+    let targetZ = scrollOffset * 40;
     
     if (time < 3) {
       // Intro phase: start at -50, smoothly glide to 0
@@ -41,7 +41,7 @@ function CinematicScene({ data }: { data: any }) {
       
       const introZ = THREE.MathUtils.lerp(-50, 0, ease);
       // If user starts scrolling during intro, add the scroll target
-      targetZ = introZ + (scrollOffset * 80);
+      targetZ = introZ + (scrollOffset * 40);
       
       // Fast damp during intro so it perfectly follows the ease curve
       groupRef.current.position.z = targetZ;
@@ -69,16 +69,12 @@ function CinematicScene({ data }: { data: any }) {
           if (opacity < 0) opacity = 0;
         }
         ref.current.style.opacity = opacity.toString();
-        // Also add slight scale effect for cinematic feel
-        const scale = THREE.MathUtils.mapLinear(worldZ, -25, 5, 0.8, 1.1);
-        ref.current.style.transform = `scale(${scale})`;
       }
     };
 
-    updateOpacity(section1Ref, 0);
-    updateOpacity(section2Ref, -20);
-    updateOpacity(section3Ref, -40);
-    updateOpacity(section4Ref, -60);
+    updateOpacity(section2Ref, 0);
+    updateOpacity(section3Ref, -20);
+    updateOpacity(section4Ref, -40);
   });
 
   return (
@@ -104,20 +100,8 @@ function CinematicScene({ data }: { data: any }) {
         </mesh>
       ))}
 
-      {/* SECTION 1: Cover (Z = 0) */}
-      <group position={[0, 0, 0]}>
-        <Html center transform distanceFactor={5}>
-          <div ref={section1Ref} className="w-[800px] text-center pointer-events-none select-none transition-opacity duration-75">
-            <h3 className="text-xl tracking-[0.3em] text-foreground/70 uppercase mb-4">Convite</h3>
-            <h1 className="font-script text-8xl md:text-9xl text-[#500000] drop-shadow-lg">
-              Digital Elegance
-            </h1>
-          </div>
-        </Html>
-      </group>
-
-      {/* SECTION 2: Names (Z = -20) */}
-      <group position={[0, -1, -20]}>
+      {/* SECTION 2: Names (Z = 0) */}
+      <group position={[0, -1, 0]}>
         <Html center transform distanceFactor={5}>
           <div ref={section2Ref} className="w-[800px] text-center bg-white/40 backdrop-blur-md p-16 rounded-[40px] border border-white/50 shadow-2xl transition-opacity duration-75">
             <h2 className="font-script text-7xl text-[#500000]">
@@ -134,8 +118,8 @@ function CinematicScene({ data }: { data: any }) {
         </Html>
       </group>
 
-      {/* SECTION 3: Date (Z = -40) */}
-      <group position={[0, 0, -40]}>
+      {/* SECTION 3: Date (Z = -20) */}
+      <group position={[0, 0, -20]}>
         <Html center transform distanceFactor={5}>
           <div ref={section3Ref} className="w-[600px] text-center transition-opacity duration-75">
             <div className="font-serif text-9xl text-[#500000]">
@@ -151,8 +135,8 @@ function CinematicScene({ data }: { data: any }) {
         </Html>
       </group>
       
-      {/* SECTION 4: Location & Gift (Z = -60) */}
-      <group position={[0, 0, -60]}>
+      {/* SECTION 4: Location & Gift (Z = -40) */}
+      <group position={[0, 0, -40]}>
         <Html center transform distanceFactor={5}>
           <div ref={section4Ref} className="w-[800px] flex gap-8 transition-opacity duration-75">
             <div className="flex-1 bg-[#500000] text-white p-12 rounded-[40px] shadow-2xl">
