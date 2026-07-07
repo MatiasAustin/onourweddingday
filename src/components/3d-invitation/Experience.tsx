@@ -14,16 +14,71 @@ function CinematicScene({ data }: { data: any }) {
   const scroll = useScroll();
   const groupRef = useRef<THREE.Group>(null);
 
+  const section1Ref = useRef<HTMLDivElement>(null);
+  const section2Ref = useRef<HTMLDivElement>(null);
+  const section3Ref = useRef<HTMLDivElement>(null);
+  const section4Ref = useRef<HTMLDivElement>(null);
+
   useFrame((state, delta) => {
     if (!groupRef.current) return;
     
-    // Smooth cinematic camera movement along Z axis based on scroll progress
     const scrollOffset = scroll.offset; // 0 to 1
     
-    // Move the entire scene towards the camera to simulate flying through
-    // Start at z=0, move to z = 40
-    const targetZ = scrollOffset * 40;
-    groupRef.current.position.z = THREE.MathUtils.damp(groupRef.current.position.z, targetZ, 4, delta);
+    // INTRO ANIMATION LOGIC:
+    // state.clock.elapsedTime tells us how many seconds have passed since mount.
+    // If we are in the first 2 seconds, animate from Z = -50 to Z = 0
+    // After that, blend into the scroll-based targetZ.
+    const time = state.clock.elapsedTime;
+    
+    let targetZ = scrollOffset * 80;
+    
+    if (time < 3) {
+      // Intro phase: start at -50, smoothly glide to 0
+      // We'll use an easing function so it slows down as it reaches 0
+      const progress = Math.min(time / 2.5, 1);
+      // Easing function (easeOutExpo)
+      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      
+      const introZ = THREE.MathUtils.lerp(-50, 0, ease);
+      // If user starts scrolling during intro, add the scroll target
+      targetZ = introZ + (scrollOffset * 80);
+      
+      // Fast damp during intro so it perfectly follows the ease curve
+      groupRef.current.position.z = targetZ;
+    } else {
+      // Normal scroll behavior
+      groupRef.current.position.z = THREE.MathUtils.damp(groupRef.current.position.z, targetZ, 4, delta);
+    }
+    
+    // Dynamic Opacity based on world Z position
+    // Camera is at Z=5. If an object's world Z > 4 (meaning it's passing the camera), it should fade out.
+    // We can calculate world Z of each section:
+    const currentZ = groupRef.current.position.z;
+    
+    const updateOpacity = (ref: React.RefObject<HTMLDivElement | null>, zPos: number) => {
+      if (ref.current) {
+        const worldZ = currentZ + zPos;
+        // Fade in when worldZ > -20, full opaque between -15 and 2, fade out abruptly after 3
+        let opacity = 0;
+        if (worldZ > -25 && worldZ < 4) {
+          opacity = THREE.MathUtils.mapLinear(worldZ, -25, -10, 0, 1);
+          if (opacity > 1) opacity = 1;
+        }
+        if (worldZ >= 4) {
+          opacity = THREE.MathUtils.mapLinear(worldZ, 4, 6, 1, 0);
+          if (opacity < 0) opacity = 0;
+        }
+        ref.current.style.opacity = opacity.toString();
+        // Also add slight scale effect for cinematic feel
+        const scale = THREE.MathUtils.mapLinear(worldZ, -25, 5, 0.8, 1.1);
+        ref.current.style.transform = `scale(${scale})`;
+      }
+    };
+
+    updateOpacity(section1Ref, 0);
+    updateOpacity(section2Ref, -20);
+    updateOpacity(section3Ref, -40);
+    updateOpacity(section4Ref, -60);
   });
 
   return (
@@ -33,26 +88,26 @@ function CinematicScene({ data }: { data: any }) {
       <directionalLight position={[10, 10, 5]} intensity={1.5} color="#ffe4e6" />
       <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#fecdd3" />
       
-      {/* Floating Particles/Petals (Mockup) */}
-      {Array.from({ length: 30 }).map((_, i) => (
+      {/* Floating Particles/Petals */}
+      {Array.from({ length: 50 }).map((_, i) => (
         <mesh 
           key={i} 
           position={[
-            (Math.random() - 0.5) * 20, 
-            (Math.random() - 0.5) * 20, 
-            -Math.random() * 40
+            (Math.random() - 0.5) * 30, 
+            (Math.random() - 0.5) * 30, 
+            -Math.random() * 80
           ]}
           rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}
         >
-          <planeGeometry args={[0.2, 0.2]} />
-          <meshStandardMaterial color="#881337" side={THREE.DoubleSide} opacity={0.6} transparent />
+          <planeGeometry args={[0.3, 0.3]} />
+          <meshStandardMaterial color="#881337" side={THREE.DoubleSide} opacity={0.4} transparent />
         </mesh>
       ))}
 
-      {/* SECTION 1: Cover (Z = -2) */}
-      <group position={[0, 0, -2]}>
-        <Html center transform distanceFactor={10}>
-          <div className="w-[800px] text-center pointer-events-none select-none">
+      {/* SECTION 1: Cover (Z = 0) */}
+      <group position={[0, 0, 0]}>
+        <Html center transform distanceFactor={5}>
+          <div ref={section1Ref} className="w-[800px] text-center pointer-events-none select-none transition-opacity duration-75">
             <h3 className="text-xl tracking-[0.3em] text-foreground/70 uppercase mb-4">Convite</h3>
             <h1 className="font-script text-8xl md:text-9xl text-[#500000] drop-shadow-lg">
               Digital Elegance
@@ -61,10 +116,10 @@ function CinematicScene({ data }: { data: any }) {
         </Html>
       </group>
 
-      {/* SECTION 2: Names (Z = -12) */}
-      <group position={[0, -1, -12]}>
-        <Html center transform distanceFactor={10}>
-          <div className="w-[800px] text-center bg-white/40 backdrop-blur-md p-16 rounded-[40px] border border-white/50 shadow-2xl">
+      {/* SECTION 2: Names (Z = -20) */}
+      <group position={[0, -1, -20]}>
+        <Html center transform distanceFactor={5}>
+          <div ref={section2Ref} className="w-[800px] text-center bg-white/40 backdrop-blur-md p-16 rounded-[40px] border border-white/50 shadow-2xl transition-opacity duration-75">
             <h2 className="font-script text-7xl text-[#500000]">
               {data.brideName || "Liliane"}
             </h2>
@@ -79,10 +134,10 @@ function CinematicScene({ data }: { data: any }) {
         </Html>
       </group>
 
-      {/* SECTION 3: Date (Z = -22) */}
-      <group position={[0, 0, -22]}>
-        <Html center transform distanceFactor={10}>
-          <div className="w-[600px] text-center">
+      {/* SECTION 3: Date (Z = -40) */}
+      <group position={[0, 0, -40]}>
+        <Html center transform distanceFactor={5}>
+          <div ref={section3Ref} className="w-[600px] text-center transition-opacity duration-75">
             <div className="font-serif text-9xl text-[#500000]">
               {data.weddingDate ? new Date(data.weddingDate).getDate() : "15"}
             </div>
@@ -96,13 +151,13 @@ function CinematicScene({ data }: { data: any }) {
         </Html>
       </group>
       
-      {/* SECTION 4: Location & Gift (Z = -32) */}
-      <group position={[0, 0, -32]}>
-        <Html center transform distanceFactor={10}>
-          <div className="w-[800px] flex gap-8">
+      {/* SECTION 4: Location & Gift (Z = -60) */}
+      <group position={[0, 0, -60]}>
+        <Html center transform distanceFactor={5}>
+          <div ref={section4Ref} className="w-[800px] flex gap-8 transition-opacity duration-75">
             <div className="flex-1 bg-[#500000] text-white p-12 rounded-[40px] shadow-2xl">
               <h3 className="font-script text-5xl mb-6">Cerimônia</h3>
-              <p className="font-serif leading-relaxed opacity-90">
+              <p className="font-serif leading-relaxed opacity-90 whitespace-pre-wrap">
                 {data.ceremonyLocation || "Paróquia Cristo Profeta\nR. Antônio José de Oliveira, 467\nBarra Funda, Apucarana - PR"}
               </p>
             </div>
