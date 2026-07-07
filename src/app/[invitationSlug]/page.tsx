@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { BlockRenderer } from "@/components/blocks/BlockRenderer";
+import Experience from "@/components/3d-invitation/Experience";
 
 interface InvitationPageProps {
   params: Promise<{
@@ -46,6 +47,11 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
   // Parse global settings if they exist (e.g., custom colors, fonts)
   // For now, we rely on the global layout styles defined in layout.tsx
   // const globalSettings = invitation.settingsJSON as any;
+
+  // Check if this invitation uses the 3D cinematic template
+  if (invitation.templateId === "elegance-3d") {
+    return <Experience data={invitation.settingsJSON || {}} />;
+  }
 
   return (
     <main className="min-h-screen flex flex-col bg-background text-foreground">
