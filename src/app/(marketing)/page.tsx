@@ -154,7 +154,7 @@ export default function LandingPage() {
                 <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-6 shadow-md border border-secondary/20">
                   <img src={template.image} alt={template.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out" />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="bg-white text-primary px-6 py-2 rounded-full font-medium shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">Preview</span>
+                    <span className="bg-white text-primary px-6 py-2 rounded-full font-medium shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">Preview & Order</span>
                   </div>
                 </div>
                 <h3 className="font-serif text-xl font-medium text-center">{template.name}</h3>
@@ -167,68 +167,6 @@ export default function LandingPage() {
             <Link href="/templates" className="inline-block border-2 border-primary text-primary px-8 py-3 rounded-full font-medium hover:bg-primary hover:text-white transition-colors">
               View All Templates
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section id="pricing" className="py-24 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-foreground mb-6">Simple, Transparent Pricing</h2>
-            <p className="text-foreground/70">Start for free, upgrade when you need more premium features.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Free Tier */}
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="bg-white p-10 rounded-3xl border border-secondary/50 shadow-sm relative overflow-hidden"
-            >
-              <h3 className="font-serif text-2xl font-medium mb-2">Essential</h3>
-              <p className="text-foreground/60 text-sm mb-6">Perfect for intimate weddings.</p>
-              <div className="mb-8">
-                <span className="text-5xl font-serif font-bold">Free</span>
-              </div>
-              <ul className="space-y-4 mb-10">
-                {["Up to 50 guests RSVP", "Standard templates", "Basic photo gallery", "OnOurWeddingDay branding"].map((feature, i) => (
-                  <li key={i} className="flex items-center text-foreground/80">
-                    <span className="text-primary mr-3">✓</span> {feature}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/sign-up" className="block text-center w-full bg-secondary/50 text-foreground py-3.5 rounded-xl font-medium hover:bg-secondary transition-colors">
-                Get Started
-              </Link>
-            </motion.div>
-
-            {/* Premium Tier */}
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="bg-primary text-white p-10 rounded-3xl shadow-xl relative overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 bg-white/20 text-white text-xs font-medium px-4 py-1.5 rounded-bl-xl uppercase tracking-wider">Most Popular</div>
-              <h3 className="font-serif text-2xl font-medium mb-2">Premium</h3>
-              <p className="text-white/80 text-sm mb-6">For the perfect, unlimited experience.</p>
-              <div className="mb-8">
-                <span className="text-5xl font-serif font-bold">$49</span>
-                <span className="text-white/70"> / one-time</span>
-              </div>
-              <ul className="space-y-4 mb-10">
-                {["Unlimited guests RSVP", "Premium designer templates", "Unlimited high-res gallery", "Custom domain support", "No branding"].map((feature, i) => (
-                  <li key={i} className="flex items-center text-white/90">
-                    <span className="text-white mr-3">✓</span> {feature}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/sign-up" className="block text-center w-full bg-white text-primary py-3.5 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-md">
-                Upgrade Now
-              </Link>
-            </motion.div>
           </div>
         </div>
       </section>
