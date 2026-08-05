@@ -71,8 +71,8 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     
     // Quote
     quoteBgUrl: invitation.settingsJSON?.quoteBgUrl || "",
-    quoteBgColor: invitation.settingsJSON?.quoteBgColor || "",
-    quoteTextColor: invitation.settingsJSON?.quoteTextColor || "",
+    quoteBgColor: invitation.settingsJSON?.quoteBgColor || "#4A0E17",
+    quoteTextColor: invitation.settingsJSON?.quoteTextColor || "#C5A059",
     quoteIconColor: invitation.settingsJSON?.quoteIconColor || "",
     quoteSourceColor: invitation.settingsJSON?.quoteSourceColor || "",
     quoteText: invitation.settingsJSON?.quoteText || "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri...",
@@ -100,10 +100,10 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     groomParents: invitation.settingsJSON?.groomParents || "Bapak Abu Hasan & Ibu Imbriyah",
     
     // Our Story
-    storyBgColor: invitation.settingsJSON?.storyBgColor || "rgba(255,255,255,0.5)",
-    storyTitleColor: invitation.settingsJSON?.storyTitleColor || "var(--primary)",
-    storyLineColor: invitation.settingsJSON?.storyLineColor || "var(--secondary)",
-    storyTextColor: invitation.settingsJSON?.storyTextColor || "var(--primary)",
+    storyBgColor: invitation.settingsJSON?.storyBgColor || "#4A0E17",
+    storyTitleColor: invitation.settingsJSON?.storyTitleColor || "#C5A059",
+    storyLineColor: invitation.settingsJSON?.storyLineColor || "#C5A059",
+    storyTextColor: invitation.settingsJSON?.storyTextColor || "#ffffff",
     
     story1Date: invitation.settingsJSON?.story1Date || "Pertama Bertemu",
     story1Title: invitation.settingsJSON?.story1Title || "Pertama Bertemu",
@@ -174,13 +174,13 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     
     // Gift
     giftBgUrl: invitation.settingsJSON?.giftBgUrl || "",
-    giftBgColor: invitation.settingsJSON?.giftBgColor || "",
-    giftTitleColor: invitation.settingsJSON?.giftTitleColor || "",
-    giftIconColor: invitation.settingsJSON?.giftIconColor || "",
-    giftTextColor: invitation.settingsJSON?.giftTextColor || "",
-    giftCardBgColor: invitation.settingsJSON?.giftCardBgColor || "",
-    giftCardTitleColor: invitation.settingsJSON?.giftCardTitleColor || "",
-    giftCardTextColor: invitation.settingsJSON?.giftCardTextColor || "",
+    giftBgColor: invitation.settingsJSON?.giftBgColor || "#4A0E17",
+    giftTitleColor: invitation.settingsJSON?.giftTitleColor || "#C5A059",
+    giftIconColor: invitation.settingsJSON?.giftIconColor || "#C5A059",
+    giftTextColor: invitation.settingsJSON?.giftTextColor || "#ffffff",
+    giftCardBgColor: invitation.settingsJSON?.giftCardBgColor || "#F7F3EC",
+    giftCardTitleColor: invitation.settingsJSON?.giftCardTitleColor || "#4A0E17",
+    giftCardTextColor: invitation.settingsJSON?.giftCardTextColor || "#4A0E17",
     bank1Name: invitation.settingsJSON?.bank1Name || "BRI",
     bank1Holder: invitation.settingsJSON?.bank1Holder || "NOVA NURSANIAH",
     bank1Number: invitation.settingsJSON?.bank1Number || "3260 0104 1138 532",
