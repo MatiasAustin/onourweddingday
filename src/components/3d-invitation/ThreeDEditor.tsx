@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { updateInvitationSettings } from "@/app/editor/actions";
-import { Save, ExternalLink, ChevronDown, ChevronRight, Image as ImageIcon, MapPin, Users, Heart, Camera, Gift, Type, Layout, Palette, Code, Eye, Music, Smartphone, Tablet, Monitor } from "lucide-react";
+import { Save, ExternalLink, ChevronDown, ChevronRight, Image as ImageIcon, MapPin, Users, Heart, Camera, Gift, Type, Layout, Palette, Code, Eye, Music, Smartphone, Tablet, Monitor, BookOpen } from "lucide-react";
 import Link from "next/link";
 import Experience from "./Experience";
 import FileUpload from "@/components/ui/FileUpload";
@@ -47,6 +47,9 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     // Hero
     heroBgUrl: invitation.settingsJSON?.heroBgUrl || "",
     heroTextColor: invitation.settingsJSON?.heroTextColor || "#ffffff",
+    heroOverlayColor: invitation.settingsJSON?.heroOverlayColor || "#000000",
+    heroOverlayOpacity: invitation.settingsJSON?.heroOverlayOpacity || "0.4",
+    heroTextDelay: invitation.settingsJSON?.heroTextDelay || "2",
     brideName: invitation.settingsJSON?.brideName || "Nova",
     groomName: invitation.settingsJSON?.groomName || "Partner",
     weddingDate: invitation.settingsJSON?.weddingDate || "2024-06-15T19:30",
@@ -78,6 +81,28 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     brideParents: invitation.settingsJSON?.brideParents || "Bapak Fulan & Ibu Fulanah",
     groomPhotoUrl: invitation.settingsJSON?.groomPhotoUrl || "",
     groomParents: invitation.settingsJSON?.groomParents || "Bapak Fulan & Ibu Fulanah",
+    
+    // Our Story
+    storyBgColor: invitation.settingsJSON?.storyBgColor || "rgba(255,255,255,0.5)",
+    storyTitleColor: invitation.settingsJSON?.storyTitleColor || "var(--primary)",
+    storyLineColor: invitation.settingsJSON?.storyLineColor || "var(--secondary)",
+    storyTextColor: invitation.settingsJSON?.storyTextColor || "var(--primary)",
+    
+    story1Date: invitation.settingsJSON?.story1Date || "Maret 2020",
+    story1Title: invitation.settingsJSON?.story1Title || "Pertama Bertemu",
+    story1Desc: invitation.settingsJSON?.story1Desc || "Berawal dari pandangan pertama di sebuah kafe.",
+    story1Image: invitation.settingsJSON?.story1Image || "",
+    
+    story2Date: invitation.settingsJSON?.story2Date || "Desember 2022",
+    story2Title: invitation.settingsJSON?.story2Title || "Resmi Bersama",
+    story2Desc: invitation.settingsJSON?.story2Desc || "Hari di mana kami memutuskan untuk saling mengikat hati.",
+    story2Image: invitation.settingsJSON?.story2Image || "",
+    
+    story3Date: invitation.settingsJSON?.story3Date || "Januari 2024",
+    story3Title: invitation.settingsJSON?.story3Title || "Lamaran",
+    story3Desc: invitation.settingsJSON?.story3Desc || "Sebuah janji suci terucap untuk melangkah ke jenjang yang lebih serius.",
+    story3Image: invitation.settingsJSON?.story3Image || "",
+
     customHtml_couple: invitation.settingsJSON?.customHtml_couple || "",
     customCss_couple: invitation.settingsJSON?.customCss_couple || "",
     customJs_couple: invitation.settingsJSON?.customJs_couple || "",
@@ -104,10 +129,11 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     
     // Gallery
     galleryBgUrl: invitation.settingsJSON?.galleryBgUrl || "",
-    galleryBgColor: invitation.settingsJSON?.galleryBgColor || "",
-    galleryTitleColor: invitation.settingsJSON?.galleryTitleColor || "",
-    galleryIconColor: invitation.settingsJSON?.galleryIconColor || "",
+    galleryTitleColor: invitation.settingsJSON?.galleryTitleColor || "var(--primary)",
+    galleryIconColor: invitation.settingsJSON?.galleryIconColor || "var(--secondary)",
+    galleryBgColor: invitation.settingsJSON?.galleryBgColor || "rgba(255,255,255,0.3)",
     galleryPhotos: invitation.settingsJSON?.galleryPhotos || "",
+    galleryMode: invitation.settingsJSON?.galleryMode || "grid",
     customHtml_gallery: invitation.settingsJSON?.customHtml_gallery || "",
     customCss_gallery: invitation.settingsJSON?.customCss_gallery || "",
     customJs_gallery: invitation.settingsJSON?.customJs_gallery || "",
@@ -317,6 +343,14 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 <InputField label="Global Background Color" name="bgColor" type="color" />
               </AccordionItem>
 
+              <AccordionItem id="hero" title="Hero / Utama" icon={Heart}>
+                <FileUpload label="Upload Background (Photo/Video)" name="heroBgUrl" value={formData.heroBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                <InputField label="Hero Text Color" name="heroTextColor" type="color" />
+                <InputField label="Overlay Color" name="heroOverlayColor" type="color" />
+                <InputField label="Overlay Opacity (0.0 to 1.0)" name="heroOverlayOpacity" placeholder="0.5" />
+                <InputField label="Text Reveal Delay (Seconds)" name="heroTextDelay" placeholder="e.g. 2 or 5" type="number" />
+              </AccordionItem>
+
               <AccordionItem id="typography" title="Tipografi & Format" icon={Type}>
                 <InputField label="Title Font Family (Google Fonts)" name="fontFamilyTitle" placeholder="e.g. Great Vibes" />
                 <InputField label="Body Font Family (Google Fonts)" name="fontFamilyBody" placeholder="e.g. Montserrat" />
@@ -344,6 +378,62 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                   </div>
                 </div>
               </AccordionItem>
+
+              <AccordionItem id="couple" title="Mempelai" icon={Users}>
+                <InputField label="Warna Background Section" name="coupleBgColor" type="color" />
+                <InputField label="Warna Teks Judul" name="coupleTitleColor" type="color" />
+                <InputField label="Warna Teks Subjudul" name="coupleSubtitleColor" type="color" />
+                <InputField label="Warna Nama Mempelai" name="coupleNameColor" type="color" />
+                <InputField label="Warna Aksen (Batas Foto & Dan)" name="coupleAccentColor" type="color" />
+                <InputField label="Warna Teks Orang Tua" name="coupleTextColor" type="color" />
+                <div className="space-y-6 mt-4">
+                  <div className="p-4 bg-black/5 rounded-xl border">
+                    <h4 className="font-bold mb-4 flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-pink-500" /> Mempelai Wanita</h4>
+                    <InputField label="Nama Panggilan" name="brideName" />
+                    <InputField label="Nama Orang Tua" name="brideParents" placeholder="Putri dari Bapak X & Ibu Y" />
+                    <FileUpload label="Upload Foto Wanita" name="bridePhotoUrl" value={formData.bridePhotoUrl} onChange={handleUploadChange} placeholder="https://..." />
+                  </div>
+                  <div className="p-4 bg-black/5 rounded-xl border">
+                    <h4 className="font-bold mb-4 flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-blue-500" /> Mempelai Pria</h4>
+                    <InputField label="Nama Panggilan" name="groomName" />
+                    <InputField label="Nama Orang Tua" name="groomParents" placeholder="Putra dari Bapak X & Ibu Y" />
+                    <FileUpload label="Upload Foto Pria" name="groomPhotoUrl" value={formData.groomPhotoUrl} onChange={handleUploadChange} placeholder="https://..." />
+                  </div>
+                </div>
+              </AccordionItem>
+
+              <AccordionItem id="story" title="Kisah Kami" icon={BookOpen}>
+                <InputField label="Warna Background Section" name="storyBgColor" type="color" />
+                <InputField label="Warna Judul" name="storyTitleColor" type="color" />
+                <InputField label="Warna Garis Timeline" name="storyLineColor" type="color" />
+                <InputField label="Warna Teks Deskripsi" name="storyTextColor" type="color" />
+                
+                <div className="space-y-6 mt-4">
+                  <div className="p-4 bg-black/5 rounded-xl border space-y-3">
+                    <h4 className="font-bold flex items-center gap-2">Cerita 1</h4>
+                    <InputField label="Tanggal/Tahun" name="story1Date" placeholder="Maret 2020" />
+                    <InputField label="Judul Cerita" name="story1Title" placeholder="Pertama Bertemu" />
+                    <InputField label="Deskripsi Cerita" name="story1Desc" placeholder="Berawal dari..." />
+                    <FileUpload label="Upload Foto Cerita 1" name="story1Image" value={formData.story1Image} onChange={handleUploadChange} placeholder="https://..." />
+                  </div>
+                  
+                  <div className="p-4 bg-black/5 rounded-xl border space-y-3">
+                    <h4 className="font-bold flex items-center gap-2">Cerita 2</h4>
+                    <InputField label="Tanggal/Tahun" name="story2Date" placeholder="Desember 2022" />
+                    <InputField label="Judul Cerita" name="story2Title" placeholder="Resmi Bersama" />
+                    <InputField label="Deskripsi Cerita" name="story2Desc" placeholder="Hari di mana..." />
+                    <FileUpload label="Upload Foto Cerita 2" name="story2Image" value={formData.story2Image} onChange={handleUploadChange} placeholder="https://..." />
+                  </div>
+
+                  <div className="p-4 bg-black/5 rounded-xl border space-y-3">
+                    <h4 className="font-bold flex items-center gap-2">Cerita 3</h4>
+                    <InputField label="Tanggal/Tahun" name="story3Date" placeholder="Januari 2024" />
+                    <InputField label="Judul Cerita" name="story3Title" placeholder="Lamaran" />
+                    <InputField label="Deskripsi Cerita" name="story3Desc" placeholder="Sebuah janji..." />
+                    <FileUpload label="Upload Foto Cerita 3" name="story3Image" value={formData.story3Image} onChange={handleUploadChange} placeholder="https://..." />
+                  </div>
+                </div>
+              </AccordionItem>
             </>
           )}
 
@@ -362,68 +452,6 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                   <InputField label="Title Color" name="coverTitleColor" type="color" />
                   <InputField label="Button Background" name="coverButtonBgColor" type="color" />
                   <InputField label="Button Text Color" name="coverButtonTextColor" type="color" />
-                </div>
-              </>
-            )}
-          </AccordionItem>
-
-          {/* HERO */}
-          <AccordionItem id="hero" title="Hero Section" icon={Layout}>
-            {isCodeMode ? <CodeEditorGroup sectionId="hero" /> : (
-              <>
-                <FileUpload label="Background Media (URL/Upload)" name="heroBgUrl" value={formData.heroBgUrl} onChange={handleUploadChange} placeholder="https://..." />
-                <InputField label="Text Color" name="heroTextColor" type="color" />
-                <div className="grid grid-cols-2 gap-4 mt-4">
-                  <InputField label="Bride Name" name="brideName" />
-                  <InputField label="Groom Name" name="groomName" />
-                </div>
-                <InputField label="Wedding Date & Time" name="weddingDate" type="datetime-local" />
-              </>
-            )}
-          </AccordionItem>
-
-          {/* QUOTE */}
-          <AccordionItem id="quote" title="Quote Section" icon={Type}>
-            {isCodeMode ? <CodeEditorGroup sectionId="quote" /> : (
-              <>
-                <FileUpload label="Background Media" name="quoteBgUrl" value={formData.quoteBgUrl} onChange={handleUploadChange} placeholder="https://..." />
-                <div className="grid grid-cols-2 gap-4">
-                  <InputField label="Section Background Color" name="quoteBgColor" type="color" />
-                  <InputField label="Quote Text Color" name="quoteTextColor" type="color" />
-                  <InputField label="Quote Icon Color" name="quoteIconColor" type="color" />
-                  <InputField label="Quote Source Color" name="quoteSourceColor" type="color" />
-                </div>
-                <InputField label="Quote Text" name="quoteText" multiline />
-                <InputField label="Quote Source" name="quoteSource" placeholder="e.g. Ar-Rum: 21" />
-              </>
-            )}
-          </AccordionItem>
-
-          {/* COUPLE */}
-          <AccordionItem id="couple" title="Mempelai Section" icon={Heart}>
-            {isCodeMode ? <CodeEditorGroup sectionId="couple" /> : (
-              <>
-                <FileUpload label="Background Media" name="coupleBgUrl" value={formData.coupleBgUrl} onChange={handleUploadChange} placeholder="https://..." />
-                
-                <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Section Colors</h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <InputField label="Background Color" name="coupleBgColor" type="color" />
-                  <InputField label="Title Color" name="coupleTitleColor" type="color" />
-                  <InputField label="Subtitle Color" name="coupleSubtitleColor" type="color" />
-                  <InputField label="Accent Color (&)" name="coupleAccentColor" type="color" />
-                  <InputField label="Name Color" name="coupleNameColor" type="color" />
-                  <InputField label="Text Color" name="coupleTextColor" type="color" />
-                </div>
-
-                <div className="p-4 bg-white border border-secondary/30 rounded-lg space-y-4 mb-4 mt-4">
-                  <h4 className="text-xs font-bold text-primary uppercase">Bride</h4>
-                  <FileUpload label="Photo" name="bridePhotoUrl" value={formData.bridePhotoUrl} onChange={handleUploadChange} placeholder="https://..." />
-                  <InputField label="Parents Name" name="brideParents" placeholder="Putri dari..." />
-                </div>
-                <div className="p-4 bg-white border border-secondary/30 rounded-lg space-y-4">
-                  <h4 className="text-xs font-bold text-primary uppercase">Groom</h4>
-                  <FileUpload label="Photo" name="groomPhotoUrl" value={formData.groomPhotoUrl} onChange={handleUploadChange} placeholder="https://..." />
-                  <InputField label="Parents Name" name="groomParents" placeholder="Putra dari..." />
                 </div>
               </>
             )}
@@ -469,19 +497,26 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
           </AccordionItem>
 
           {/* GALLERY */}
-          <AccordionItem id="gallery" title="Galeri Section" icon={Camera}>
-            {isCodeMode ? <CodeEditorGroup sectionId="gallery" /> : (
+          <AccordionItem id="gallery" title="Galeri" icon={Camera}>
+             {isCodeMode ? <CodeEditorGroup sectionId="gallery" /> : (
               <>
-                <FileUpload label="Background Media" name="galleryBgUrl" value={formData.galleryBgUrl} onChange={handleUploadChange} placeholder="https://..." />
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <InputField label="Background Color" name="galleryBgColor" type="color" />
-                  <InputField label="Title Color" name="galleryTitleColor" type="color" />
-                  <InputField label="Icon Color" name="galleryIconColor" type="color" />
+                <InputField label="Warna Background Section" name="galleryBgColor" type="color" />
+                <InputField label="Warna Judul" name="galleryTitleColor" type="color" />
+                <InputField label="Warna Ikon Kamera" name="galleryIconColor" type="color" />
+                <div className="mb-4">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">Gallery Mode</label>
+                  <select
+                    name="galleryMode"
+                    value={formData.galleryMode as string}
+                    onChange={handleChange as any}
+                    className="w-full px-3 py-2 rounded-lg border border-secondary bg-white focus:bg-white focus:ring-2 focus:ring-primary/50 transition-colors text-sm"
+                  >
+                    <option value="grid">Grid Biasa</option>
+                    <option value="slider">Auto Slide Looping (Korsel)</option>
+                    <option value="stars">Twinkling Stars (Acak & Elegan)</option>
+                  </select>
                 </div>
-
-                <FileUpload label="Photos (URL/Upload)" name="galleryPhotos" value={formData.galleryPhotos} onChange={handleUploadChange} placeholder="Upload photos..." multiline />
-                <p className="text-xs text-foreground/50 mt-1 mb-4">Pisahkan dengan koma.</p>
+                <FileUpload label="Gallery Photos (Pisahkan URL dengan koma)" name="galleryPhotos" value={formData.galleryPhotos} onChange={handleUploadChange} placeholder="https://..., https://..." multiline />
               </>
             )}
           </AccordionItem>

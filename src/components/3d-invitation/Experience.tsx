@@ -50,6 +50,40 @@ const CustomInjector = ({ html, css, js }: { html?: string, css?: string, js?: s
   );
 };
 
+const TwinklingStarsGallery = ({ photos }: { photos: string[] }) => {
+  return (
+    <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black/5 mt-8">
+       {photos.map((photo, i) => {
+          const size = 100 + (Math.random() * 150);
+          const top = Math.random() * 80;
+          const left = Math.random() * 80;
+          const delay = Math.random() * 5;
+          const duration = 4 + (Math.random() * 4);
+          return (
+             <div 
+               key={i} 
+               className="absolute rounded-2xl shadow-xl overflow-hidden border-2 border-white/50"
+               style={{ 
+                 width: size, height: size, top: `${top}%`, left: `${left}%`,
+                 animation: `twinkle ${duration}s infinite alternate ${delay}s ease-in-out`,
+                 opacity: 0
+               }}
+             >
+                <img src={photo.trim()} className="w-full h-full object-cover" />
+             </div>
+          )
+       })}
+       <style dangerouslySetInnerHTML={{__html: `
+         @keyframes twinkle {
+           0% { opacity: 0; transform: scale(0.8); }
+           50% { opacity: 1; transform: scale(1.05); }
+           100% { opacity: 0; transform: scale(0.8); }
+         }
+       `}} />
+    </div>
+  )
+}
+
 interface ExperienceProps {
   data: any;
   children?: React.ReactNode;
@@ -59,7 +93,7 @@ interface ExperienceProps {
 export default function Experience({ data, children, previewMode = "desktop" }: ExperienceProps) {
   const [mounted, setMounted] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
-  const [isVideoFinished, setIsVideoFinished] = useState(false);
+  const [isHeroTextVisible, setIsHeroTextVisible] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
@@ -68,16 +102,16 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
     setMounted(true);
   }, []);
 
-  // Fallback timer starts only AFTER cover is opened
+  // Text Reveal Timer starts only AFTER cover is opened
   useEffect(() => {
     if (isOpened) {
-      // If video doesn't end (e.g. error or very long), show text anyway after 10s
+      const delay = parseFloat(data.heroTextDelay || "2") * 1000;
       const timer = setTimeout(() => {
-        setIsVideoFinished(true);
-      }, 10000);
+        setIsHeroTextVisible(true);
+      }, delay);
       return () => clearTimeout(timer);
     }
-  }, [isOpened]);
+  }, [isOpened, data.heroTextDelay]);
 
   // Handle Music and Hero Video Playback
   useEffect(() => {
@@ -116,7 +150,6 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
              loop={!isHero} 
              muted 
              playsInline 
-             onEnded={() => isHero && setIsVideoFinished(true)}
              className={`absolute inset-0 w-full h-full object-cover ${!isHero ? 'opacity-40' : 'opacity-100'}`}
              src={url} 
            />
@@ -125,12 +158,6 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
              src={url} 
              className={`absolute inset-0 w-full h-full object-cover ${!isHero ? 'opacity-40' : 'opacity-100'}`}
              alt="Background" 
-             onLoad={() => {
-               if (isHero) {
-                 // If hero is just an image, show text immediately
-                 setIsVideoFinished(true);
-               }
-             }}
            />
         )}
       </div>
@@ -247,8 +274,11 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       <section className="relative w-full flex flex-col items-center justify-center overflow-hidden" style={{ minHeight: exactScreenHeight }}>
         {renderBg(data.heroBgUrl, "bg-black", true)}
         
+        {/* Dynamic Overlay */}
+        <div className="absolute inset-0 w-full h-full z-0 transition-opacity duration-1000" style={{ backgroundColor: data.heroOverlayColor || '#000000', opacity: isHeroTextVisible ? (data.heroOverlayOpacity || '0.4') : '0' }} />
+        
         {/* Content Layer (Only animate in if isOpened is true) */}
-        {isVideoFinished && isOpened && (
+        {isHeroTextVisible && isOpened && (
           <motion.div 
             className="relative z-10 text-center p-8"
             style={{ color: data.heroTextColor || '#ffffff' }}
@@ -359,6 +389,45 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
         <CustomInjector html={data.customHtml_couple} css={data.customCss_couple} js={data.customJs_couple} />
       </section>
 
+      {/* 3.5 OUR STORY SECTION */}
+      <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.storyBgColor || 'rgba(255,255,255,0.5)' }}>
+         <div className="relative z-10 max-w-4xl mx-auto">
+           <motion.div className="text-center mb-16" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+             <h2 className="font-script text-6xl mb-4" style={{ color: data.storyTitleColor || 'var(--primary)' }}>Kisah Kami</h2>
+           </motion.div>
+           
+           <div className="relative border-l-2 ml-4 md:ml-0 md:border-l-0" style={{ borderColor: data.storyLineColor || 'var(--secondary)' }}>
+             {/* Desktop Timeline Line */}
+             <div className="hidden md:block absolute top-0 bottom-0 left-1/2 -ml-[1px] w-0.5" style={{ backgroundColor: data.storyLineColor || 'var(--secondary)' }} />
+             
+             {[
+               { date: data.story1Date, title: data.story1Title, desc: data.story1Desc, img: data.story1Image },
+               { date: data.story2Date, title: data.story2Title, desc: data.story2Desc, img: data.story2Image },
+               { date: data.story3Date, title: data.story3Title, desc: data.story3Desc, img: data.story3Image },
+             ].filter(s => s.title || s.desc).map((story, i) => (
+               <motion.div key={i} variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className={`relative mb-12 flex flex-col md:flex-row items-center justify-between ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+                  <div className="hidden md:block w-5 h-5 rounded-full absolute left-1/2 -ml-[10px] top-4 border-4 border-white shadow-md z-10" style={{ backgroundColor: data.storyLineColor || 'var(--secondary)' }} />
+                  <div className="absolute w-4 h-4 rounded-full md:hidden -left-[9px] top-6 border-4 border-white shadow-md z-10" style={{ backgroundColor: data.storyLineColor || 'var(--secondary)' }} />
+                  
+                  <div className={`w-full md:w-[45%] pl-8 md:pl-0 ${i % 2 === 0 ? 'md:pl-12 md:text-left' : 'md:pr-12 md:text-right'}`}>
+                     <p className="font-sans font-bold text-sm tracking-widest uppercase mb-2 global-align" style={{ color: data.storyLineColor || 'var(--secondary)' }}>{story.date}</p>
+                     <h3 className="font-serif text-3xl font-bold mb-4 global-align" style={{ color: data.storyTitleColor || 'var(--primary)' }}>{story.title}</h3>
+                     <p className="opacity-80 leading-relaxed global-align" style={{ color: data.storyTextColor || 'var(--primary)' }}>{story.desc}</p>
+                  </div>
+                  
+                  <div className={`w-full md:w-[45%] pl-8 md:pl-0 mt-6 md:mt-0 ${i % 2 === 0 ? 'md:pr-12' : 'md:pl-12'}`}>
+                     {story.img && (
+                       <div className="rounded-2xl overflow-hidden shadow-xl aspect-video border-4" style={{ borderColor: 'rgba(255,255,255,0.5)' }}>
+                         <img src={story.img} alt={story.title} className="w-full h-full object-cover" />
+                       </div>
+                     )}
+                  </div>
+               </motion.div>
+             ))}
+           </div>
+         </div>
+      </section>
+
       {/* 4. EVENT DETAILS SECTION */}
       <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.eventBgColor || 'var(--bg-color)' }}>
         {renderBg(data.eventBgUrl, "")}
@@ -456,24 +525,42 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
           </motion.div>
 
           <motion.div 
-            className="grid grid-cols-2 md:grid-cols-4 gap-4"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
-            {data.galleryPhotos ? (
-              data.galleryPhotos.split(',').filter(Boolean).map((photoUrl: string, i: number) => (
-                <motion.div key={i} variants={fadeInUp} className="aspect-square rounded-2xl overflow-hidden bg-[var(--primary)]/10">
-                  <img src={photoUrl.trim()} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
-                </motion.div>
-              ))
+            {data.galleryMode === 'slider' ? (
+               <div className="w-full overflow-hidden flex flex-nowrap py-4 mt-8 relative">
+                  <motion.div 
+                    className="flex gap-4"
+                    animate={{ x: ["0%", "-50%"] }}
+                    transition={{ ease: "linear", duration: 20, repeat: Infinity }}
+                  >
+                     {(() => {
+                       const photos = data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`);
+                       const duplicated = [...photos, ...photos];
+                       return duplicated.map((photoUrl: string, i: number) => (
+                         <div key={i} className="w-64 h-80 shrink-0 rounded-2xl overflow-hidden shadow-lg border-4 border-white/50 bg-[var(--primary)]/10">
+                           <img src={photoUrl.trim()} className="w-full h-full object-cover" />
+                         </div>
+                       ));
+                     })()}
+                  </motion.div>
+               </div>
+            ) : data.galleryMode === 'stars' ? (
+               <TwinklingStarsGallery photos={data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`)} />
             ) : (
-              [1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <motion.div key={i} variants={fadeInUp} className="aspect-square rounded-2xl overflow-hidden bg-[var(--primary)]/10">
-                  <img src={`https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
-                </motion.div>
-              ))
+               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                 {(() => {
+                   const photos = data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6,7,8].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`);
+                   return photos.map((photoUrl: string, i: number) => (
+                     <motion.div key={i} variants={fadeInUp} className="aspect-square rounded-2xl overflow-hidden shadow-md bg-[var(--primary)]/10">
+                       <img src={photoUrl.trim()} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+                     </motion.div>
+                   ));
+                 })()}
+               </div>
             )}
           </motion.div>
         </div>
