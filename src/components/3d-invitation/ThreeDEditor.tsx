@@ -23,6 +23,16 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     secondaryColor: invitation.settingsJSON?.secondaryColor || "#C8A24C",
     bgColor: invitation.settingsJSON?.bgColor || "#fff1f2",
 
+    // Typography
+    fontFamilyTitle: invitation.settingsJSON?.fontFamilyTitle || "Great Vibes",
+    fontFamilyBody: invitation.settingsJSON?.fontFamilyBody || "Montserrat",
+    fontSizeTitle: invitation.settingsJSON?.fontSizeTitle || "4rem",
+    fontSizeBody: invitation.settingsJSON?.fontSizeBody || "1rem",
+    fontWeightTitle: invitation.settingsJSON?.fontWeightTitle || "400",
+    fontWeightBody: invitation.settingsJSON?.fontWeightBody || "400",
+    lineHeightBody: invitation.settingsJSON?.lineHeightBody || "1.6",
+    textAlignment: invitation.settingsJSON?.textAlignment || "center",
+
     // Cover & Audio
     coverDesktopBgUrl: invitation.settingsJSON?.coverDesktopBgUrl || "",
     coverMobileBgUrl: invitation.settingsJSON?.coverMobileBgUrl || "",
@@ -300,11 +310,41 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
           
           {/* THEME (Only in visual mode) */}
           {!isCodeMode && (
-            <AccordionItem id="theme" title="Tema Global" icon={Palette}>
-              <InputField label="Global Primary Color" name="primaryColor" type="color" />
-              <InputField label="Global Secondary Color" name="secondaryColor" type="color" />
-              <InputField label="Global Background Color" name="bgColor" type="color" />
-            </AccordionItem>
+            <>
+              <AccordionItem id="theme" title="Tema Global" icon={Palette}>
+                <InputField label="Global Primary Color" name="primaryColor" type="color" />
+                <InputField label="Global Secondary Color" name="secondaryColor" type="color" />
+                <InputField label="Global Background Color" name="bgColor" type="color" />
+              </AccordionItem>
+
+              <AccordionItem id="typography" title="Tipografi & Format" icon={Type}>
+                <InputField label="Title Font Family (Google Fonts)" name="fontFamilyTitle" placeholder="e.g. Great Vibes" />
+                <InputField label="Body Font Family (Google Fonts)" name="fontFamilyBody" placeholder="e.g. Montserrat" />
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Title Font Size" name="fontSizeTitle" placeholder="e.g. 4rem or 64px" />
+                  <InputField label="Title Font Weight" name="fontWeightTitle" placeholder="e.g. 400, 700" />
+                  <InputField label="Body Font Size" name="fontSizeBody" placeholder="e.g. 1rem or 16px" />
+                  <InputField label="Body Font Weight" name="fontWeightBody" placeholder="e.g. 400, 700" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Body Line Height" name="lineHeightBody" placeholder="e.g. 1.6" />
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">Text Alignment</label>
+                    <select
+                      name="textAlignment"
+                      value={formData.textAlignment as string}
+                      onChange={handleChange as any}
+                      className="w-full px-3 py-2 rounded-lg border border-secondary bg-white focus:bg-white focus:ring-2 focus:ring-primary/50 transition-colors text-sm"
+                    >
+                      <option value="left">Left</option>
+                      <option value="center">Center</option>
+                      <option value="right">Right</option>
+                      <option value="justify">Justify</option>
+                    </select>
+                  </div>
+                </div>
+              </AccordionItem>
+            </>
           )}
 
           {/* COVER & AUDIO */}
@@ -538,7 +578,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
             previewMode === 'tablet' ? 'w-[768px] h-[1024px] my-auto mt-20 border-[8px] border-gray-800 rounded-[30px] shadow-2xl overflow-hidden relative shrink-0' : 
             'w-full h-full relative'
          }`}>
-            <Experience data={{...invitation.settingsJSON, ...formData}} />
+            <Experience data={{...invitation.settingsJSON, ...formData}} previewMode={previewMode} />
          </div>
       </div>
     </div>

@@ -53,9 +53,10 @@ const CustomInjector = ({ html, css, js }: { html?: string, css?: string, js?: s
 interface ExperienceProps {
   data: any;
   children?: React.ReactNode;
+  previewMode?: "desktop" | "tablet" | "mobile";
 }
 
-export default function Experience({ data, children }: ExperienceProps) {
+export default function Experience({ data, children, previewMode = "desktop" }: ExperienceProps) {
   const [mounted, setMounted] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [isVideoFinished, setIsVideoFinished] = useState(false);
@@ -93,7 +94,7 @@ export default function Experience({ data, children }: ExperienceProps) {
     const isVideo = url.endsWith('.mp4') || url.endsWith('.webm') || url.includes('pixabay.com/video') || url.includes('supabase');
     
     return (
-      <div className={`absolute inset-0 w-full h-full z-0 ${defaultBgClass} transition-opacity duration-1000 ${isHero && isVideoFinished ? 'opacity-80' : 'opacity-100'}`}>
+      <div className={`absolute inset-0 w-full h-full z-0 ${defaultBgClass} transition-opacity duration-1000 opacity-100`}>
         {isVideo ? (
            <video 
              autoPlay 
@@ -101,13 +102,13 @@ export default function Experience({ data, children }: ExperienceProps) {
              muted 
              playsInline 
              onEnded={() => isHero && setIsVideoFinished(true)}
-             className={`absolute inset-0 w-full h-full object-cover ${isHero ? 'opacity-50' : 'opacity-40'}`}
+             className={`absolute inset-0 w-full h-full object-cover ${!isHero ? 'opacity-40' : 'opacity-100'}`}
              src={url} 
            />
         ) : (
            <img 
              src={url} 
-             className={`absolute inset-0 w-full h-full object-cover ${isHero ? 'opacity-50' : 'opacity-40'}`}
+             className={`absolute inset-0 w-full h-full object-cover ${!isHero ? 'opacity-40' : 'opacity-100'}`}
              alt="Background" 
              onLoad={() => {
                if (isHero) {
@@ -129,10 +130,27 @@ export default function Experience({ data, children }: ExperienceProps) {
     '--primary': data.primaryColor || '#500000',
     '--secondary': data.secondaryColor || '#C8A24C',
     '--bg-color': data.bgColor || '#fff1f2',
+    '--font-title': `"${data.fontFamilyTitle || 'Great Vibes'}", cursive, serif`,
+    '--font-body': `"${data.fontFamilyBody || 'Montserrat'}", sans-serif`,
+    '--title-size': data.fontSizeTitle || '4rem',
+    '--body-size': data.fontSizeBody || '1rem',
+    '--title-weight': data.fontWeightTitle || '400',
+    '--body-weight': data.fontWeightBody || '400',
+    '--body-line-height': data.lineHeightBody || '1.6',
+    '--text-alignment': data.textAlignment || 'center',
   } as React.CSSProperties;
 
+  const exactScreenHeight = previewMode === 'mobile' ? '812px' : previewMode === 'tablet' ? '1024px' : '100vh';
+  const googleFontsUrl = `https://fonts.googleapis.com/css2?family=${(data.fontFamilyTitle || 'Great Vibes').replace(/ /g, '+')}:wght@${data.fontWeightTitle || '400'}&family=${(data.fontFamilyBody || 'Montserrat').replace(/ /g, '+')}:wght@${data.fontWeightBody || '400'}&display=swap`;
+
   return (
-    <div style={customStyles} className={`w-full bg-[var(--bg-color)] font-sans text-[var(--primary)] overflow-x-hidden relative ${!isOpened ? 'h-[100dvh] overflow-hidden' : 'min-h-screen'}`}>
+    <div style={{ ...customStyles, minHeight: exactScreenHeight, height: !isOpened ? exactScreenHeight : 'auto' }} className={`w-full bg-[var(--bg-color)] font-sans text-[var(--primary)] overflow-x-hidden relative ${!isOpened ? 'overflow-hidden' : ''}`}>
+      <style dangerouslySetInnerHTML={{__html: `
+        @import url('${googleFontsUrl}');
+        .font-script { font-family: var(--font-title) !important; font-size: var(--title-size) !important; font-weight: var(--title-weight) !important; line-height: 1.2; }
+        .font-sans, .font-serif, .font-mono, p { font-family: var(--font-body) !important; font-size: var(--body-size) !important; line-height: var(--body-line-height) !important; font-weight: var(--body-weight) !important; }
+        .text-center { text-align: var(--text-alignment) !important; }
+      `}} />
       
       {/* 0. COVER SECTION (Full Screen Overlay) */}
       <AnimatePresence>
@@ -211,7 +229,7 @@ export default function Experience({ data, children }: ExperienceProps) {
       )}
 
       {/* 1. HERO SECTION */}
-      <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
+      <section className="relative w-full flex flex-col items-center justify-center overflow-hidden" style={{ minHeight: exactScreenHeight }}>
         {renderBg(data.heroBgUrl, "bg-black", true)}
         
         {/* Content Layer (Only animate in if isOpened is true) */}
