@@ -292,13 +292,13 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
             <h1 className="font-script text-6xl md:text-8xl mb-8" style={{ lineHeight: data.heroLineHeight || "1.2" }}>{data.groomName || "Partner"}</h1>
             
             <motion.div 
-              className="mt-16 text-sm tracking-widest uppercase border rounded-full px-6 py-3 inline-block bg-black/20 backdrop-blur-sm"
-              style={{ borderColor: data.heroTextColor ? `${data.heroTextColor}40` : 'rgba(255,255,255,0.3)' }}
+              className="inline-block border-y border-current py-2 px-8"
+              style={{ marginTop: `${data.heroDateSpacing || '32'}px`, borderColor: data.heroTextColor ? `${data.heroTextColor}40` : 'rgba(255,255,255,0.3)' }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.5, duration: 1 }}
             >
-              {formattedDate}
+              <p className="font-sans font-bold tracking-widest uppercase text-sm">{formattedDate}</p>
             </motion.div>
           </motion.div>
         )}
