@@ -271,7 +271,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       )}
 
       {/* 1. HERO SECTION */}
-      <section className="relative w-full flex flex-col items-center justify-center overflow-hidden" style={{ minHeight: exactScreenHeight }}>
+      <section className={`relative w-full flex flex-col items-center justify-${data.heroLayout || 'center'} overflow-hidden`} style={{ minHeight: exactScreenHeight }}>
         {renderBg(data.heroBgUrl, "bg-black", true)}
         
         {/* Dynamic Overlay */}
@@ -280,20 +280,16 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
         {/* Content Layer (Only animate in if isOpened is true) */}
         {isHeroTextVisible && isOpened && (
           <motion.div 
-            className="relative z-10 text-center p-8"
+            className={`relative z-10 w-full p-8 pb-32 text-${data.heroTextAlign || 'center'}`}
             style={{ color: data.heroTextColor || '#ffffff' }}
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }} // delayed slightly after cover swipe
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
           >
-            <p className="tracking-[0.3em] uppercase text-sm mb-6 opacity-80">The Wedding Of</p>
-            <h1 className="font-script text-8xl md:text-9xl mb-4 drop-shadow-xl">
-              {data.brideName || "Nova"}
-            </h1>
-            <p className="font-serif text-3xl italic my-2 opacity-70">&</p>
-            <h1 className="font-script text-8xl md:text-9xl drop-shadow-xl">
-              {data.groomName || "Partner"}
-            </h1>
+            <p className="font-sans font-bold tracking-[0.3em] uppercase text-sm mb-4">{data.heroTitleText || "The Wedding Of"}</p>
+            <h1 className="font-script text-6xl md:text-8xl" style={{ lineHeight: data.heroLineHeight || "1.2" }}>{data.brideName || "Nova"}</h1>
+            <p className="font-serif italic text-2xl md:text-4xl my-2">&</p>
+            <h1 className="font-script text-6xl md:text-8xl mb-8" style={{ lineHeight: data.heroLineHeight || "1.2" }}>{data.groomName || "Partner"}</h1>
             
             <motion.div 
               className="mt-16 text-sm tracking-widest uppercase border rounded-full px-6 py-3 inline-block bg-black/20 backdrop-blur-sm"

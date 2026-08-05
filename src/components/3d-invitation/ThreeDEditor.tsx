@@ -52,6 +52,10 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     heroOverlayColor: invitation.settingsJSON?.heroOverlayColor || "#000000",
     heroOverlayOpacity: invitation.settingsJSON?.heroOverlayOpacity || "0.4",
     heroTextDelay: invitation.settingsJSON?.heroTextDelay || "2",
+    heroTitleText: invitation.settingsJSON?.heroTitleText || "The Wedding Of",
+    heroLayout: invitation.settingsJSON?.heroLayout || "center",
+    heroTextAlign: invitation.settingsJSON?.heroTextAlign || "center",
+    heroLineHeight: invitation.settingsJSON?.heroLineHeight || "1.2",
     brideName: invitation.settingsJSON?.brideName || "Nova",
     groomName: invitation.settingsJSON?.groomName || "Partner",
     weddingDate: invitation.settingsJSON?.weddingDate || "2024-06-15T19:30",
@@ -346,6 +350,49 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
               </AccordionItem>
 
               <AccordionItem id="hero" title="Hero / Utama" icon={Heart}>
+                <h4 className="text-xs font-bold text-primary uppercase mb-2 border-b pb-2">Teks & Konten</h4>
+                <InputField label="Teks Atas" name="heroTitleText" placeholder="The Wedding Of" />
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Nama Panggilan Wanita" name="brideName" />
+                  <InputField label="Nama Panggilan Pria" name="groomName" />
+                </div>
+                <InputField label="Tanggal Pernikahan" name="weddingDate" type="datetime-local" />
+
+                <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Layout & Tipografi</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="mb-4">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">Posisi Vertikal</label>
+                    <select name="heroLayout" value={formData.heroLayout as string} onChange={handleChange as any} className="w-full px-3 py-2 rounded-lg border border-secondary bg-white text-sm">
+                      <option value="start">Atas (Top)</option>
+                      <option value="center">Tengah (Center)</option>
+                      <option value="end">Bawah (Bottom)</option>
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">Perataan Teks</label>
+                    <select name="heroTextAlign" value={formData.heroTextAlign as string} onChange={handleChange as any} className="w-full px-3 py-2 rounded-lg border border-secondary bg-white text-sm">
+                      <option value="left">Kiri (Left)</option>
+                      <option value="center">Tengah (Center)</option>
+                      <option value="right">Kanan (Right)</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div className="mb-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/80">Jarak Baris Nama (Line Height)</label>
+                    <span className="text-xs font-mono bg-secondary/20 text-primary px-2 py-1 rounded">
+                      {formData.heroLineHeight}
+                    </span>
+                  </div>
+                  <input 
+                    type="range" name="heroLineHeight" min="0.5" max="3" step="0.1" 
+                    value={formData.heroLineHeight as string || "1.2"} onChange={handleChange as any} 
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary" 
+                  />
+                </div>
+
+                <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Media & Overlay</h4>
                 <FileUpload label="Upload Background (Photo/Video)" name="heroBgUrl" value={formData.heroBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 <InputField label="Hero Text Color" name="heroTextColor" type="color" />
                 <InputField label="Overlay Color" name="heroOverlayColor" type="color" />
