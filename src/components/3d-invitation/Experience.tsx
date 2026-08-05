@@ -444,14 +444,14 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
               {data.coupleFrameUrl ? (
                 <div className="relative w-64 md:w-80 mx-auto aspect-[3/4] mb-8">
                   <div className="absolute inset-0 p-[20%]">
-                    <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-xl grayscale opacity-80" />
+                    <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-xl" />
                   </div>
                   <img src={data.coupleFrameUrl} alt="Frame" className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-lg" />
                 </div>
               ) : (
                 <div className="w-64 h-80 mx-auto rounded-t-full border-4 p-2 mb-6" style={{ borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'var(--secondary)' }}>
                   <div className="w-full h-full rounded-t-full overflow-hidden bg-[var(--primary)]/10">
-                    <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover grayscale opacity-80" />
+                    <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover" />
                   </div>
                 </div>
               )}
