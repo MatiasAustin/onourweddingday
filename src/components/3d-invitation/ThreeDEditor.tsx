@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { updateInvitationSettings } from "@/app/editor/actions";
-import { Save, ExternalLink, ChevronDown, ChevronRight, Image as ImageIcon, MapPin, Users, Heart, Camera, Gift, Type, Layout, Palette, Code, Eye, Music } from "lucide-react";
+import { Save, ExternalLink, ChevronDown, ChevronRight, Image as ImageIcon, MapPin, Users, Heart, Camera, Gift, Type, Layout, Palette, Code, Eye, Music, Smartphone, Tablet, Monitor } from "lucide-react";
 import Link from "next/link";
 import Experience from "./Experience";
 import FileUpload from "@/components/ui/FileUpload";
@@ -15,6 +15,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("cover");
   const [isCodeMode, setIsCodeMode] = useState(false);
+  const [previewMode, setPreviewMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
   
   const [formData, setFormData] = useState({
     // Global Colors
@@ -517,15 +518,28 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
       </div>
 
       {/* RIGHT AREA: Live Preview */}
-      <div className="flex-1 relative bg-black overflow-y-auto h-full">
-         <div className="absolute top-4 left-4 z-50 pointer-events-none bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
-           <span className="text-white/80 font-mono tracking-widest text-xs uppercase flex items-center gap-2">
-             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-             Live Preview
-           </span>
+      <div className="flex-1 relative bg-gray-950 overflow-y-auto h-full flex flex-col items-center">
+         {/* Responsive Toolbar */}
+         <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 bg-gray-900/80 backdrop-blur-md p-1.5 rounded-full border border-gray-700 shadow-xl">
+           <button onClick={() => setPreviewMode("mobile")} className={`p-2 rounded-full transition-colors ${previewMode === 'mobile' ? 'bg-primary text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`} title="Mobile Preview">
+             <Smartphone className="w-4 h-4" />
+           </button>
+           <button onClick={() => setPreviewMode("tablet")} className={`p-2 rounded-full transition-colors ${previewMode === 'tablet' ? 'bg-primary text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`} title="Tablet Preview">
+             <Tablet className="w-4 h-4" />
+           </button>
+           <button onClick={() => setPreviewMode("desktop")} className={`p-2 rounded-full transition-colors ${previewMode === 'desktop' ? 'bg-primary text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`} title="Desktop Preview">
+             <Monitor className="w-4 h-4" />
+           </button>
          </div>
-         {/* Render the Experience component directly with the current formData */}
-         <Experience data={{...invitation.settingsJSON, ...formData}} />
+
+         {/* Render the Experience component in a constrained box based on mode */}
+         <div className={`transition-all duration-500 ease-in-out bg-white ${
+            previewMode === 'mobile' ? 'w-[375px] h-[812px] my-auto mt-20 border-[8px] border-gray-800 rounded-[40px] shadow-2xl overflow-hidden relative shrink-0' : 
+            previewMode === 'tablet' ? 'w-[768px] h-[1024px] my-auto mt-20 border-[8px] border-gray-800 rounded-[30px] shadow-2xl overflow-hidden relative shrink-0' : 
+            'w-full h-full relative'
+         }`}>
+            <Experience data={{...invitation.settingsJSON, ...formData}} />
+         </div>
       </div>
     </div>
   );
