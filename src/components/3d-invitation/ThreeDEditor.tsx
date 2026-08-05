@@ -33,7 +33,9 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     lineHeightBody: invitation.settingsJSON?.lineHeightBody || "1.6",
     textAlignment: invitation.settingsJSON?.textAlignment || "center",
 
-    // Cover & Audio
+    // Cover
+    coverTitleText: invitation.settingsJSON?.coverTitleText || "WEDDING INVITATION",
+    coverSubtitleText: invitation.settingsJSON?.coverSubtitleText || "Kepada Yth.",
     coverDesktopBgUrl: invitation.settingsJSON?.coverDesktopBgUrl || "",
     coverMobileBgUrl: invitation.settingsJSON?.coverMobileBgUrl || "",
     coverTitleColor: invitation.settingsJSON?.coverTitleColor || "#ffffff",
@@ -59,8 +61,8 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     heroTranslateY: invitation.settingsJSON?.heroTranslateY || "0",
     heroDateSpacing: invitation.settingsJSON?.heroDateSpacing || "32",
     brideName: invitation.settingsJSON?.brideName || "Nova",
-    groomName: invitation.settingsJSON?.groomName || "Partner",
-    weddingDate: invitation.settingsJSON?.weddingDate || "2024-06-15T19:30",
+    groomName: invitation.settingsJSON?.groomName || "Irfan",
+    weddingDate: invitation.settingsJSON?.weddingDate || "2026-10-04T08:00",
     customHtml_hero: invitation.settingsJSON?.customHtml_hero || "",
     customCss_hero: invitation.settingsJSON?.customCss_hero || "",
     customJs_hero: invitation.settingsJSON?.customJs_hero || "",
@@ -86,9 +88,13 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     coupleTextColor: invitation.settingsJSON?.coupleTextColor || "",
     coupleAccentColor: invitation.settingsJSON?.coupleAccentColor || "",
     bridePhotoUrl: invitation.settingsJSON?.bridePhotoUrl || "",
-    brideParents: invitation.settingsJSON?.brideParents || "Bapak Fulan & Ibu Fulanah",
+    brideFullName: invitation.settingsJSON?.brideFullName || "Nova Nursaniah",
+    brideChildOrder: invitation.settingsJSON?.brideChildOrder || "Putri ke-2",
+    brideParents: invitation.settingsJSON?.brideParents || "Bapak Nurdani & Ibu Supriyanti",
     groomPhotoUrl: invitation.settingsJSON?.groomPhotoUrl || "",
-    groomParents: invitation.settingsJSON?.groomParents || "Bapak Fulan & Ibu Fulanah",
+    groomFullName: invitation.settingsJSON?.groomFullName || "Muhamad Irfan Zidni",
+    groomChildOrder: invitation.settingsJSON?.groomChildOrder || "Putra ke-3",
+    groomParents: invitation.settingsJSON?.groomParents || "Bapak Abu Hasan & Ibu Imbriyah",
     
     // Our Story
     storyBgColor: invitation.settingsJSON?.storyBgColor || "rgba(255,255,255,0.5)",
@@ -96,20 +102,25 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     storyLineColor: invitation.settingsJSON?.storyLineColor || "var(--secondary)",
     storyTextColor: invitation.settingsJSON?.storyTextColor || "var(--primary)",
     
-    story1Date: invitation.settingsJSON?.story1Date || "Maret 2020",
+    story1Date: invitation.settingsJSON?.story1Date || "Pertama Bertemu",
     story1Title: invitation.settingsJSON?.story1Title || "Pertama Bertemu",
-    story1Desc: invitation.settingsJSON?.story1Desc || "Berawal dari pandangan pertama di sebuah kafe.",
+    story1Desc: invitation.settingsJSON?.story1Desc || "Semua berawal dari sebuah swipe sederhana di aplikasi dating. Siapa sangka, pertemuan virtual itu menjadi awal dari kisah cinta yang nyata",
     story1Image: invitation.settingsJSON?.story1Image || "",
     
-    story2Date: invitation.settingsJSON?.story2Date || "Desember 2022",
-    story2Title: invitation.settingsJSON?.story2Title || "Resmi Bersama",
-    story2Desc: invitation.settingsJSON?.story2Desc || "Hari di mana kami memutuskan untuk saling mengikat hati.",
+    story2Date: invitation.settingsJSON?.story2Date || "02-Maret-2026",
+    story2Title: invitation.settingsJSON?.story2Title || "Mulai Pacaran",
+    story2Desc: invitation.settingsJSON?.story2Desc || "Hari ketika dua hati memutuskan untuk berjalan bersama. Sejak saat itu, setiap langkah memiliki arti karena kita melangkah sebagai satu",
     story2Image: invitation.settingsJSON?.story2Image || "",
     
-    story3Date: invitation.settingsJSON?.story3Date || "Januari 2024",
+    story3Date: invitation.settingsJSON?.story3Date || "14 Juni 2026",
     story3Title: invitation.settingsJSON?.story3Title || "Lamaran",
-    story3Desc: invitation.settingsJSON?.story3Desc || "Sebuah janji suci terucap untuk melangkah ke jenjang yang lebih serius.",
+    story3Desc: invitation.settingsJSON?.story3Desc || "14 Juni 2026 menjadi hari yang tak terlupakan. Dengan restu keluarga dan penuh rasa syukur, kami melangkah ke tahap berikutnya melalui sebuah lamaran, sebagai awal menuju hari bahagia kami. ❤️💍",
     story3Image: invitation.settingsJSON?.story3Image || "",
+
+    story4Date: invitation.settingsJSON?.story4Date || "04 Oktober 2026",
+    story4Title: invitation.settingsJSON?.story4Title || "Menikah",
+    story4Desc: invitation.settingsJSON?.story4Desc || "Dengan penuh rasa syukur kepada Allah SWT, kami mengucapkan ijab kabul dan memulai perjalanan sebagai suami istri. Semoga Allah SWT senantiasa melimpahkan rahmat, keberkahan, serta menjadikan rumah tangga kami keluarga yang sakinah, mawaddah, wa rahmah. Aamiin. 🤍🕌💍",
+    story4Image: invitation.settingsJSON?.story4Image || "",
 
     customHtml_couple: invitation.settingsJSON?.customHtml_couple || "",
     customCss_couple: invitation.settingsJSON?.customCss_couple || "",
@@ -126,11 +137,18 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     eventCard2BgColor: invitation.settingsJSON?.eventCard2BgColor || "",
     eventCard2TextColor: invitation.settingsJSON?.eventCard2TextColor || "",
     eventCard2AccentColor: invitation.settingsJSON?.eventCard2AccentColor || "",
-    akadTime: invitation.settingsJSON?.akadTime || "08:00 WIB - Selesai",
-    akadLocation: invitation.settingsJSON?.akadLocation || "Masjid Agung, Jakarta",
-    resepsiTime: invitation.settingsJSON?.resepsiTime || "11:00 WIB - 14:00 WIB",
-    resepsiLocation: invitation.settingsJSON?.resepsiLocation || "Grand Ballroom, Jakarta",
-    mapLink: invitation.settingsJSON?.mapLink || "",
+    akadHari: invitation.settingsJSON?.akadHari || "Minggu",
+    akadTanggal: invitation.settingsJSON?.akadTanggal || "04 Oktober 2026",
+    akadWaktu: invitation.settingsJSON?.akadWaktu || "Menyusul",
+    akadLokasi: invitation.settingsJSON?.akadLokasi || "Kediaman Mempelai Wanita",
+    akadAlamat: invitation.settingsJSON?.akadAlamat || "Jl.Bbk Kaum RT 02 RW 02 Cikampek Selatan Kab. Karawang",
+    akadMapLink: invitation.settingsJSON?.akadMapLink || "https://maps.google.com/?q=HFV2+9CH,+Unnamed+Road,+Cikampek+Sel.,+Kec.+Cikampek,+Karawang,+Jawa+Barat+41373",
+    resepsiHari: invitation.settingsJSON?.resepsiHari || "Minggu",
+    resepsiTanggal: invitation.settingsJSON?.resepsiTanggal || "04 Oktober 2026",
+    resepsiWaktu: invitation.settingsJSON?.resepsiWaktu || "Menyusul",
+    resepsiLokasi: invitation.settingsJSON?.resepsiLokasi || "Kediaman Mempelai Wanita",
+    resepsiAlamat: invitation.settingsJSON?.resepsiAlamat || "Jl.Bbk Kaum RT 02 RW 02 Cikampek Selatan Kab. Karawang",
+    resepsiMapLink: invitation.settingsJSON?.resepsiMapLink || "https://maps.google.com/?q=HFV2+9CH,+Unnamed+Road,+Cikampek+Sel.,+Kec.+Cikampek,+Karawang,+Jawa+Barat+41373",
     customHtml_event: invitation.settingsJSON?.customHtml_event || "",
     customCss_event: invitation.settingsJSON?.customCss_event || "",
     customJs_event: invitation.settingsJSON?.customJs_event || "",
@@ -155,12 +173,22 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     giftCardBgColor: invitation.settingsJSON?.giftCardBgColor || "",
     giftCardTitleColor: invitation.settingsJSON?.giftCardTitleColor || "",
     giftCardTextColor: invitation.settingsJSON?.giftCardTextColor || "",
-    bankName: invitation.settingsJSON?.bankName || "BCA / PIX",
-    pixKey: invitation.settingsJSON?.pixKey || "1234 5678 90",
-    accountHolder: invitation.settingsJSON?.accountHolder || "",
+    bank1Name: invitation.settingsJSON?.bank1Name || "BRI",
+    bank1Holder: invitation.settingsJSON?.bank1Holder || "NOVA NURSANIAH",
+    bank1Number: invitation.settingsJSON?.bank1Number || "3260 0104 1138 532",
+    bank2Name: invitation.settingsJSON?.bank2Name || "BCA",
+    bank2Holder: invitation.settingsJSON?.bank2Holder || "MUHAMAD IRFAN ZIDNI",
+    bank2Number: invitation.settingsJSON?.bank2Number || "3781961530",
+    qrisUrl: invitation.settingsJSON?.qrisUrl || "",
+    giftPenerima: invitation.settingsJSON?.giftPenerima || "Nova Nursaniah",
+    giftHp: invitation.settingsJSON?.giftHp || "085155143885",
+    giftAlamat: invitation.settingsJSON?.giftAlamat || "Jl. bbk kaum rt 02 rw 02 cikampek selatan kab. karawang 41373",
     customHtml_gift: invitation.settingsJSON?.customHtml_gift || "",
     customCss_gift: invitation.settingsJSON?.customCss_gift || "",
     customJs_gift: invitation.settingsJSON?.customJs_gift || "",
+    
+    // Video
+    videoUrl: invitation.settingsJSON?.videoUrl || "",
     
     // RSVP
     rsvpBgUrl: invitation.settingsJSON?.rsvpBgUrl || "",
@@ -499,14 +527,18 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 <div className="space-y-6 mt-4">
                   <div className="p-4 bg-black/5 rounded-xl border">
                     <h4 className="font-bold mb-4 flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-pink-500" /> Mempelai Wanita</h4>
-                    <InputField label="Nama Panggilan" name="brideName" />
-                    <InputField label="Nama Orang Tua" name="brideParents" placeholder="Putri dari Bapak X & Ibu Y" />
+                    <InputField label="Nama Lengkap" name="brideFullName" placeholder="Nova Nursaniah" />
+                    <InputField label="Nama Panggilan" name="brideName" placeholder="Nova" />
+                    <InputField label="Anak ke-berapa" name="brideChildOrder" placeholder="Putri ke-2" />
+                    <InputField label="Nama Orang Tua" name="brideParents" placeholder="Bapak Nurdani & Ibu Supriyanti" />
                     <FileUpload label="Upload Foto Wanita" name="bridePhotoUrl" value={formData.bridePhotoUrl} onChange={handleUploadChange} placeholder="https://..." />
                   </div>
                   <div className="p-4 bg-black/5 rounded-xl border">
                     <h4 className="font-bold mb-4 flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-blue-500" /> Mempelai Pria</h4>
-                    <InputField label="Nama Panggilan" name="groomName" />
-                    <InputField label="Nama Orang Tua" name="groomParents" placeholder="Putra dari Bapak X & Ibu Y" />
+                    <InputField label="Nama Lengkap" name="groomFullName" placeholder="Muhamad Irfan Zidni" />
+                    <InputField label="Nama Panggilan" name="groomName" placeholder="Irfan" />
+                    <InputField label="Anak ke-berapa" name="groomChildOrder" placeholder="Putra ke-3" />
+                    <InputField label="Nama Orang Tua" name="groomParents" placeholder="Bapak Abu Hasan & Ibu Imbriyah" />
                     <FileUpload label="Upload Foto Pria" name="groomPhotoUrl" value={formData.groomPhotoUrl} onChange={handleUploadChange} placeholder="https://..." />
                   </div>
                 </div>
@@ -542,6 +574,14 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                     <InputField label="Deskripsi Cerita" name="story3Desc" placeholder="Sebuah janji..." />
                     <FileUpload label="Upload Foto Cerita 3" name="story3Image" value={formData.story3Image} onChange={handleUploadChange} placeholder="https://..." />
                   </div>
+
+                  <div className="p-4 bg-black/5 rounded-xl border space-y-3">
+                    <h4 className="font-bold flex items-center gap-2">Cerita 4</h4>
+                    <InputField label="Tanggal/Tahun" name="story4Date" placeholder="Oktober 2026" />
+                    <InputField label="Judul Cerita" name="story4Title" placeholder="Pernikahan" />
+                    <InputField label="Deskripsi Cerita" name="story4Desc" placeholder="Hari bahagia..." />
+                    <FileUpload label="Upload Foto Cerita 4" name="story4Image" value={formData.story4Image} onChange={handleUploadChange} placeholder="https://..." />
+                  </div>
                 </div>
               </AccordionItem>
             </>
@@ -553,6 +593,8 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
               <>
                 <h4 className="text-xs font-bold text-primary uppercase mt-2 mb-2 border-b pb-2">Informasi Utama</h4>
                 <div className="flex flex-col gap-4">
+                  <InputField label="Judul Cover" name="coverTitleText" placeholder="WEDDING INVITATION" />
+                  <InputField label="Subjudul Cover" name="coverSubtitleText" placeholder="Kepada Yth." />
                   <InputField label="Nama Panggilan Wanita" name="brideName" />
                   <InputField label="Nama Panggilan Pria" name="groomName" />
                 </div>
@@ -620,20 +662,41 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                   <InputField label="Accent / Button" name="eventCard2AccentColor" type="color" />
                 </div>
 
-                <InputField label="Google Maps Link" name="mapLink" placeholder="https://maps.google.com/..." />
-                
-                <div className="grid grid-cols-2 gap-4 mt-4">
-                  <InputField label="Akad Time" name="akadTime" placeholder="08:00 WIB" />
-                  <InputField label="Akad Location" name="akadLocation" placeholder="Masjid..." />
-                  <InputField label="Resepsi Time" name="resepsiTime" placeholder="11:00 WIB" />
-                  <InputField label="Resepsi Location" name="resepsiLocation" placeholder="Gedung..." />
+                <div className="flex flex-col gap-4 mt-4">
+                  <div className="p-4 bg-black/5 rounded-xl border">
+                    <h4 className="font-bold mb-4">Data Akad Nikah</h4>
+                    <InputField label="Hari" name="akadHari" placeholder="Minggu" />
+                    <InputField label="Tanggal" name="akadTanggal" placeholder="04 Oktober 2026" />
+                    <InputField label="Waktu" name="akadWaktu" placeholder="Menyusul" />
+                    <InputField label="Nama Lokasi" name="akadLokasi" placeholder="Kediaman Mempelai Wanita" />
+                    <InputField label="Alamat Lengkap" name="akadAlamat" multiline placeholder="Jl.Bbk Kaum..." />
+                    <InputField label="Link Google Maps" name="akadMapLink" placeholder="https://maps..." />
+                  </div>
+                  <div className="p-4 bg-black/5 rounded-xl border">
+                    <h4 className="font-bold mb-4">Data Resepsi</h4>
+                    <InputField label="Hari" name="resepsiHari" placeholder="Minggu" />
+                    <InputField label="Tanggal" name="resepsiTanggal" placeholder="04 Oktober 2026" />
+                    <InputField label="Waktu" name="resepsiWaktu" placeholder="Menyusul" />
+                    <InputField label="Nama Lokasi" name="resepsiLokasi" placeholder="Kediaman Mempelai Wanita" />
+                    <InputField label="Alamat Lengkap" name="resepsiAlamat" multiline placeholder="Jl.Bbk Kaum..." />
+                    <InputField label="Link Google Maps" name="resepsiMapLink" placeholder="https://maps..." />
+                  </div>
                 </div>
               </>
             )}
           </AccordionItem>
 
+          {/* VIDEO PREWEDDING */}
+          <AccordionItem id="video" title="Video Prewedding" icon={Camera}>
+             {isCodeMode ? <CodeEditorGroup sectionId="video" /> : (
+              <>
+                <InputField label="Link Video YouTube/Vimeo" name="videoUrl" placeholder="https://www.youtube.com/watch?v=..." />
+              </>
+            )}
+          </AccordionItem>
+
           {/* GALLERY */}
-          <AccordionItem id="gallery" title="Galeri" icon={Camera}>
+          <AccordionItem id="gallery" title="Galeri" icon={ImageIcon}>
              {isCodeMode ? <CodeEditorGroup sectionId="gallery" /> : (
               <>
                 <InputField label="Warna Background Section" name="galleryBgColor" type="color" />
@@ -673,9 +736,30 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                   <InputField label="Card Text Color" name="giftCardTextColor" type="color" />
                 </div>
 
-                <InputField label="Bank / Wallet Name" name="bankName" placeholder="BCA / Mandiri" />
-                <InputField label="Account Number / Pix Key" name="pixKey" />
-                <InputField label="Account Holder Name" name="accountHolder" placeholder="A.n Nova" />
+                <div className="flex flex-col gap-4 mt-4">
+                  <div className="p-4 bg-black/5 rounded-xl border">
+                    <h4 className="font-bold mb-4">Rekening 1</h4>
+                    <InputField label="Nama Bank/Dompet" name="bank1Name" placeholder="BRI" />
+                    <InputField label="Atas Nama" name="bank1Holder" placeholder="NOVA NURSANIAH" />
+                    <InputField label="Nomor Rekening" name="bank1Number" placeholder="3260 0104 1138 532" />
+                  </div>
+                  <div className="p-4 bg-black/5 rounded-xl border">
+                    <h4 className="font-bold mb-4">Rekening 2</h4>
+                    <InputField label="Nama Bank/Dompet" name="bank2Name" placeholder="BCA" />
+                    <InputField label="Atas Nama" name="bank2Holder" placeholder="MUHAMAD IRFAN ZIDNI" />
+                    <InputField label="Nomor Rekening" name="bank2Number" placeholder="3781961530" />
+                  </div>
+                  <div className="p-4 bg-black/5 rounded-xl border">
+                    <h4 className="font-bold mb-4">QRIS</h4>
+                    <FileUpload label="Upload Barcode QRIS" name="qrisUrl" value={formData.qrisUrl} onChange={handleUploadChange} placeholder="https://..." />
+                  </div>
+                  <div className="p-4 bg-black/5 rounded-xl border">
+                    <h4 className="font-bold mb-4">Kirim Kado (Fisik)</h4>
+                    <InputField label="Nama Penerima" name="giftPenerima" placeholder="Nova Nursaniah" />
+                    <InputField label="Nomor HP" name="giftHp" placeholder="085155143885" />
+                    <InputField label="Alamat Lengkap" name="giftAlamat" multiline placeholder="Jl. bbk kaum..." />
+                  </div>
+                </div>
               </>
             )}
           </AccordionItem>

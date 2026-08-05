@@ -218,10 +218,13 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
             
             <div className="relative z-10 text-center px-6 flex flex-col items-center h-full w-full justify-between py-24">
               <div className="flex-1 flex flex-col items-center justify-center">
-                <p className="tracking-[0.3em] uppercase text-xs mb-6 opacity-80 font-bold" style={{ color: data.coverTitleColor || '#ffffff' }}>Undangan Pernikahan</p>
+                <p className="tracking-[0.3em] uppercase text-xs mb-6 opacity-80 font-bold" style={{ color: data.coverTitleColor || '#ffffff' }}>{data.coverTitleText || "Undangan Pernikahan"}</p>
                 <h1 className="font-script text-7xl md:text-9xl mb-4 drop-shadow-xl" style={{ color: data.coverTitleColor || '#ffffff' }}>
-                  {data.brideName || "Nova"} & {data.groomName || "Partner"}
+                  {data.brideName || "Nova"} & {data.groomName || "Irfan"}
                 </h1>
+                {data.coverSubtitleText && (
+                  <p className="tracking-[0.2em] mt-2 uppercase text-[10px] opacity-70 font-semibold" style={{ color: data.coverTitleColor || '#ffffff' }}>{data.coverSubtitleText}</p>
+                )}
               </div>
 
               <motion.button
@@ -357,8 +360,8 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
                   <img src={data.bridePhotoUrl || "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop"} alt="Bride" className="w-full h-full object-cover" />
                 </div>
               </div>
-              <h3 className="font-script text-5xl mb-2" style={{ color: data.coupleNameColor || 'var(--primary)' }}>{data.brideName || "Nova"}</h3>
-              <p className="font-serif opacity-70 font-medium" style={{ color: data.coupleTextColor || 'var(--primary)' }}>Putri dari</p>
+              <h3 className="font-script text-5xl mb-2" style={{ color: data.coupleNameColor || 'var(--primary)' }}>{data.brideFullName || data.brideName || "Nova"}</h3>
+              <p className="font-serif opacity-70 font-medium" style={{ color: data.coupleTextColor || 'var(--primary)' }}>{data.brideChildOrder || "Putri dari"}</p>
               <p className="font-sans text-sm opacity-60 mt-1" style={{ color: data.coupleTextColor || 'var(--primary)' }}>{data.brideParents || "Bapak Fulan & Ibu Fulanah"}</p>
             </motion.div>
 
@@ -376,8 +379,8 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
                   <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover grayscale opacity-80" />
                 </div>
               </div>
-              <h3 className="font-script text-5xl mb-2" style={{ color: data.coupleNameColor || 'var(--primary)' }}>{data.groomName || "Partner"}</h3>
-              <p className="font-serif opacity-70 font-medium" style={{ color: data.coupleTextColor || 'var(--primary)' }}>Putra dari</p>
+              <h3 className="font-script text-5xl mb-2" style={{ color: data.coupleNameColor || 'var(--primary)' }}>{data.groomFullName || data.groomName || "Partner"}</h3>
+              <p className="font-serif opacity-70 font-medium" style={{ color: data.coupleTextColor || 'var(--primary)' }}>{data.groomChildOrder || "Putra dari"}</p>
               <p className="font-sans text-sm opacity-60 mt-1" style={{ color: data.coupleTextColor || 'var(--primary)' }}>{data.groomParents || "Bapak Fulan & Ibu Fulanah"}</p>
             </motion.div>
           </div>
@@ -400,6 +403,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
                { date: data.story1Date, title: data.story1Title, desc: data.story1Desc, img: data.story1Image },
                { date: data.story2Date, title: data.story2Title, desc: data.story2Desc, img: data.story2Image },
                { date: data.story3Date, title: data.story3Title, desc: data.story3Desc, img: data.story3Image },
+               { date: data.story4Date, title: data.story4Title, desc: data.story4Desc, img: data.story4Image },
              ].filter(s => s.title || s.desc).map((story, i) => (
                <motion.div key={i} variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className={`relative mb-12 flex flex-col md:flex-row items-center justify-between ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
                   <div className="hidden md:block w-5 h-5 rounded-full absolute left-1/2 -ml-[10px] top-4 border-4 border-white shadow-md z-10" style={{ backgroundColor: data.storyLineColor || 'var(--secondary)' }} />
@@ -458,14 +462,14 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
               <Heart className="w-10 h-10 mx-auto mb-6" style={{ color: data.eventCard1AccentColor || 'var(--secondary)' }} />
               <h3 className="font-script text-5xl mb-4">Akad Nikah</h3>
               <div className="space-y-4 font-serif text-lg opacity-80">
-                <p className="font-bold opacity-100">{formattedDate}</p>
-                <p>{data.akadTime || "08:00 WIB - Selesai"}</p>
+                <p className="font-bold opacity-100">{data.akadHari ? `${data.akadHari}, ${data.akadTanggal}` : formattedDate}</p>
+                <p>{data.akadWaktu || data.akadTime || "08:00 WIB - Selesai"}</p>
                 <div className="w-12 h-px mx-auto my-4" style={{ backgroundColor: data.eventCard1AccentColor || 'var(--secondary)' }} />
-                <p className="font-bold opacity-100">Lokasi Akad</p>
-                <p className="text-sm">{data.akadLocation || data.venue || "Masjid Agung, Jakarta"}</p>
+                <p className="font-bold opacity-100">{data.akadLokasi || "Lokasi Akad"}</p>
+                <p className="text-sm">{data.akadAlamat || data.akadLocation || data.venue || "Masjid Agung, Jakarta"}</p>
               </div>
-              {data.mapLink && (
-                <a href={data.mapLink} target="_blank" className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full hover:opacity-80 transition-opacity font-sans text-sm uppercase tracking-wider" style={{ backgroundColor: data.eventCard1AccentColor || 'var(--primary)', color: '#fff' }}>
+              {(data.akadMapLink || data.mapLink) && (
+                <a href={data.akadMapLink || data.mapLink} target="_blank" rel="noreferrer" className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full hover:opacity-80 transition-opacity font-sans text-sm uppercase tracking-wider" style={{ backgroundColor: data.eventCard1AccentColor || 'var(--primary)', color: '#fff' }}>
                   <Navigation className="w-4 h-4" /> Buka Peta
                 </a>
               )}
@@ -487,14 +491,14 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
               <CalendarHeart className="w-10 h-10 mx-auto mb-6" style={{ color: data.eventCard2AccentColor || 'var(--secondary)' }} />
               <h3 className="font-script text-5xl mb-4">Resepsi</h3>
               <div className="space-y-4 font-serif text-lg opacity-80">
-                <p className="font-bold opacity-100">{formattedDate}</p>
-                <p>{data.resepsiTime || "11:00 WIB - 14:00 WIB"}</p>
+                <p className="font-bold opacity-100">{data.resepsiHari ? `${data.resepsiHari}, ${data.resepsiTanggal}` : formattedDate}</p>
+                <p>{data.resepsiWaktu || data.resepsiTime || "11:00 WIB - 14:00 WIB"}</p>
                 <div className="w-12 h-px mx-auto my-4" style={{ backgroundColor: data.eventCard2AccentColor || 'var(--secondary)' }} />
-                <p className="font-bold opacity-100">Lokasi Resepsi</p>
-                <p className="text-sm">{data.resepsiLocation || data.venue || "Grand Ballroom, Jakarta"}</p>
+                <p className="font-bold opacity-100">{data.resepsiLokasi || "Lokasi Resepsi"}</p>
+                <p className="text-sm">{data.resepsiAlamat || data.resepsiLocation || data.venue || "Grand Ballroom, Jakarta"}</p>
               </div>
-              {data.mapLink && (
-                <a href={data.mapLink} target="_blank" className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full hover:opacity-90 transition-opacity font-sans text-sm uppercase tracking-wider" style={{ backgroundColor: '#ffffff', color: data.eventCard2BgColor || 'var(--primary)' }}>
+              {(data.resepsiMapLink || data.mapLink) && (
+                <a href={data.resepsiMapLink || data.mapLink} target="_blank" rel="noreferrer" className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full hover:opacity-90 transition-opacity font-sans text-sm uppercase tracking-wider" style={{ backgroundColor: '#ffffff', color: data.eventCard2BgColor || 'var(--primary)' }}>
                   <Navigation className="w-4 h-4" /> Buka Peta
                 </a>
               )}
@@ -503,6 +507,27 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
         </div>
         <CustomInjector html={data.customHtml_event} css={data.customCss_event} js={data.customJs_event} />
       </section>
+
+      {/* VIDEO PREWEDDING */}
+      {data.videoUrl && (
+        <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.galleryBgColor || 'var(--bg-color)' }}>
+          <div className="relative z-10 max-w-4xl mx-auto text-center">
+            <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <Camera className="w-8 h-8 mx-auto mb-4" style={{ color: data.galleryIconColor || 'var(--secondary)' }} />
+              <h2 className="font-script text-6xl mb-10" style={{ color: data.galleryTitleColor || 'var(--primary)' }}>Video Prewedding</h2>
+              <div className="relative w-full overflow-hidden rounded-3xl shadow-xl aspect-video border-4" style={{ borderColor: data.galleryIconColor || 'var(--secondary)' }}>
+                <iframe 
+                  className="absolute inset-0 w-full h-full"
+                  src={data.videoUrl.replace("watch?v=", "embed/")} 
+                  title="Prewedding Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       {/* 5. GALLERY SECTION */}
       <section className="relative w-full py-24 px-8 border-y border-[var(--secondary)]/20 overflow-hidden" style={{ backgroundColor: data.galleryBgColor || 'rgba(255,255,255,0.3)' }}>
@@ -581,19 +606,40 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
               Namun jika Anda ingin memberikan tanda kasih, dapat melalui:
             </p>
             
-            <div className="p-8 rounded-3xl border shadow-lg max-w-sm mx-auto" style={{ backgroundColor: data.giftCardBgColor || '#ffffff', color: data.giftCardTextColor || 'var(--primary)', borderColor: data.giftIconColor ? `${data.giftIconColor}4d` : 'var(--secondary)' }}>
-              <h4 className="font-sans font-bold text-xl mb-2" style={{ color: data.giftCardTitleColor || 'inherit' }}>{data.bankName || "BCA / PIX"}</h4>
-              <p className="font-mono text-xl tracking-widest mb-4 break-all">
-                {data.pixKey || "1234 5678 90"}
-              </p>
-              <p className="font-serif opacity-70 mb-6">a.n {data.accountHolder || (data.brideName + " / " + data.groomName) || "Nova / Partner"}</p>
-              <button 
-                className="px-6 py-2 font-semibold rounded-full hover:opacity-80 transition-colors border"
-                style={{ backgroundColor: data.giftIconColor ? `${data.giftIconColor}1a` : 'rgba(200,162,76,0.1)', color: data.giftIconColor || 'var(--secondary)', borderColor: data.giftIconColor || 'var(--secondary)' }}
-                onClick={() => navigator.clipboard.writeText(data.pixKey || "1234 5678 90")}
-              >
-                Salin Rekening
-              </button>
+            <div className="flex flex-col gap-6 w-full max-w-sm mx-auto">
+              {(data.bank1Name || data.bank1Number) && (
+                <div className="p-8 rounded-3xl border shadow-lg" style={{ backgroundColor: data.giftCardBgColor || '#ffffff', color: data.giftCardTextColor || 'var(--primary)', borderColor: data.giftIconColor ? `${data.giftIconColor}4d` : 'var(--secondary)' }}>
+                  <h4 className="font-sans font-bold text-xl mb-2" style={{ color: data.giftCardTitleColor || 'inherit' }}>{data.bank1Name || "Bank 1"}</h4>
+                  <p className="font-mono text-xl tracking-widest mb-4 break-all">{data.bank1Number}</p>
+                  <p className="font-serif opacity-70 mb-6">a.n {data.bank1Holder}</p>
+                  <button onClick={() => navigator.clipboard.writeText(data.bank1Number as string)} className="px-6 py-2 font-semibold rounded-full hover:opacity-80 transition-colors border" style={{ backgroundColor: data.giftIconColor ? `${data.giftIconColor}1a` : 'rgba(200,162,76,0.1)', color: data.giftIconColor || 'var(--secondary)', borderColor: data.giftIconColor || 'var(--secondary)' }}>Salin Rekening</button>
+                </div>
+              )}
+              
+              {(data.bank2Name || data.bank2Number) && (
+                <div className="p-8 rounded-3xl border shadow-lg" style={{ backgroundColor: data.giftCardBgColor || '#ffffff', color: data.giftCardTextColor || 'var(--primary)', borderColor: data.giftIconColor ? `${data.giftIconColor}4d` : 'var(--secondary)' }}>
+                  <h4 className="font-sans font-bold text-xl mb-2" style={{ color: data.giftCardTitleColor || 'inherit' }}>{data.bank2Name || "Bank 2"}</h4>
+                  <p className="font-mono text-xl tracking-widest mb-4 break-all">{data.bank2Number}</p>
+                  <p className="font-serif opacity-70 mb-6">a.n {data.bank2Holder}</p>
+                  <button onClick={() => navigator.clipboard.writeText(data.bank2Number as string)} className="px-6 py-2 font-semibold rounded-full hover:opacity-80 transition-colors border" style={{ backgroundColor: data.giftIconColor ? `${data.giftIconColor}1a` : 'rgba(200,162,76,0.1)', color: data.giftIconColor || 'var(--secondary)', borderColor: data.giftIconColor || 'var(--secondary)' }}>Salin Rekening</button>
+                </div>
+              )}
+
+              {data.qrisUrl && (
+                <div className="p-8 rounded-3xl border shadow-lg" style={{ backgroundColor: data.giftCardBgColor || '#ffffff', color: data.giftCardTextColor || 'var(--primary)', borderColor: data.giftIconColor ? `${data.giftIconColor}4d` : 'var(--secondary)' }}>
+                  <h4 className="font-sans font-bold text-xl mb-4" style={{ color: data.giftCardTitleColor || 'inherit' }}>QRIS</h4>
+                  <img src={data.qrisUrl as string} alt="QRIS" className="w-full rounded-xl" />
+                </div>
+              )}
+
+              {(data.giftAlamat || data.giftPenerima) && (
+                <div className="p-8 rounded-3xl border shadow-lg text-left" style={{ backgroundColor: data.giftCardBgColor || '#ffffff', color: data.giftCardTextColor || 'var(--primary)', borderColor: data.giftIconColor ? `${data.giftIconColor}4d` : 'var(--secondary)' }}>
+                  <h4 className="font-sans font-bold text-xl mb-4 text-center" style={{ color: data.giftCardTitleColor || 'inherit' }}>Kirim Kado</h4>
+                  <p className="font-bold">{data.giftPenerima}</p>
+                  <p className="mb-2 opacity-80">{data.giftHp}</p>
+                  <p className="font-serif opacity-80 text-sm leading-relaxed whitespace-pre-wrap">{data.giftAlamat}</p>
+                </div>
+              )}
             </div>
           </motion.div>
         </div>
