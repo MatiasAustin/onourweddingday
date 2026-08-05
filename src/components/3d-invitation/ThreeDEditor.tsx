@@ -561,14 +561,14 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Media & Overlay</h4>
                 <FileUpload label="Background Music (MP3)" name="bgMusicUrl" value={formData.bgMusicUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
-                <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="flex flex-col gap-4 mt-4">
                   <FileUpload label="Cover Image (Desktop)" name="coverDesktopBgUrl" value={formData.coverDesktopBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                   <FileUpload label="Cover Image (Mobile)" name="coverMobileBgUrl" value={formData.coverMobileBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="flex flex-col gap-4 mt-4">
                   <InputField label="Overlay Color" name="coverOverlayColor" type="color" />
-                  <div className="col-span-1">
+                  <div className="w-full">
                     <div className="flex justify-between items-center mb-2">
                       <label className="text-xs font-semibold uppercase tracking-wider text-foreground/80">Overlay Opacity</label>
                       <span className="text-xs font-mono bg-secondary/20 text-primary px-2 py-1 rounded">
@@ -745,9 +745,9 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
 
          {/* Render the Experience component in a constrained box based on mode */}
          <div className={`transition-all duration-500 ease-in-out bg-white ${
-            previewMode === 'mobile' ? 'w-[375px] h-[812px] my-auto mt-20 border-[8px] border-gray-800 rounded-[40px] shadow-2xl overflow-hidden relative shrink-0' : 
-            previewMode === 'tablet' ? 'w-[768px] h-[1024px] my-auto mt-20 border-[8px] border-gray-800 rounded-[30px] shadow-2xl overflow-hidden relative shrink-0' : 
-            'w-full h-full relative'
+            previewMode === 'mobile' ? 'w-[375px] h-[812px] my-auto mt-20 border-[8px] border-gray-800 rounded-[40px] shadow-2xl overflow-y-auto overflow-x-hidden relative shrink-0' : 
+            previewMode === 'tablet' ? 'w-[768px] h-[1024px] my-auto mt-20 border-[8px] border-gray-800 rounded-[30px] shadow-2xl overflow-y-auto overflow-x-hidden relative shrink-0' : 
+            'w-full h-full overflow-y-auto overflow-x-hidden relative'
          }`}>
             <Experience data={{...invitation.settingsJSON, ...formData}} previewMode={previewMode} />
          </div>
