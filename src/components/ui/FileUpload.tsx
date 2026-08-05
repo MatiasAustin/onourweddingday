@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Upload, Loader2 } from "lucide-react";
+import { Upload, Loader2, Trash2 } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 
 interface FileUploadProps {
@@ -96,6 +96,18 @@ export default function FileUpload({ label, name, value, onChange, placeholder, 
               {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
             </div>
           </div>
+          
+          {/* Delete/Clear Button */}
+          {value && (
+            <button
+              type="button"
+              onClick={() => onChange({ target: { name, value: '' } })}
+              className="flex items-center justify-center px-3 rounded-lg border border-red-200 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors"
+              title="Hapus Media"
+            >
+              <Trash2 className="w-5 h-5" />
+            </button>
+          )}
         </div>
         {error && <p className="text-red-500 text-xs">{error}</p>}
       </div>
