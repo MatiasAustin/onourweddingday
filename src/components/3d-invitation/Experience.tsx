@@ -133,10 +133,10 @@ export default function Experience({ data, children }: ExperienceProps) {
           >
             <Quote className="w-12 h-12 mx-auto text-[#C8A24C] mb-8 opacity-50" />
             <p className="font-serif text-xl md:text-2xl leading-relaxed italic text-[#500000]/80">
-              "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang."
+              "{data.quoteText || "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang."}"
             </p>
             <p className="mt-6 font-sans font-semibold tracking-widest text-sm uppercase text-[#C8A24C]">
-              Ar-Rum: 21
+              {data.quoteSource || "Ar-Rum: 21"}
             </p>
           </motion.div>
         </div>
@@ -168,12 +168,12 @@ export default function Experience({ data, children }: ExperienceProps) {
             >
               <div className="w-64 h-80 mx-auto rounded-t-full border-4 border-[#C8A24C]/30 p-2 mb-6">
                 <div className="w-full h-full rounded-t-full overflow-hidden bg-[#500000]/10">
-                  <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop" alt="Bride" className="w-full h-full object-cover" />
+                  <img src={data.bridePhotoUrl || "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop"} alt="Bride" className="w-full h-full object-cover" />
                 </div>
               </div>
               <h3 className="font-script text-5xl text-[#500000] mb-2">{data.brideName || "Nova"}</h3>
               <p className="font-serif text-[#500000]/70 font-medium">Putri dari</p>
-              <p className="font-sans text-sm text-[#500000]/60 mt-1">Bapak Fulan & Ibu Fulanah</p>
+              <p className="font-sans text-sm text-[#500000]/60 mt-1">{data.brideParents || "Bapak Fulan & Ibu Fulanah"}</p>
             </motion.div>
 
             <span className="font-script text-7xl text-[#C8A24C]">&</span>
@@ -187,12 +187,12 @@ export default function Experience({ data, children }: ExperienceProps) {
             >
               <div className="w-64 h-80 mx-auto rounded-t-full border-4 border-[#C8A24C]/30 p-2 mb-6">
                 <div className="w-full h-full rounded-t-full overflow-hidden bg-[#500000]/10">
-                  <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop" alt="Groom" className="w-full h-full object-cover grayscale opacity-80" />
+                  <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover grayscale opacity-80" />
                 </div>
               </div>
               <h3 className="font-script text-5xl text-[#500000] mb-2">{data.groomName || "Partner"}</h3>
               <p className="font-serif text-[#500000]/70 font-medium">Putra dari</p>
-              <p className="font-sans text-sm text-[#500000]/60 mt-1">Bapak Fulan & Ibu Fulanah</p>
+              <p className="font-sans text-sm text-[#500000]/60 mt-1">{data.groomParents || "Bapak Fulan & Ibu Fulanah"}</p>
             </motion.div>
           </div>
         </div>
@@ -227,14 +227,16 @@ export default function Experience({ data, children }: ExperienceProps) {
               <h3 className="font-script text-5xl mb-4">Akad Nikah</h3>
               <div className="space-y-4 font-serif text-lg text-[#500000]/80">
                 <p className="font-bold text-[#500000]">{formattedDate}</p>
-                <p>08:00 WIB - Selesai</p>
+                <p>{data.akadTime || "08:00 WIB - Selesai"}</p>
                 <div className="w-12 h-px bg-[#C8A24C] mx-auto my-4" />
                 <p className="font-bold text-[#500000]">Lokasi Akad</p>
-                <p className="text-sm">{data.venue || "Masjid Agung, Jakarta"}</p>
+                <p className="text-sm">{data.akadLocation || data.venue || "Masjid Agung, Jakarta"}</p>
               </div>
-              <button className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#500000] text-white hover:bg-[#8B1E24] transition-colors font-sans text-sm uppercase tracking-wider">
-                <Navigation className="w-4 h-4" /> Buka Peta
-              </button>
+              {data.mapLink && (
+                <a href={data.mapLink} target="_blank" className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#500000] text-white hover:bg-[#8B1E24] transition-colors font-sans text-sm uppercase tracking-wider">
+                  <Navigation className="w-4 h-4" /> Buka Peta
+                </a>
+              )}
             </motion.div>
 
             <motion.div 
@@ -249,14 +251,16 @@ export default function Experience({ data, children }: ExperienceProps) {
               <h3 className="font-script text-5xl mb-4 text-white">Resepsi</h3>
               <div className="space-y-4 font-serif text-lg text-white/80">
                 <p className="font-bold text-white">{formattedDate}</p>
-                <p>11:00 WIB - 14:00 WIB</p>
+                <p>{data.resepsiTime || "11:00 WIB - 14:00 WIB"}</p>
                 <div className="w-12 h-px bg-[#C8A24C] mx-auto my-4" />
                 <p className="font-bold text-white">Lokasi Resepsi</p>
-                <p className="text-sm">{data.venue || "Grand Ballroom, Jakarta"}</p>
+                <p className="text-sm">{data.resepsiLocation || data.venue || "Grand Ballroom, Jakarta"}</p>
               </div>
-              <button className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full bg-white text-[#500000] hover:bg-gray-100 transition-colors font-sans text-sm uppercase tracking-wider">
-                <Navigation className="w-4 h-4" /> Buka Peta
-              </button>
+              {data.mapLink && (
+                <a href={data.mapLink} target="_blank" className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full bg-white text-[#500000] hover:bg-gray-100 transition-colors font-sans text-sm uppercase tracking-wider">
+                  <Navigation className="w-4 h-4" /> Buka Peta
+                </a>
+              )}
             </motion.div>
           </div>
         </div>
@@ -285,11 +289,19 @@ export default function Experience({ data, children }: ExperienceProps) {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <motion.div key={i} variants={fadeInUp} className="aspect-square rounded-2xl overflow-hidden bg-[#500000]/10">
-                <img src={`https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
-              </motion.div>
-            ))}
+            {data.galleryPhotos ? (
+              data.galleryPhotos.split(',').filter(Boolean).map((photoUrl: string, i: number) => (
+                <motion.div key={i} variants={fadeInUp} className="aspect-square rounded-2xl overflow-hidden bg-[#500000]/10">
+                  <img src={photoUrl.trim()} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+                </motion.div>
+              ))
+            ) : (
+              [1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                <motion.div key={i} variants={fadeInUp} className="aspect-square rounded-2xl overflow-hidden bg-[#500000]/10">
+                  <img src={`https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+                </motion.div>
+              ))
+            )}
           </motion.div>
         </div>
       </section>
@@ -313,12 +325,15 @@ export default function Experience({ data, children }: ExperienceProps) {
             </p>
             
             <div className="bg-white p-8 rounded-3xl border border-[#C8A24C]/30 shadow-lg max-w-sm mx-auto">
-              <h4 className="font-sans font-bold text-xl mb-2 text-[#500000]">BCA / PIX</h4>
+              <h4 className="font-sans font-bold text-xl mb-2 text-[#500000]">{data.bankName || "BCA / PIX"}</h4>
               <p className="font-mono text-xl tracking-widest text-[#500000] mb-4 break-all">
                 {data.pixKey || "1234 5678 90"}
               </p>
-              <p className="font-serif text-[#500000]/70 mb-6">a.n {data.brideName || "Nova"} / {data.groomName || "Partner"}</p>
-              <button className="px-6 py-2 bg-[#C8A24C]/10 text-[#C8A24C] font-semibold rounded-full hover:bg-[#C8A24C]/20 transition-colors border border-[#C8A24C]/50">
+              <p className="font-serif text-[#500000]/70 mb-6">a.n {data.accountHolder || (data.brideName + " / " + data.groomName) || "Nova / Partner"}</p>
+              <button 
+                className="px-6 py-2 bg-[#C8A24C]/10 text-[#C8A24C] font-semibold rounded-full hover:bg-[#C8A24C]/20 transition-colors border border-[#C8A24C]/50"
+                onClick={() => navigator.clipboard.writeText(data.pixKey || "1234 5678 90")}
+              >
                 Salin Rekening
               </button>
             </div>
