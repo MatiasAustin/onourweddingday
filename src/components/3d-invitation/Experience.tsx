@@ -62,25 +62,39 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
   const [isVideoFinished, setIsVideoFinished] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
   
   useEffect(() => {
     setMounted(true);
-    
-    // Fallback: If video doesn't end (e.g. error or very long), show text anyway after 10s
-    const timer = setTimeout(() => {
-      setIsVideoFinished(true);
-    }, 10000);
-    return () => clearTimeout(timer);
   }, []);
 
-  // Handle Music Playback
+  // Fallback timer starts only AFTER cover is opened
   useEffect(() => {
-    if (audioRef.current && isOpened) {
-      if (isMuted) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play().catch(e => console.log("Audio play blocked:", e));
+    if (isOpened) {
+      // If video doesn't end (e.g. error or very long), show text anyway after 10s
+      const timer = setTimeout(() => {
+        setIsVideoFinished(true);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpened]);
+
+  // Handle Music and Hero Video Playback
+  useEffect(() => {
+    if (isOpened) {
+      if (heroVideoRef.current) {
+        heroVideoRef.current.play().catch(e => console.log("Video play blocked:", e));
       }
+      
+      if (audioRef.current) {
+        if (isMuted) {
+          audioRef.current.pause();
+        } else {
+          audioRef.current.play().catch(e => console.log("Audio play blocked:", e));
+        }
+      }
+    } else if (audioRef.current) {
+       audioRef.current.pause();
     }
   }, [isOpened, isMuted]);
 
@@ -97,7 +111,8 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       <div className={`absolute inset-0 w-full h-full z-0 ${defaultBgClass} transition-opacity duration-1000 opacity-100`}>
         {isVideo ? (
            <video 
-             autoPlay 
+             ref={isHero ? heroVideoRef : undefined}
+             autoPlay={!isHero} 
              loop={!isHero} 
              muted 
              playsInline 
