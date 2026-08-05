@@ -5,6 +5,7 @@ import { updateInvitationSettings } from "@/app/editor/actions";
 import { Save, ExternalLink, ChevronDown, ChevronRight, Image as ImageIcon, MapPin, Users, Heart, Camera, Gift, Type, Layout, Palette, Code, Eye } from "lucide-react";
 import Link from "next/link";
 import Experience from "./Experience";
+import FileUpload from "@/components/ui/FileUpload";
 
 interface ThreeDEditorProps {
   invitation: any;
@@ -17,24 +18,35 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
   const [jsonText, setJsonText] = useState("");
   
   const [formData, setFormData] = useState({
-    // Colors
+    // Global Colors
     primaryColor: invitation.settingsJSON?.primaryColor || "#500000",
     secondaryColor: invitation.settingsJSON?.secondaryColor || "#C8A24C",
     bgColor: invitation.settingsJSON?.bgColor || "#fff1f2",
 
     // Hero
     heroBgUrl: invitation.settingsJSON?.heroBgUrl || "",
+    heroTextColor: invitation.settingsJSON?.heroTextColor || "#ffffff",
     brideName: invitation.settingsJSON?.brideName || "Nova",
     groomName: invitation.settingsJSON?.groomName || "Partner",
     weddingDate: invitation.settingsJSON?.weddingDate || "2024-06-15T19:30",
     
     // Quote
     quoteBgUrl: invitation.settingsJSON?.quoteBgUrl || "",
+    quoteBgColor: invitation.settingsJSON?.quoteBgColor || "",
+    quoteTextColor: invitation.settingsJSON?.quoteTextColor || "",
+    quoteIconColor: invitation.settingsJSON?.quoteIconColor || "",
+    quoteSourceColor: invitation.settingsJSON?.quoteSourceColor || "",
     quoteText: invitation.settingsJSON?.quoteText || "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri...",
     quoteSource: invitation.settingsJSON?.quoteSource || "Ar-Rum: 21",
     
     // Couple
     coupleBgUrl: invitation.settingsJSON?.coupleBgUrl || "",
+    coupleBgColor: invitation.settingsJSON?.coupleBgColor || "",
+    coupleTitleColor: invitation.settingsJSON?.coupleTitleColor || "",
+    coupleSubtitleColor: invitation.settingsJSON?.coupleSubtitleColor || "",
+    coupleNameColor: invitation.settingsJSON?.coupleNameColor || "",
+    coupleTextColor: invitation.settingsJSON?.coupleTextColor || "",
+    coupleAccentColor: invitation.settingsJSON?.coupleAccentColor || "",
     bridePhotoUrl: invitation.settingsJSON?.bridePhotoUrl || "",
     brideParents: invitation.settingsJSON?.brideParents || "Bapak Fulan & Ibu Fulanah",
     groomPhotoUrl: invitation.settingsJSON?.groomPhotoUrl || "",
@@ -42,6 +54,15 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     
     // Events
     eventBgUrl: invitation.settingsJSON?.eventBgUrl || "",
+    eventBgColor: invitation.settingsJSON?.eventBgColor || "",
+    eventTitleColor: invitation.settingsJSON?.eventTitleColor || "",
+    eventSubtitleColor: invitation.settingsJSON?.eventSubtitleColor || "",
+    eventCard1BgColor: invitation.settingsJSON?.eventCard1BgColor || "",
+    eventCard1TextColor: invitation.settingsJSON?.eventCard1TextColor || "",
+    eventCard1AccentColor: invitation.settingsJSON?.eventCard1AccentColor || "",
+    eventCard2BgColor: invitation.settingsJSON?.eventCard2BgColor || "",
+    eventCard2TextColor: invitation.settingsJSON?.eventCard2TextColor || "",
+    eventCard2AccentColor: invitation.settingsJSON?.eventCard2AccentColor || "",
     akadTime: invitation.settingsJSON?.akadTime || "08:00 WIB - Selesai",
     akadLocation: invitation.settingsJSON?.akadLocation || "Masjid Agung, Jakarta",
     resepsiTime: invitation.settingsJSON?.resepsiTime || "11:00 WIB - 14:00 WIB",
@@ -50,20 +71,49 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     
     // Gallery
     galleryBgUrl: invitation.settingsJSON?.galleryBgUrl || "",
+    galleryBgColor: invitation.settingsJSON?.galleryBgColor || "",
+    galleryTitleColor: invitation.settingsJSON?.galleryTitleColor || "",
+    galleryIconColor: invitation.settingsJSON?.galleryIconColor || "",
     galleryPhotos: invitation.settingsJSON?.galleryPhotos || "",
     
     // Gift
     giftBgUrl: invitation.settingsJSON?.giftBgUrl || "",
+    giftBgColor: invitation.settingsJSON?.giftBgColor || "",
+    giftTitleColor: invitation.settingsJSON?.giftTitleColor || "",
+    giftIconColor: invitation.settingsJSON?.giftIconColor || "",
+    giftTextColor: invitation.settingsJSON?.giftTextColor || "",
+    giftCardBgColor: invitation.settingsJSON?.giftCardBgColor || "",
+    giftCardTitleColor: invitation.settingsJSON?.giftCardTitleColor || "",
+    giftCardTextColor: invitation.settingsJSON?.giftCardTextColor || "",
     bankName: invitation.settingsJSON?.bankName || "BCA / PIX",
     pixKey: invitation.settingsJSON?.pixKey || "1234 5678 90",
     accountHolder: invitation.settingsJSON?.accountHolder || "",
     
-    // Others
+    // RSVP
     rsvpBgUrl: invitation.settingsJSON?.rsvpBgUrl || "",
+    rsvpBgColor: invitation.settingsJSON?.rsvpBgColor || "",
+    rsvpTitleColor: invitation.settingsJSON?.rsvpTitleColor || "",
+    rsvpSubtitleColor: invitation.settingsJSON?.rsvpSubtitleColor || "",
+    rsvpFormBgColor: invitation.settingsJSON?.rsvpFormBgColor || "",
+    rsvpFormTextColor: invitation.settingsJSON?.rsvpFormTextColor || "",
+    rsvpButtonBgColor: invitation.settingsJSON?.rsvpButtonBgColor || "",
+    rsvpButtonTextColor: invitation.settingsJSON?.rsvpButtonTextColor || "",
+    
+    // Footer
     footerBgUrl: invitation.settingsJSON?.footerBgUrl || "",
+    footerBgColor: invitation.settingsJSON?.footerBgColor || "",
+    footerTitleColor: invitation.settingsJSON?.footerTitleColor || "",
+    footerTextColor: invitation.settingsJSON?.footerTextColor || "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleUploadChange = (e: { target: { name: string; value: string } }) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
@@ -125,7 +175,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
   };
 
   const InputField = ({ label, name, type = "text", placeholder = "", multiline = false }: any) => (
-    <div>
+    <div className="mb-4">
       <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">{label}</label>
       {multiline ? (
         <textarea
@@ -141,7 +191,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
           {type === 'color' && (
              <div 
                className="w-8 h-8 rounded-lg border border-secondary flex-shrink-0"
-               style={{ backgroundColor: formData[name as keyof typeof formData] }}
+               style={{ backgroundColor: formData[name as keyof typeof formData] || 'transparent' }}
              />
           )}
           <input
@@ -199,15 +249,16 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
             </div>
           ) : (
             <>
-              <AccordionItem id="theme" title="Tema Warna" icon={Palette}>
-                <InputField label="Primary Color (Teks/Aksen)" name="primaryColor" type="color" />
-                <InputField label="Secondary Color (Ikon/Elemen)" name="secondaryColor" type="color" />
-                <InputField label="Background Color" name="bgColor" type="color" />
+              <AccordionItem id="theme" title="Tema Global" icon={Palette}>
+                <InputField label="Global Primary Color" name="primaryColor" type="color" />
+                <InputField label="Global Secondary Color" name="secondaryColor" type="color" />
+                <InputField label="Global Background Color" name="bgColor" type="color" />
               </AccordionItem>
 
-              <AccordionItem id="hero" title="Hero & General" icon={Layout}>
-                <InputField label="Hero Background URL (Video/Image)" name="heroBgUrl" placeholder="https://..." />
-                <div className="grid grid-cols-2 gap-4">
+              <AccordionItem id="hero" title="Hero Section" icon={Layout}>
+                <FileUpload label="Background Media (URL/Upload)" name="heroBgUrl" value={formData.heroBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                <InputField label="Text Color" name="heroTextColor" type="color" />
+                <div className="grid grid-cols-2 gap-4 mt-4">
                   <InputField label="Bride Name" name="brideName" />
                   <InputField label="Groom Name" name="groomName" />
                 </div>
@@ -215,27 +266,66 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
               </AccordionItem>
 
               <AccordionItem id="quote" title="Quote Section" icon={Type}>
-                <InputField label="Background URL" name="quoteBgUrl" placeholder="https://..." />
+                <FileUpload label="Background Media" name="quoteBgUrl" value={formData.quoteBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Section Background Color" name="quoteBgColor" type="color" />
+                  <InputField label="Quote Text Color" name="quoteTextColor" type="color" />
+                  <InputField label="Quote Icon Color" name="quoteIconColor" type="color" />
+                  <InputField label="Quote Source Color" name="quoteSourceColor" type="color" />
+                </div>
                 <InputField label="Quote Text" name="quoteText" multiline />
                 <InputField label="Quote Source" name="quoteSource" placeholder="e.g. Ar-Rum: 21" />
               </AccordionItem>
 
-              <AccordionItem id="couple" title="Mempelai" icon={Heart}>
-                <InputField label="Background URL" name="coupleBgUrl" placeholder="https://..." />
-                <div className="p-3 bg-white border border-secondary/30 rounded-lg space-y-4 mb-4">
+              <AccordionItem id="couple" title="Mempelai Section" icon={Heart}>
+                <FileUpload label="Background Media" name="coupleBgUrl" value={formData.coupleBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                
+                <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Section Colors</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Background Color" name="coupleBgColor" type="color" />
+                  <InputField label="Title Color" name="coupleTitleColor" type="color" />
+                  <InputField label="Subtitle Color" name="coupleSubtitleColor" type="color" />
+                  <InputField label="Accent Color (&)" name="coupleAccentColor" type="color" />
+                  <InputField label="Name Color" name="coupleNameColor" type="color" />
+                  <InputField label="Text Color" name="coupleTextColor" type="color" />
+                </div>
+
+                <div className="p-4 bg-white border border-secondary/30 rounded-lg space-y-4 mb-4 mt-4">
                   <h4 className="text-xs font-bold text-primary uppercase">Bride</h4>
-                  <InputField label="Photo URL" name="bridePhotoUrl" placeholder="https://..." />
+                  <FileUpload label="Photo" name="bridePhotoUrl" value={formData.bridePhotoUrl} onChange={handleUploadChange} placeholder="https://..." />
                   <InputField label="Parents Name" name="brideParents" placeholder="Putri dari..." />
                 </div>
-                <div className="p-3 bg-white border border-secondary/30 rounded-lg space-y-4">
+                <div className="p-4 bg-white border border-secondary/30 rounded-lg space-y-4">
                   <h4 className="text-xs font-bold text-primary uppercase">Groom</h4>
-                  <InputField label="Photo URL" name="groomPhotoUrl" placeholder="https://..." />
+                  <FileUpload label="Photo" name="groomPhotoUrl" value={formData.groomPhotoUrl} onChange={handleUploadChange} placeholder="https://..." />
                   <InputField label="Parents Name" name="groomParents" placeholder="Putra dari..." />
                 </div>
               </AccordionItem>
 
-              <AccordionItem id="events" title="Detail Acara" icon={MapPin}>
-                <InputField label="Background URL" name="eventBgUrl" placeholder="https://..." />
+              <AccordionItem id="events" title="Detail Acara Section" icon={MapPin}>
+                <FileUpload label="Background Media" name="eventBgUrl" value={formData.eventBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                
+                <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Section Colors</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Background Color" name="eventBgColor" type="color" />
+                  <InputField label="Title Color" name="eventTitleColor" type="color" />
+                  <InputField label="Subtitle Color" name="eventSubtitleColor" type="color" />
+                </div>
+
+                <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Akad Card Colors</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Card Background" name="eventCard1BgColor" type="color" />
+                  <InputField label="Card Text Color" name="eventCard1TextColor" type="color" />
+                  <InputField label="Accent / Button" name="eventCard1AccentColor" type="color" />
+                </div>
+
+                <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Resepsi Card Colors</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Card Background" name="eventCard2BgColor" type="color" />
+                  <InputField label="Card Text Color" name="eventCard2TextColor" type="color" />
+                  <InputField label="Accent / Button" name="eventCard2AccentColor" type="color" />
+                </div>
+
                 <InputField label="Google Maps Link" name="mapLink" placeholder="https://maps.google.com/..." />
                 
                 <div className="grid grid-cols-2 gap-4 mt-4">
@@ -246,22 +336,58 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 </div>
               </AccordionItem>
 
-              <AccordionItem id="gallery" title="Galeri" icon={Camera}>
-                <InputField label="Background URL" name="galleryBgUrl" placeholder="https://..." />
-                <InputField label="Photo URLs (Comma separated)" name="galleryPhotos" multiline placeholder="https://img1.jpg, https://img2.jpg" />
-                <p className="text-xs text-foreground/50 mt-1">Pisahkan link foto dengan tanda koma.</p>
+              <AccordionItem id="gallery" title="Galeri Section" icon={Camera}>
+                <FileUpload label="Background Media" name="galleryBgUrl" value={formData.galleryBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Background Color" name="galleryBgColor" type="color" />
+                  <InputField label="Title Color" name="galleryTitleColor" type="color" />
+                  <InputField label="Icon Color" name="galleryIconColor" type="color" />
+                </div>
+
+                <FileUpload label="Photos (URL/Upload)" name="galleryPhotos" value={formData.galleryPhotos} onChange={handleUploadChange} placeholder="Upload photos..." multiline />
+                <p className="text-xs text-foreground/50 mt-1 mb-4">Pilih file satu per satu, link akan ditambahkan otomatis.</p>
               </AccordionItem>
 
-              <AccordionItem id="gift" title="Wedding Gift" icon={Gift}>
-                <InputField label="Background URL" name="giftBgUrl" placeholder="https://..." />
+              <AccordionItem id="gift" title="Wedding Gift Section" icon={Gift}>
+                <FileUpload label="Background Media" name="giftBgUrl" value={formData.giftBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Background Color" name="giftBgColor" type="color" />
+                  <InputField label="Title Color" name="giftTitleColor" type="color" />
+                  <InputField label="Icon Color" name="giftIconColor" type="color" />
+                  <InputField label="Text Color" name="giftTextColor" type="color" />
+                  <InputField label="Card Background" name="giftCardBgColor" type="color" />
+                  <InputField label="Card Title Color" name="giftCardTitleColor" type="color" />
+                  <InputField label="Card Text Color" name="giftCardTextColor" type="color" />
+                </div>
+
                 <InputField label="Bank / Wallet Name" name="bankName" placeholder="BCA / Mandiri" />
                 <InputField label="Account Number / Pix Key" name="pixKey" />
                 <InputField label="Account Holder Name" name="accountHolder" placeholder="A.n Nova" />
               </AccordionItem>
 
-              <AccordionItem id="others" title="Lainnya (RSVP & Footer)" icon={ImageIcon}>
-                <InputField label="RSVP Background URL" name="rsvpBgUrl" placeholder="https://..." />
-                <InputField label="Footer Background URL" name="footerBgUrl" placeholder="https://..." />
+              <AccordionItem id="rsvp" title="RSVP Section" icon={Users}>
+                <FileUpload label="Background Media" name="rsvpBgUrl" value={formData.rsvpBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Background Color" name="rsvpBgColor" type="color" />
+                  <InputField label="Title Color" name="rsvpTitleColor" type="color" />
+                  <InputField label="Subtitle Color" name="rsvpSubtitleColor" type="color" />
+                  <InputField label="Form Background" name="rsvpFormBgColor" type="color" />
+                  <InputField label="Form Text Color" name="rsvpFormTextColor" type="color" />
+                  <InputField label="Button Background" name="rsvpButtonBgColor" type="color" />
+                  <InputField label="Button Text Color" name="rsvpButtonTextColor" type="color" />
+                </div>
+              </AccordionItem>
+              
+              <AccordionItem id="footer" title="Footer Section" icon={ImageIcon}>
+                <FileUpload label="Background Media" name="footerBgUrl" value={formData.footerBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Background Color" name="footerBgColor" type="color" />
+                  <InputField label="Title Color" name="footerTitleColor" type="color" />
+                  <InputField label="Text Color" name="footerTextColor" type="color" />
+                </div>
               </AccordionItem>
 
               <div className="pt-4 pb-8">
