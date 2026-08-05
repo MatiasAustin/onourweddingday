@@ -17,6 +17,19 @@ export default async function EditorLayout({
     redirect("/login");
   }
 
+  const { invitationId } = await params;
+  const { data: invitation } = await supabase.from('Invitation').select('templateId').eq('id', invitationId).single();
+
+  // If this invitation uses the cinematic 3D template, skip the block editor layout
+  // because ThreeDEditor provides its own full-screen split layout.
+  if (invitation?.templateId === "elegance-3d") {
+    return (
+      <EditorProvider>
+        {children}
+      </EditorProvider>
+    );
+  }
+
   // The Visual Builder Layout has the Sidebar on the left
   // and the live preview iframe/canvas on the right
   return (
