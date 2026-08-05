@@ -30,9 +30,16 @@ interface ExperienceProps {
 
 export default function Experience({ data, children }: ExperienceProps) {
   const [mounted, setMounted] = useState(false);
+  const [isVideoFinished, setIsVideoFinished] = useState(false);
   
   useEffect(() => {
     setMounted(true);
+    
+    // Fallback: If video doesn't end (e.g. error or very long), show text anyway after 10s
+    const timer = setTimeout(() => {
+      setIsVideoFinished(true);
+    }, 10000);
+    return () => clearTimeout(timer);
   }, []);
 
   if (!mounted) return <div className="min-h-screen bg-[#fff1f2]" />;
@@ -45,10 +52,14 @@ export default function Experience({ data, children }: ExperienceProps) {
     const isVideo = url.endsWith('.mp4') || url.endsWith('.webm') || url.includes('pixabay.com/video');
     
     return (
-      <div className={`absolute inset-0 w-full h-full -z-10 ${defaultBgClass}`}>
+      <div className={`absolute inset-0 w-full h-full -z-10 ${defaultBgClass} transition-opacity duration-1000 ${isHero && isVideoFinished ? 'opacity-30' : 'opacity-100'}`}>
         {isVideo ? (
            <video 
-             autoPlay loop muted playsInline 
+             autoPlay 
+             loop={!isHero} 
+             muted 
+             playsInline 
+             onEnded={() => isHero && setIsVideoFinished(true)}
              className={`absolute inset-0 w-full h-full object-cover ${isHero ? 'opacity-60' : 'opacity-30'}`}
              src={url} 
            />
@@ -57,6 +68,12 @@ export default function Experience({ data, children }: ExperienceProps) {
              src={url} 
              className={`absolute inset-0 w-full h-full object-cover ${isHero ? 'opacity-60' : 'opacity-30'}`}
              alt="Background" 
+             onLoad={() => {
+               if (isHero) {
+                 // If hero is just an image, show text immediately
+                 setIsVideoFinished(true);
+               }
+             }}
            />
         )}
       </div>
@@ -74,31 +91,33 @@ export default function Experience({ data, children }: ExperienceProps) {
       <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
         {renderBg(data.heroBgUrl, "bg-black", true)}
         
-        {/* Content Layer */}
-        <motion.div 
-          className="relative z-10 text-center text-white p-8"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-        >
-          <p className="tracking-[0.3em] uppercase text-sm mb-6 text-white/80">The Wedding Of</p>
-          <h1 className="font-script text-8xl md:text-9xl mb-4 drop-shadow-xl">
-            {data.brideName || "Nova"}
-          </h1>
-          <p className="font-serif text-3xl italic my-2 text-white/70">&</p>
-          <h1 className="font-script text-8xl md:text-9xl drop-shadow-xl">
-            {data.groomName || "Partner"}
-          </h1>
-          
+        {/* Content Layer (Only animates in after video finishes or timer triggers) */}
+        {isVideoFinished && (
           <motion.div 
-            className="mt-16 text-sm tracking-widest uppercase border border-white/30 rounded-full px-6 py-3 inline-block bg-black/20 backdrop-blur-sm"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 1 }}
+            className="relative z-10 text-center text-white p-8"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
           >
-            {formattedDate}
+            <p className="tracking-[0.3em] uppercase text-sm mb-6 text-white/80">The Wedding Of</p>
+            <h1 className="font-script text-8xl md:text-9xl mb-4 drop-shadow-xl">
+              {data.brideName || "Nova"}
+            </h1>
+            <p className="font-serif text-3xl italic my-2 text-white/70">&</p>
+            <h1 className="font-script text-8xl md:text-9xl drop-shadow-xl">
+              {data.groomName || "Partner"}
+            </h1>
+            
+            <motion.div 
+              className="mt-16 text-sm tracking-widest uppercase border border-white/30 rounded-full px-6 py-3 inline-block bg-black/20 backdrop-blur-sm"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 1 }}
+            >
+              {formattedDate}
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
       </section>
 
       {/* 2. QUOTE SECTION */}
