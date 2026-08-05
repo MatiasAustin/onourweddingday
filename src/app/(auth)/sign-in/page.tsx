@@ -1,6 +1,7 @@
 import { login } from "./actions";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { PasswordInput } from "@/components/PasswordInput";
 
 export default async function SignInPage({
   searchParams,
@@ -36,14 +37,7 @@ export default async function SignInPage({
 
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-foreground/80" htmlFor="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="••••••••"
-              required
-              className="w-full px-4 py-2.5 rounded-xl border border-secondary/50 bg-secondary/5 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-            />
+            <PasswordInput />
           </div>
 
           {message && (
