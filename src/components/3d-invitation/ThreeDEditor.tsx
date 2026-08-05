@@ -19,12 +19,12 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
   
   const [formData, setFormData] = useState({
     // Global Colors
-    primaryColor: invitation.settingsJSON?.primaryColor || "#500000",
-    secondaryColor: invitation.settingsJSON?.secondaryColor || "#C8A24C",
-    bgColor: invitation.settingsJSON?.bgColor || "#fff1f2",
+    primaryColor: invitation.settingsJSON?.primaryColor || "#4A0E17",
+    secondaryColor: invitation.settingsJSON?.secondaryColor || "#C5A059",
+    bgColor: invitation.settingsJSON?.bgColor || "#F7F3EC",
 
     // Typography
-    fontFamilyTitle: invitation.settingsJSON?.fontFamilyTitle || "Great Vibes",
+    fontFamilyTitle: invitation.settingsJSON?.fontFamilyTitle || "Playfair Display",
     fontFamilyBody: invitation.settingsJSON?.fontFamilyBody || "Montserrat",
     fontSizeTitle: invitation.settingsJSON?.fontSizeTitle || "4rem",
     fontSizeBody: invitation.settingsJSON?.fontSizeBody || "1rem",
@@ -54,7 +54,9 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     heroOverlayColor: invitation.settingsJSON?.heroOverlayColor || "#000000",
     heroOverlayOpacity: invitation.settingsJSON?.heroOverlayOpacity || "0.4",
     heroTextDelay: invitation.settingsJSON?.heroTextDelay || "2",
-    heroTitleText: invitation.settingsJSON?.heroTitleText || "The Wedding Of",
+    heroTitleText: invitation.settingsJSON?.heroTitleText || "VINTAGE JAVANESE WEDDING",
+    topOrnamentUrl: invitation.settingsJSON?.topOrnamentUrl || "",
+    bottomOrnamentUrl: invitation.settingsJSON?.bottomOrnamentUrl || "",
     heroLayout: invitation.settingsJSON?.heroLayout || "center",
     heroTextAlign: invitation.settingsJSON?.heroTextAlign || "center",
     heroLineHeight: invitation.settingsJSON?.heroLineHeight || "1.2",
@@ -153,6 +155,11 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     customHtml_event: invitation.settingsJSON?.customHtml_event || "",
     customCss_event: invitation.settingsJSON?.customCss_event || "",
     customJs_event: invitation.settingsJSON?.customJs_event || "",
+    
+    // Countdown
+    countdownBgColor: invitation.settingsJSON?.countdownBgColor || "#4A0E17",
+    countdownTextColor: invitation.settingsJSON?.countdownTextColor || "#ffffff",
+    countdownDate: invitation.settingsJSON?.countdownDate || "2026-10-04T08:00:00",
     
     // Gallery
     galleryBgUrl: invitation.settingsJSON?.galleryBgUrl || "",
@@ -453,10 +460,12 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
 
                 <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Media & Overlay</h4>
                 <FileUpload label="Upload Background (Photo/Video)" name="heroBgUrl" value={formData.heroBgUrl} onChange={handleUploadChange} placeholder="https://..." />
-                <InputField label="Hero Text Color" name="heroTextColor" type="color" />
-                <InputField label="Overlay Color" name="heroOverlayColor" type="color" />
-                
-                <div className="mb-4">
+                  <InputField label="Text Color" name="heroTextColor" type="color" />
+                  <InputField label="Overlay Color" name="heroOverlayColor" type="color" />
+                  <FileUpload label="Top Ornament (PNG)" name="topOrnamentUrl" value={formData.topOrnamentUrl} onChange={handleUploadChange} placeholder="https://..." />
+                  <FileUpload label="Bottom Ornament (PNG)" name="bottomOrnamentUrl" value={formData.bottomOrnamentUrl} onChange={handleUploadChange} placeholder="https://..." />
+                  
+                  <div className="w-full mt-4">
                   <div className="flex justify-between items-center mb-2">
                     <label className="text-xs font-semibold uppercase tracking-wider text-foreground/80">Overlay Opacity</label>
                     <span className="text-xs font-mono bg-secondary/20 text-primary px-2 py-1 rounded">
@@ -633,6 +642,17 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                   <InputField label="Button Text Color" name="coverButtonTextColor" type="color" />
                   <InputField label="Button Bg Color" name="coverButtonBgColor" type="color" />
                 </div>
+              </>
+            )}
+          </AccordionItem>
+
+          {/* COUNTDOWN */}
+          <AccordionItem id="countdown" title="Hitung Mundur (Countdown)" icon={Heart}>
+            {isCodeMode ? <CodeEditorGroup sectionId="countdown" /> : (
+              <>
+                <InputField label="Tanggal & Waktu (YYYY-MM-DDTHH:mm)" name="countdownDate" type="datetime-local" />
+                <InputField label="Background Color" name="countdownBgColor" type="color" />
+                <InputField label="Text Color" name="countdownTextColor" type="color" />
               </>
             )}
           </AccordionItem>

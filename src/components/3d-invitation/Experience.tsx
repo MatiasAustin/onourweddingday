@@ -95,6 +95,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
   const [isOpened, setIsOpened] = useState(false);
   const [isHeroTextVisible, setIsHeroTextVisible] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const audioRef = useRef<HTMLAudioElement>(null);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   
@@ -131,6 +132,32 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
        audioRef.current.pause();
     }
   }, [isOpened, isMuted]);
+
+  // Countdown Timer Logic
+  useEffect(() => {
+    if (!data.countdownDate) return;
+    
+    const target = new Date(data.countdownDate).getTime();
+    
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = target - now;
+      
+      if (distance < 0) {
+        clearInterval(interval);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      } else {
+        setTimeLeft({
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((distance % (1000 * 60)) / 1000)
+        });
+      }
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [data.countdownDate]);
 
   if (!mounted) return <div className="min-h-screen bg-[var(--bg-color)]" />;
 
@@ -227,19 +254,37 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
                 )}
               </div>
 
-              <motion.button
-                onClick={() => setIsOpened(true)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="mt-auto px-8 py-4 rounded-full flex items-center gap-3 shadow-2xl font-bold tracking-wider uppercase text-sm"
-                style={{ 
-                  backgroundColor: data.coverButtonBgColor || 'var(--secondary)', 
-                  color: data.coverButtonTextColor || '#ffffff' 
-                }}
-              >
-                <MailOpen className="w-5 h-5" />
-                Buka Undangan
-              </motion.button>
+              <div className="mt-auto flex flex-col md:flex-row items-center gap-4">
+                <motion.button
+                  onClick={() => setIsOpened(true)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-8 py-3 rounded-full flex items-center gap-3 shadow-xl font-bold tracking-wider uppercase text-xs border-2"
+                  style={{ 
+                    backgroundColor: data.coverButtonBgColor || 'var(--primary)', 
+                    color: data.coverButtonTextColor || '#ffffff',
+                    borderColor: data.coverButtonBgColor || 'var(--primary)'
+                  }}
+                >
+                  <MailOpen className="w-4 h-4" />
+                  Open Invitation
+                </motion.button>
+
+                <motion.button
+                  onClick={() => setIsOpened(true)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-8 py-3 rounded-full flex items-center gap-3 shadow-xl font-bold tracking-wider uppercase text-xs border-2"
+                  style={{ 
+                    backgroundColor: 'transparent',
+                    color: data.coverButtonBgColor || 'var(--primary)',
+                    borderColor: data.coverButtonBgColor || 'var(--primary)'
+                  }}
+                >
+                  <CalendarHeart className="w-4 h-4" />
+                  Save The Date
+                </motion.button>
+              </div>
             </div>
             
             <CustomInjector html={data.customHtml_cover} css={data.customCss_cover} js={data.customJs_cover} />
@@ -280,6 +325,14 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
         {/* Dynamic Overlay */}
         <div className="absolute inset-0 w-full h-full z-0 transition-opacity duration-1000" style={{ backgroundColor: data.heroOverlayColor || '#000000', opacity: isHeroTextVisible ? (data.heroOverlayOpacity || '0.4') : '0' }} />
         
+        {/* Floral Ornaments */}
+        {data.topOrnamentUrl && (
+          <img src={data.topOrnamentUrl} className="absolute top-0 left-0 w-full md:w-2/3 object-contain z-0 pointer-events-none drop-shadow-xl" alt="Top Ornament" />
+        )}
+        {data.bottomOrnamentUrl && (
+          <img src={data.bottomOrnamentUrl} className="absolute bottom-0 right-0 w-full md:w-2/3 object-contain z-0 pointer-events-none drop-shadow-xl" style={{ transform: 'rotate(180deg)' }} alt="Bottom Ornament" />
+        )}
+        
         {/* Content Layer (Only animate in if isOpened is true) */}
         {isHeroTextVisible && isOpened && (
           <motion.div 
@@ -289,10 +342,10 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
             animate={{ opacity: 1, y: parseInt(data.heroTranslateY || "0") }}
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
-            <p className="font-sans font-bold tracking-[0.3em] uppercase text-sm mb-4">{data.heroTitleText || "The Wedding Of"}</p>
-            <h1 className="font-script text-6xl md:text-8xl" style={{ lineHeight: data.heroLineHeight || "1.2" }}>{data.brideName || "Nova"}</h1>
-            <p className="font-serif italic text-2xl md:text-4xl my-2">&</p>
-            <h1 className="font-script text-6xl md:text-8xl mb-8" style={{ lineHeight: data.heroLineHeight || "1.2" }}>{data.groomName || "Partner"}</h1>
+            <p className="font-sans font-bold tracking-[0.3em] uppercase text-xs mb-8 opacity-80" style={{ color: data.secondaryColor || 'var(--secondary)' }}>{data.heroTitleText || "VINTAGE JAVANESE WEDDING"}</p>
+            <h1 className="font-script text-6xl md:text-7xl mb-8" style={{ lineHeight: data.heroLineHeight || "1.2", letterSpacing: "-0.02em" }}>
+              {data.brideName || "Nova"} & {data.groomName || "Irfan"}
+            </h1>
             
             <motion.div 
               className="inline-block border-y border-current py-2 px-8"
@@ -337,14 +390,17 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
 
         <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div 
-            className="text-center mb-16"
+            className="text-center mb-16 flex flex-col items-center"
             variants={fadeInUp}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <h2 className="font-script text-6xl" style={{ color: data.coupleTitleColor || 'var(--primary)' }}>Mempelai</h2>
-            <p className="font-sans text-sm tracking-widest uppercase mt-4" style={{ color: data.coupleSubtitleColor || 'var(--secondary)' }}>Dengan memohon rahmat Allah SWT</p>
+            <p className="font-sans font-bold tracking-[0.2em] uppercase text-xs mb-4" style={{ color: data.secondaryColor || 'var(--secondary)' }}>BRIDE & GROOM</p>
+            <div className="w-12 h-px mb-6" style={{ backgroundColor: data.secondaryColor || 'var(--secondary)' }} />
+            <h2 className="font-script text-4xl md:text-5xl px-4" style={{ color: data.coupleTitleColor || 'var(--primary)' }}>Two Families, One Sacred Promise</h2>
+            <div className="w-12 h-px mt-6 mb-6" style={{ backgroundColor: data.secondaryColor || 'var(--secondary)' }} />
+            <p className="font-serif text-sm opacity-70 max-w-md mx-auto leading-relaxed px-4" style={{ color: data.coupleSubtitleColor || 'var(--primary)' }}>In the warmth of tradition and the blessing of our parents, we begin a new home together.</p>
           </motion.div>
 
           <div className="flex flex-col md:flex-row justify-center items-center gap-16 md:gap-32">
@@ -448,78 +504,112 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
          </div>
       </section>
 
+      {/* 3.75 COUNTDOWN SECTION */}
+      {data.countdownDate && (
+        <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.countdownBgColor || '#4A0E17' }}>
+          <div className="relative z-10 max-w-4xl mx-auto text-center">
+            <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <h2 className="font-script text-5xl md:text-6xl mb-12" style={{ color: data.countdownTextColor || '#ffffff' }}>Save The Date</h2>
+              
+              <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+                {[
+                  { label: "DAYS", value: timeLeft.days },
+                  { label: "HOURS", value: timeLeft.hours },
+                  { label: "MINUTES", value: timeLeft.minutes },
+                  { label: "SECONDS", value: timeLeft.seconds }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex flex-col items-center justify-center w-24 h-24 md:w-32 md:h-32 border rounded-xl backdrop-blur-sm" style={{ borderColor: data.secondaryColor ? `${data.secondaryColor}80` : 'rgba(197,160,89,0.5)', backgroundColor: 'rgba(0,0,0,0.1)' }}>
+                    <span className="font-serif text-3xl md:text-4xl font-bold mb-1" style={{ color: data.countdownTextColor || '#ffffff' }}>{String(item.value).padStart(2, '0')}</span>
+                    <span className="font-sans text-[9px] md:text-xs tracking-widest uppercase opacity-70" style={{ color: data.countdownTextColor || '#ffffff' }}>{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+          {/* Subtle floral accents on sides if needed */}
+          {data.topOrnamentUrl && (
+            <img src={data.topOrnamentUrl} className="absolute -left-32 top-1/2 -translate-y-1/2 w-64 object-contain opacity-20 pointer-events-none" style={{ transform: 'rotate(90deg)' }} alt="" />
+          )}
+          {data.bottomOrnamentUrl && (
+            <img src={data.bottomOrnamentUrl} className="absolute -right-32 top-1/2 -translate-y-1/2 w-64 object-contain opacity-20 pointer-events-none" style={{ transform: 'rotate(-90deg)' }} alt="" />
+          )}
+        </section>
+      )}
+
       {/* 4. EVENT DETAILS SECTION */}
       <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.eventBgColor || 'var(--bg-color)' }}>
         {renderBg(data.eventBgUrl, "")}
 
         <div className="relative z-10 max-w-5xl mx-auto">
           <motion.div 
-            className="text-center mb-16"
+            className="text-center mb-16 flex flex-col items-center"
             variants={fadeInUp}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <h2 className="font-script text-6xl" style={{ color: data.eventTitleColor || 'var(--primary)' }}>Detail Acara</h2>
-            <p className="font-sans text-sm tracking-widest uppercase mt-4" style={{ color: data.eventSubtitleColor || 'var(--secondary)' }}>Waktu & Tempat Pelaksanaan</p>
+            <p className="font-sans font-bold tracking-[0.2em] uppercase text-xs mb-4" style={{ color: data.secondaryColor || 'var(--secondary)' }}>WEDDING EVENTS</p>
+            <div className="w-12 h-px mb-6" style={{ backgroundColor: data.secondaryColor || 'var(--secondary)' }} />
+            <h2 className="font-script text-4xl md:text-5xl px-4" style={{ color: data.eventTitleColor || 'var(--primary)' }}>Akad & Reception</h2>
+            <div className="w-12 h-px mt-6 mb-6" style={{ backgroundColor: data.secondaryColor || 'var(--secondary)' }} />
+            <p className="font-serif text-sm opacity-70 max-w-md mx-auto leading-relaxed px-4" style={{ color: data.eventTitleColor || 'var(--primary)' }}>We would be honored by your presence and prayers as we celebrate with sacred tradition and family warmth.</p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Akad Card */}
             <motion.div 
-              className="backdrop-blur-md p-10 rounded-[40px] border shadow-xl text-center relative overflow-hidden"
+              className="p-10 rounded-[30px] border shadow-sm text-center relative overflow-hidden"
               style={{ 
-                backgroundColor: data.eventCard1BgColor || 'rgba(255,255,255,0.7)',
+                backgroundColor: data.eventCard1BgColor || 'var(--bg-color)',
                 color: data.eventCard1TextColor || 'var(--primary)',
-                borderColor: data.eventCard1AccentColor ? `${data.eventCard1AccentColor}4d` : 'rgba(200,162,76,0.3)'
+                borderColor: data.eventCard1AccentColor ? `${data.eventCard1AccentColor}4d` : 'rgba(197,160,89,0.3)'
               }}
               variants={scaleUp}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
             >
-              <div className="absolute top-0 right-0 w-32 h-32 rounded-bl-full" style={{ backgroundColor: data.eventCard1AccentColor ? `${data.eventCard1AccentColor}1a` : 'rgba(200,162,76,0.1)' }} />
-              <Heart className="w-10 h-10 mx-auto mb-6" style={{ color: data.eventCard1AccentColor || 'var(--secondary)' }} />
-              <h3 className="font-script text-5xl mb-4">Akad Nikah</h3>
-              <div className="space-y-4 font-serif text-lg opacity-80">
-                <p className="font-bold opacity-100">{data.akadHari ? `${data.akadHari}, ${data.akadTanggal}` : formattedDate}</p>
-                <p>{data.akadWaktu || data.akadTime || "08:00 WIB - Selesai"}</p>
-                <div className="w-12 h-px mx-auto my-4" style={{ backgroundColor: data.eventCard1AccentColor || 'var(--secondary)' }} />
-                <p className="font-bold opacity-100">{data.akadLokasi || "Lokasi Akad"}</p>
-                <p className="text-sm">{data.akadAlamat || data.akadLocation || data.venue || "Masjid Agung, Jakarta"}</p>
+              <Heart className="w-6 h-6 mx-auto mb-6 opacity-80" style={{ color: data.eventCard1AccentColor || 'var(--secondary)' }} />
+              <h3 className="font-script text-4xl mb-6">Akad Nikah</h3>
+              <div className="space-y-2 font-sans text-sm opacity-80">
+                <p className="font-bold tracking-wider">{data.akadHari ? `${data.akadHari}, ${data.akadTanggal}` : formattedDate}</p>
+                <p className="tracking-widest text-xs mt-1">{data.akadWaktu || data.akadTime || "08:00 WIB - Selesai"}</p>
+                <div className="w-8 h-px mx-auto my-6" style={{ backgroundColor: data.eventCard1AccentColor || 'var(--secondary)' }} />
+                <p className="font-bold">{data.akadLokasi || "Lokasi Akad"}</p>
+                <p className="text-xs font-serif leading-relaxed mt-2">{data.akadAlamat || data.akadLocation || data.venue || "Masjid Agung, Jakarta"}</p>
               </div>
               {(data.akadMapLink || data.mapLink) && (
-                <a href={data.akadMapLink || data.mapLink} target="_blank" rel="noreferrer" className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full hover:opacity-80 transition-opacity font-sans text-sm uppercase tracking-wider" style={{ backgroundColor: data.eventCard1AccentColor || 'var(--primary)', color: '#fff' }}>
-                  <Navigation className="w-4 h-4" /> Buka Peta
+                <a href={data.akadMapLink || data.mapLink} target="_blank" rel="noreferrer" className="mt-8 mx-auto flex items-center justify-center gap-2 w-max px-6 py-2 rounded-full hover:opacity-80 transition-opacity font-sans text-[10px] font-bold uppercase tracking-widest border" style={{ color: data.eventCard1AccentColor || 'var(--secondary)', borderColor: data.eventCard1AccentColor || 'var(--secondary)' }}>
+                  <Navigation className="w-3 h-3" /> Buka Peta
                 </a>
               )}
             </motion.div>
 
             {/* Resepsi Card */}
             <motion.div 
-              className="p-10 rounded-[40px] shadow-xl text-center relative overflow-hidden"
+              className="p-10 rounded-[30px] border shadow-sm text-center relative overflow-hidden"
               style={{ 
-                backgroundColor: data.eventCard2BgColor || 'var(--primary)',
-                color: data.eventCard2TextColor || '#ffffff'
+                backgroundColor: data.eventCard2BgColor || 'var(--bg-color)',
+                color: data.eventCard2TextColor || 'var(--primary)',
+                borderColor: data.eventCard2AccentColor ? `${data.eventCard2AccentColor}4d` : 'rgba(197,160,89,0.3)'
               }}
               variants={scaleUp}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
             >
-              <div className="absolute top-0 left-0 w-32 h-32 bg-black/20 rounded-br-full" />
-              <CalendarHeart className="w-10 h-10 mx-auto mb-6" style={{ color: data.eventCard2AccentColor || 'var(--secondary)' }} />
-              <h3 className="font-script text-5xl mb-4">Resepsi</h3>
-              <div className="space-y-4 font-serif text-lg opacity-80">
-                <p className="font-bold opacity-100">{data.resepsiHari ? `${data.resepsiHari}, ${data.resepsiTanggal}` : formattedDate}</p>
-                <p>{data.resepsiWaktu || data.resepsiTime || "11:00 WIB - 14:00 WIB"}</p>
-                <div className="w-12 h-px mx-auto my-4" style={{ backgroundColor: data.eventCard2AccentColor || 'var(--secondary)' }} />
-                <p className="font-bold opacity-100">{data.resepsiLokasi || "Lokasi Resepsi"}</p>
-                <p className="text-sm">{data.resepsiAlamat || data.resepsiLocation || data.venue || "Grand Ballroom, Jakarta"}</p>
+              <CalendarHeart className="w-6 h-6 mx-auto mb-6 opacity-80" style={{ color: data.eventCard2AccentColor || 'var(--secondary)' }} />
+              <h3 className="font-script text-4xl mb-6">Resepsi</h3>
+              <div className="space-y-2 font-sans text-sm opacity-80">
+                <p className="font-bold tracking-wider">{data.resepsiHari ? `${data.resepsiHari}, ${data.resepsiTanggal}` : formattedDate}</p>
+                <p className="tracking-widest text-xs mt-1">{data.resepsiWaktu || data.resepsiTime || "11:00 WIB - 14:00 WIB"}</p>
+                <div className="w-8 h-px mx-auto my-6" style={{ backgroundColor: data.eventCard2AccentColor || 'var(--secondary)' }} />
+                <p className="font-bold">{data.resepsiLokasi || "Lokasi Resepsi"}</p>
+                <p className="text-xs font-serif leading-relaxed mt-2">{data.resepsiAlamat || data.resepsiLocation || data.venue || "Grand Ballroom, Jakarta"}</p>
               </div>
               {(data.resepsiMapLink || data.mapLink) && (
-                <a href={data.resepsiMapLink || data.mapLink} target="_blank" rel="noreferrer" className="mt-8 flex items-center justify-center gap-2 w-full py-3 rounded-full hover:opacity-90 transition-opacity font-sans text-sm uppercase tracking-wider" style={{ backgroundColor: '#ffffff', color: data.eventCard2BgColor || 'var(--primary)' }}>
-                  <Navigation className="w-4 h-4" /> Buka Peta
+                <a href={data.resepsiMapLink || data.mapLink} target="_blank" rel="noreferrer" className="mt-8 mx-auto flex items-center justify-center gap-2 w-max px-6 py-2 rounded-full hover:opacity-80 transition-opacity font-sans text-[10px] font-bold uppercase tracking-widest border" style={{ color: data.eventCard2AccentColor || 'var(--secondary)', borderColor: data.eventCard2AccentColor || 'var(--secondary)' }}>
+                  <Navigation className="w-3 h-3" /> Buka Peta
                 </a>
               )}
             </motion.div>
