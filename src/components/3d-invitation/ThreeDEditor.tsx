@@ -354,14 +354,14 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
               <AccordionItem id="hero" title="Hero / Utama" icon={Heart}>
                 <h4 className="text-xs font-bold text-primary uppercase mb-2 border-b pb-2">Teks & Konten</h4>
                 <InputField label="Teks Atas" name="heroTitleText" placeholder="The Wedding Of" />
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <InputField label="Nama Panggilan Wanita" name="brideName" />
                   <InputField label="Nama Panggilan Pria" name="groomName" />
                 </div>
                 <InputField label="Tanggal Pernikahan" name="weddingDate" type="datetime-local" />
 
                 <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Layout & Tipografi</h4>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <div className="mb-4">
                     <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">Posisi Vertikal</label>
                     <select name="heroLayout" value={formData.heroLayout as string} onChange={handleChange as any} className="w-full px-3 py-2 rounded-lg border border-secondary bg-white text-sm">
@@ -450,13 +450,13 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
               <AccordionItem id="typography" title="Tipografi & Format" icon={Type}>
                 <InputField label="Title Font Family (Google Fonts)" name="fontFamilyTitle" placeholder="e.g. Great Vibes" />
                 <InputField label="Body Font Family (Google Fonts)" name="fontFamilyBody" placeholder="e.g. Montserrat" />
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <InputField label="Title Font Size" name="fontSizeTitle" placeholder="e.g. 4rem or 64px" />
                   <InputField label="Title Font Weight" name="fontWeightTitle" placeholder="e.g. 400, 700" />
                   <InputField label="Body Font Size" name="fontSizeBody" placeholder="e.g. 1rem or 16px" />
                   <InputField label="Body Font Weight" name="fontWeightBody" placeholder="e.g. 400, 700" />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <InputField label="Body Line Height" name="lineHeightBody" placeholder="e.g. 1.6" />
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">Text Alignment</label>
@@ -478,7 +478,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
               {/* QUOTE */}
               <AccordionItem id="quote" title="Kutipan (Quote)" icon={Type}>
                 <FileUpload label="Background Media" name="quoteBgUrl" value={formData.quoteBgUrl} onChange={handleUploadChange} placeholder="https://..." />
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <InputField label="Section Background Color" name="quoteBgColor" type="color" />
                   <InputField label="Quote Text Color" name="quoteTextColor" type="color" />
                   <InputField label="Quote Icon Color" name="quoteIconColor" type="color" />
@@ -552,7 +552,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
             {isCodeMode ? <CodeEditorGroup sectionId="cover" /> : (
               <>
                 <h4 className="text-xs font-bold text-primary uppercase mt-2 mb-2 border-b pb-2">Informasi Utama</h4>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <InputField label="Nama Panggilan Wanita" name="brideName" />
                   <InputField label="Nama Panggilan Pria" name="groomName" />
                 </div>
@@ -584,7 +584,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 </div>
 
                 <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Warna Elemen</h4>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <InputField label="Title Color" name="coverTitleColor" type="color" />
                   <InputField label="Button Text Color" name="coverButtonTextColor" type="color" />
                   <InputField label="Button Bg Color" name="coverButtonBgColor" type="color" />
@@ -600,21 +600,21 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 <FileUpload label="Background Media" name="eventBgUrl" value={formData.eventBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
                 <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Section Colors</h4>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <InputField label="Background Color" name="eventBgColor" type="color" />
                   <InputField label="Title Color" name="eventTitleColor" type="color" />
                   <InputField label="Subtitle Color" name="eventSubtitleColor" type="color" />
                 </div>
 
                 <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Akad Card Colors</h4>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <InputField label="Card Background" name="eventCard1BgColor" type="color" />
                   <InputField label="Card Text Color" name="eventCard1TextColor" type="color" />
                   <InputField label="Accent / Button" name="eventCard1AccentColor" type="color" />
                 </div>
 
                 <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Resepsi Card Colors</h4>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <InputField label="Card Background" name="eventCard2BgColor" type="color" />
                   <InputField label="Card Text Color" name="eventCard2TextColor" type="color" />
                   <InputField label="Accent / Button" name="eventCard2AccentColor" type="color" />
@@ -663,7 +663,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
               <>
                 <FileUpload label="Background Media" name="giftBgUrl" value={formData.giftBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <InputField label="Background Color" name="giftBgColor" type="color" />
                   <InputField label="Title Color" name="giftTitleColor" type="color" />
                   <InputField label="Icon Color" name="giftIconColor" type="color" />
@@ -686,7 +686,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
               <>
                 <FileUpload label="Background Media" name="rsvpBgUrl" value={formData.rsvpBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <InputField label="Background Color" name="rsvpBgColor" type="color" />
                   <InputField label="Title Color" name="rsvpTitleColor" type="color" />
                   <InputField label="Subtitle Color" name="rsvpSubtitleColor" type="color" />
@@ -704,7 +704,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
             {isCodeMode ? <CodeEditorGroup sectionId="footer" /> : (
               <>
                 <FileUpload label="Background Media" name="footerBgUrl" value={formData.footerBgUrl} onChange={handleUploadChange} placeholder="https://..." />
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <InputField label="Background Color" name="footerBgColor" type="color" />
                   <InputField label="Title Color" name="footerTitleColor" type="color" />
                   <InputField label="Text Color" name="footerTextColor" type="color" />

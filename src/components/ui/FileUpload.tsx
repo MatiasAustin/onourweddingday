@@ -84,13 +84,13 @@ export default function FileUpload({ label, name, value, onChange, placeholder, 
             />
           )}
           
-          <div className="relative">
+          <div className="relative shrink-0">
             <input 
               type="file" 
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed" 
               onChange={handleUpload}
               disabled={isUploading}
-              accept="image/*,video/*"
+              accept="image/*,video/*,audio/*"
             />
             <div className={`h-full flex items-center justify-center px-4 rounded-lg border border-secondary ${isUploading ? 'bg-secondary/20' : 'bg-primary text-white hover:bg-primary-light'} transition-colors cursor-pointer`}>
               {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
