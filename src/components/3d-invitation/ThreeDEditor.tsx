@@ -87,6 +87,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     coupleNameColor: invitation.settingsJSON?.coupleNameColor || "",
     coupleTextColor: invitation.settingsJSON?.coupleTextColor || "",
     coupleAccentColor: invitation.settingsJSON?.coupleAccentColor || "",
+    coupleFrameUrl: invitation.settingsJSON?.coupleFrameUrl || "",
     bridePhotoUrl: invitation.settingsJSON?.bridePhotoUrl || "",
     brideFullName: invitation.settingsJSON?.brideFullName || "Nova Nursaniah",
     brideChildOrder: invitation.settingsJSON?.brideChildOrder || "Putri ke-2",
@@ -524,6 +525,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 <InputField label="Warna Nama Mempelai" name="coupleNameColor" type="color" />
                 <InputField label="Warna Aksen (Batas Foto & Dan)" name="coupleAccentColor" type="color" />
                 <InputField label="Warna Teks Orang Tua" name="coupleTextColor" type="color" />
+                <FileUpload label="Upload PNG Frame Mempelai (Opsional)" name="coupleFrameUrl" value={formData.coupleFrameUrl} onChange={handleUploadChange} placeholder="https://..." />
                 <div className="space-y-6 mt-4">
                   <div className="p-4 bg-black/5 rounded-xl border">
                     <h4 className="font-bold mb-4 flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-pink-500" /> Mempelai Wanita</h4>

@@ -349,38 +349,58 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
 
           <div className="flex flex-col md:flex-row justify-center items-center gap-16 md:gap-32">
             <motion.div 
-              className="text-center"
+              className={`text-center ${data.coupleFrameUrl ? 'p-8 md:p-12 rounded-[40px] border shadow-sm w-full max-w-md' : ''}`}
+              style={data.coupleFrameUrl ? { backgroundColor: data.coupleBgColor || 'var(--bg-color)', borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'rgba(200,162,76,0.3)' } : {}}
               variants={fadeInUp}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
             >
-              <div className="w-64 h-80 mx-auto rounded-t-full border-4 p-2 mb-6" style={{ borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'var(--secondary)' }}>
-                <div className="w-full h-full rounded-t-full overflow-hidden bg-[var(--primary)]/10">
-                  <img src={data.bridePhotoUrl || "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop"} alt="Bride" className="w-full h-full object-cover" />
+              {data.coupleFrameUrl ? (
+                <div className="relative w-64 md:w-80 mx-auto aspect-[3/4] mb-8">
+                  <div className="absolute inset-0 p-[20%]">
+                    <img src={data.bridePhotoUrl || "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop"} alt="Bride" className="w-full h-full object-cover rounded-xl" />
+                  </div>
+                  <img src={data.coupleFrameUrl} alt="Frame" className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-lg" />
                 </div>
-              </div>
+              ) : (
+                <div className="w-64 h-80 mx-auto rounded-t-full border-4 p-2 mb-6" style={{ borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'var(--secondary)' }}>
+                  <div className="w-full h-full rounded-t-full overflow-hidden bg-[var(--primary)]/10">
+                    <img src={data.bridePhotoUrl || "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop"} alt="Bride" className="w-full h-full object-cover" />
+                  </div>
+                </div>
+              )}
               <h3 className="font-script text-5xl mb-2" style={{ color: data.coupleNameColor || 'var(--primary)' }}>{data.brideFullName || data.brideName || "Nova"}</h3>
-              <p className="font-serif opacity-70 font-medium" style={{ color: data.coupleTextColor || 'var(--primary)' }}>{data.brideChildOrder || "Putri dari"}</p>
+              <p className="font-serif opacity-70 font-medium mt-6" style={{ color: data.coupleTextColor || 'var(--primary)' }}>{data.brideChildOrder || "Putri dari"}</p>
               <p className="font-sans text-sm opacity-60 mt-1" style={{ color: data.coupleTextColor || 'var(--primary)' }}>{data.brideParents || "Bapak Fulan & Ibu Fulanah"}</p>
             </motion.div>
 
             <span className="font-script text-7xl" style={{ color: data.coupleAccentColor || 'var(--secondary)' }}>&</span>
 
             <motion.div 
-              className="text-center"
+              className={`text-center ${data.coupleFrameUrl ? 'p-8 md:p-12 rounded-[40px] border shadow-sm w-full max-w-md' : ''}`}
+              style={data.coupleFrameUrl ? { backgroundColor: data.coupleBgColor || 'var(--bg-color)', borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'rgba(200,162,76,0.3)' } : {}}
               variants={fadeInUp}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
             >
-              <div className="w-64 h-80 mx-auto rounded-t-full border-4 p-2 mb-6" style={{ borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'var(--secondary)' }}>
-                <div className="w-full h-full rounded-t-full overflow-hidden bg-[var(--primary)]/10">
-                  <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover grayscale opacity-80" />
+              {data.coupleFrameUrl ? (
+                <div className="relative w-64 md:w-80 mx-auto aspect-[3/4] mb-8">
+                  <div className="absolute inset-0 p-[20%]">
+                    <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-xl grayscale opacity-80" />
+                  </div>
+                  <img src={data.coupleFrameUrl} alt="Frame" className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-lg" />
                 </div>
-              </div>
+              ) : (
+                <div className="w-64 h-80 mx-auto rounded-t-full border-4 p-2 mb-6" style={{ borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'var(--secondary)' }}>
+                  <div className="w-full h-full rounded-t-full overflow-hidden bg-[var(--primary)]/10">
+                    <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover grayscale opacity-80" />
+                  </div>
+                </div>
+              )}
               <h3 className="font-script text-5xl mb-2" style={{ color: data.coupleNameColor || 'var(--primary)' }}>{data.groomFullName || data.groomName || "Partner"}</h3>
-              <p className="font-serif opacity-70 font-medium" style={{ color: data.coupleTextColor || 'var(--primary)' }}>{data.groomChildOrder || "Putra dari"}</p>
+              <p className="font-serif opacity-70 font-medium mt-6" style={{ color: data.coupleTextColor || 'var(--primary)' }}>{data.groomChildOrder || "Putra dari"}</p>
               <p className="font-sans text-sm opacity-60 mt-1" style={{ color: data.coupleTextColor || 'var(--primary)' }}>{data.groomParents || "Bapak Fulan & Ibu Fulanah"}</p>
             </motion.div>
           </div>
