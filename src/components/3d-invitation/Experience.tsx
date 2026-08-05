@@ -88,12 +88,12 @@ export default function Experience({ data, children }: ExperienceProps) {
   // Helper to render backgrounds dynamically
   const renderBg = (url: string | undefined, defaultBgClass: string, isHero: boolean = false) => {
     if (!url && isHero) url = "https://cdn.pixabay.com/video/2020/05/21/40003-424103176_large.mp4";
-    if (!url) return <div className={`absolute inset-0 w-full h-full -z-10 ${defaultBgClass}`} />;
+    if (!url) return <div className={`absolute inset-0 w-full h-full z-0 ${defaultBgClass}`} />;
 
-    const isVideo = url.endsWith('.mp4') || url.endsWith('.webm') || url.includes('pixabay.com/video');
+    const isVideo = url.endsWith('.mp4') || url.endsWith('.webm') || url.includes('pixabay.com/video') || url.includes('supabase');
     
     return (
-      <div className={`absolute inset-0 w-full h-full -z-10 ${defaultBgClass} transition-opacity duration-1000 ${isHero && isVideoFinished ? 'opacity-30' : 'opacity-100'}`}>
+      <div className={`absolute inset-0 w-full h-full z-0 ${defaultBgClass} transition-opacity duration-1000 ${isHero && isVideoFinished ? 'opacity-80' : 'opacity-100'}`}>
         {isVideo ? (
            <video 
              autoPlay 
@@ -101,13 +101,13 @@ export default function Experience({ data, children }: ExperienceProps) {
              muted 
              playsInline 
              onEnded={() => isHero && setIsVideoFinished(true)}
-             className={`absolute inset-0 w-full h-full object-cover ${isHero ? 'opacity-60' : 'opacity-30'}`}
+             className={`absolute inset-0 w-full h-full object-cover ${isHero ? 'opacity-50' : 'opacity-40'}`}
              src={url} 
            />
         ) : (
            <img 
              src={url} 
-             className={`absolute inset-0 w-full h-full object-cover ${isHero ? 'opacity-60' : 'opacity-30'}`}
+             className={`absolute inset-0 w-full h-full object-cover ${isHero ? 'opacity-50' : 'opacity-40'}`}
              alt="Background" 
              onLoad={() => {
                if (isHero) {
@@ -132,13 +132,13 @@ export default function Experience({ data, children }: ExperienceProps) {
   } as React.CSSProperties;
 
   return (
-    <div style={customStyles} className="w-full bg-[var(--bg-color)] font-sans text-[var(--primary)] overflow-x-hidden relative">
+    <div style={customStyles} className={`w-full bg-[var(--bg-color)] font-sans text-[var(--primary)] overflow-x-hidden relative ${!isOpened ? 'h-[100dvh] overflow-hidden' : 'min-h-screen'}`}>
       
       {/* 0. COVER SECTION (Full Screen Overlay) */}
       <AnimatePresence>
         {!isOpened && (
           <motion.div 
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden"
+            className="absolute inset-0 z-50 flex flex-col items-center justify-center overflow-hidden"
             initial={{ y: 0 }}
             exit={{ y: "-100%", transition: { duration: 1.2, ease: [0.76, 0, 0.24, 1] } }}
           >
