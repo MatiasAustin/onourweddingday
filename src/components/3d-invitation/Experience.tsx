@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, Variants } from "framer-motion";
-import { CalendarHeart, Gift, Camera, Heart, Quote, Navigation } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { motion, Variants, AnimatePresence } from "framer-motion";
+import { CalendarHeart, Gift, Camera, Heart, Quote, Navigation, Music2, VolumeX, MailOpen } from "lucide-react";
 
 // Reusable Animation Variants
 const fadeInUp: Variants = {
@@ -23,6 +23,33 @@ const staggerContainer: Variants = {
   }
 };
 
+// Custom Injector Component for Custom HTML/CSS/JS
+const CustomInjector = ({ html, css, js }: { html?: string, css?: string, js?: string }) => {
+  useEffect(() => {
+    if (!js) return;
+    let script: HTMLScriptElement;
+    try {
+      script = document.createElement('script');
+      script.innerHTML = js;
+      document.body.appendChild(script);
+    } catch (e) {
+      console.error('Custom JS Error', e);
+    }
+    return () => { 
+      if (script && document.body.contains(script)) {
+        document.body.removeChild(script); 
+      }
+    }
+  }, [js]);
+
+  return (
+    <>
+      {css && <style dangerouslySetInnerHTML={{ __html: css }} />}
+      {html && <div dangerouslySetInnerHTML={{ __html: html }} className="relative z-30 w-full" />}
+    </>
+  );
+};
+
 interface ExperienceProps {
   data: any;
   children?: React.ReactNode;
@@ -30,7 +57,10 @@ interface ExperienceProps {
 
 export default function Experience({ data, children }: ExperienceProps) {
   const [mounted, setMounted] = useState(false);
+  const [isOpened, setIsOpened] = useState(false);
   const [isVideoFinished, setIsVideoFinished] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
   
   useEffect(() => {
     setMounted(true);
@@ -41,6 +71,17 @@ export default function Experience({ data, children }: ExperienceProps) {
     }, 10000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Handle Music Playback
+  useEffect(() => {
+    if (audioRef.current && isOpened) {
+      if (isMuted) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(e => console.log("Audio play blocked:", e));
+      }
+    }
+  }, [isOpened, isMuted]);
 
   if (!mounted) return <div className="min-h-screen bg-[var(--bg-color)]" />;
 
@@ -91,20 +132,96 @@ export default function Experience({ data, children }: ExperienceProps) {
   } as React.CSSProperties;
 
   return (
-    <div style={customStyles} className="w-full bg-[var(--bg-color)] font-sans text-[var(--primary)] overflow-x-hidden">
+    <div style={customStyles} className="w-full bg-[var(--bg-color)] font-sans text-[var(--primary)] overflow-x-hidden relative">
       
+      {/* 0. COVER SECTION (Full Screen Overlay) */}
+      <AnimatePresence>
+        {!isOpened && (
+          <motion.div 
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden"
+            initial={{ y: 0 }}
+            exit={{ y: "-100%", transition: { duration: 1.2, ease: [0.76, 0, 0.24, 1] } }}
+          >
+            {/* Responsive Background using CSS */}
+            <style dangerouslySetInnerHTML={{__html: `
+              .cover-bg-image {
+                background-image: url('${data.coverMobileBgUrl || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop"}');
+              }
+              @media (min-width: 768px) {
+                .cover-bg-image {
+                  background-image: url('${data.coverDesktopBgUrl || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2000&auto=format&fit=crop"}');
+                }
+              }
+            `}} />
+            <div className="absolute inset-0 bg-cover bg-center cover-bg-image opacity-70" />
+            <div className="absolute inset-0 bg-black/40" /> {/* Dark overlay for readability */}
+            
+            <div className="relative z-10 text-center px-6 flex flex-col items-center h-full w-full justify-between py-24">
+              <div className="flex-1 flex flex-col items-center justify-center">
+                <p className="tracking-[0.3em] uppercase text-xs mb-6 opacity-80 font-bold" style={{ color: data.coverTitleColor || '#ffffff' }}>Undangan Pernikahan</p>
+                <h1 className="font-script text-7xl md:text-9xl mb-4 drop-shadow-xl" style={{ color: data.coverTitleColor || '#ffffff' }}>
+                  {data.brideName || "Nova"} & {data.groomName || "Partner"}
+                </h1>
+              </div>
+
+              <motion.button
+                onClick={() => setIsOpened(true)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="mt-auto px-8 py-4 rounded-full flex items-center gap-3 shadow-2xl font-bold tracking-wider uppercase text-sm"
+                style={{ 
+                  backgroundColor: data.coverButtonBgColor || 'var(--secondary)', 
+                  color: data.coverButtonTextColor || '#ffffff' 
+                }}
+              >
+                <MailOpen className="w-5 h-5" />
+                Buka Undangan
+              </motion.button>
+            </div>
+            
+            <CustomInjector html={data.customHtml_cover} css={data.customCss_cover} js={data.customJs_cover} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* AUDIO PLAYER */}
+      {data.bgMusicUrl && (
+        <>
+          <audio ref={audioRef} src={data.bgMusicUrl} loop />
+          
+          <AnimatePresence>
+            {isOpened && (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                onClick={() => setIsMuted(!isMuted)}
+                className="fixed bottom-6 right-6 z-40 p-4 rounded-full shadow-2xl backdrop-blur-md border"
+                style={{ 
+                  backgroundColor: 'rgba(255,255,255,0.2)',
+                  borderColor: 'rgba(255,255,255,0.4)',
+                  color: data.primaryColor || '#500000'
+                }}
+              >
+                {isMuted ? <VolumeX className="w-6 h-6" /> : <Music2 className="w-6 h-6 animate-spin-slow" style={{ animationDuration: '4s' }} />}
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </>
+      )}
+
       {/* 1. HERO SECTION */}
       <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
         {renderBg(data.heroBgUrl, "bg-black", true)}
         
-        {/* Content Layer */}
-        {isVideoFinished && (
+        {/* Content Layer (Only animate in if isOpened is true) */}
+        {isVideoFinished && isOpened && (
           <motion.div 
             className="relative z-10 text-center p-8"
             style={{ color: data.heroTextColor || '#ffffff' }}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }} // delayed slightly after cover swipe
           >
             <p className="tracking-[0.3em] uppercase text-sm mb-6 opacity-80">The Wedding Of</p>
             <h1 className="font-script text-8xl md:text-9xl mb-4 drop-shadow-xl">
@@ -120,12 +237,13 @@ export default function Experience({ data, children }: ExperienceProps) {
               style={{ borderColor: data.heroTextColor ? `${data.heroTextColor}40` : 'rgba(255,255,255,0.3)' }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1, duration: 1 }}
+              transition={{ delay: 1.5, duration: 1 }}
             >
               {formattedDate}
             </motion.div>
           </motion.div>
         )}
+        <CustomInjector html={data.customHtml_hero} css={data.customCss_hero} js={data.customJs_hero} />
       </section>
 
       {/* 2. QUOTE SECTION */}
@@ -148,6 +266,7 @@ export default function Experience({ data, children }: ExperienceProps) {
             </p>
           </motion.div>
         </div>
+        <CustomInjector html={data.customHtml_quote} css={data.customCss_quote} js={data.customJs_quote} />
       </section>
 
       {/* 3. COUPLE SECTION */}
@@ -204,6 +323,7 @@ export default function Experience({ data, children }: ExperienceProps) {
             </motion.div>
           </div>
         </div>
+        <CustomInjector html={data.customHtml_couple} css={data.customCss_couple} js={data.customJs_couple} />
       </section>
 
       {/* 4. EVENT DETAILS SECTION */}
@@ -283,6 +403,7 @@ export default function Experience({ data, children }: ExperienceProps) {
             </motion.div>
           </div>
         </div>
+        <CustomInjector html={data.customHtml_event} css={data.customCss_event} js={data.customJs_event} />
       </section>
 
       {/* 5. GALLERY SECTION */}
@@ -323,6 +444,7 @@ export default function Experience({ data, children }: ExperienceProps) {
             )}
           </motion.div>
         </div>
+        <CustomInjector html={data.customHtml_gallery} css={data.customCss_gallery} js={data.customJs_gallery} />
       </section>
 
       {/* 6. GIFT SECTION */}
@@ -359,6 +481,7 @@ export default function Experience({ data, children }: ExperienceProps) {
             </div>
           </motion.div>
         </div>
+        <CustomInjector html={data.customHtml_gift} css={data.customCss_gift} js={data.customJs_gift} />
       </section>
 
       {/* 7. RSVP SECTION */}
@@ -408,6 +531,7 @@ export default function Experience({ data, children }: ExperienceProps) {
             </button>
           </motion.form>
         </div>
+        <CustomInjector html={data.customHtml_rsvp} css={data.customCss_rsvp} js={data.customJs_rsvp} />
       </section>
 
       {/* 8. FOOTER */}
@@ -425,6 +549,7 @@ export default function Experience({ data, children }: ExperienceProps) {
           <p className="font-sans text-sm tracking-widest uppercase mb-8" style={{ color: data.footerTextColor || 'var(--primary)', opacity: 0.6 }}>Terima Kasih</p>
           <p className="font-sans text-xs" style={{ color: data.footerTextColor || 'var(--primary)', opacity: 0.4 }}>Powered by OnOurWeddingDay</p>
         </motion.div>
+        <CustomInjector html={data.customHtml_footer} css={data.customCss_footer} js={data.customJs_footer} />
       </footer>
 
       {/* Include extra children if injected from admin, just in case */}

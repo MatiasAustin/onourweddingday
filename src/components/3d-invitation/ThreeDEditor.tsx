@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { updateInvitationSettings } from "@/app/editor/actions";
-import { Save, ExternalLink, ChevronDown, ChevronRight, Image as ImageIcon, MapPin, Users, Heart, Camera, Gift, Type, Layout, Palette, Code, Eye } from "lucide-react";
+import { Save, ExternalLink, ChevronDown, ChevronRight, Image as ImageIcon, MapPin, Users, Heart, Camera, Gift, Type, Layout, Palette, Code, Eye, Music } from "lucide-react";
 import Link from "next/link";
 import Experience from "./Experience";
 import FileUpload from "@/components/ui/FileUpload";
@@ -13,9 +13,8 @@ interface ThreeDEditorProps {
 
 export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<string>("theme");
+  const [activeTab, setActiveTab] = useState<string>("cover");
   const [isCodeMode, setIsCodeMode] = useState(false);
-  const [jsonText, setJsonText] = useState("");
   
   const [formData, setFormData] = useState({
     // Global Colors
@@ -23,12 +22,26 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     secondaryColor: invitation.settingsJSON?.secondaryColor || "#C8A24C",
     bgColor: invitation.settingsJSON?.bgColor || "#fff1f2",
 
+    // Cover & Audio
+    coverDesktopBgUrl: invitation.settingsJSON?.coverDesktopBgUrl || "",
+    coverMobileBgUrl: invitation.settingsJSON?.coverMobileBgUrl || "",
+    bgMusicUrl: invitation.settingsJSON?.bgMusicUrl || "",
+    coverTitleColor: invitation.settingsJSON?.coverTitleColor || "#ffffff",
+    coverButtonBgColor: invitation.settingsJSON?.coverButtonBgColor || "#C8A24C",
+    coverButtonTextColor: invitation.settingsJSON?.coverButtonTextColor || "#ffffff",
+    customHtml_cover: invitation.settingsJSON?.customHtml_cover || "",
+    customCss_cover: invitation.settingsJSON?.customCss_cover || "",
+    customJs_cover: invitation.settingsJSON?.customJs_cover || "",
+
     // Hero
     heroBgUrl: invitation.settingsJSON?.heroBgUrl || "",
     heroTextColor: invitation.settingsJSON?.heroTextColor || "#ffffff",
     brideName: invitation.settingsJSON?.brideName || "Nova",
     groomName: invitation.settingsJSON?.groomName || "Partner",
     weddingDate: invitation.settingsJSON?.weddingDate || "2024-06-15T19:30",
+    customHtml_hero: invitation.settingsJSON?.customHtml_hero || "",
+    customCss_hero: invitation.settingsJSON?.customCss_hero || "",
+    customJs_hero: invitation.settingsJSON?.customJs_hero || "",
     
     // Quote
     quoteBgUrl: invitation.settingsJSON?.quoteBgUrl || "",
@@ -38,6 +51,9 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     quoteSourceColor: invitation.settingsJSON?.quoteSourceColor || "",
     quoteText: invitation.settingsJSON?.quoteText || "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri...",
     quoteSource: invitation.settingsJSON?.quoteSource || "Ar-Rum: 21",
+    customHtml_quote: invitation.settingsJSON?.customHtml_quote || "",
+    customCss_quote: invitation.settingsJSON?.customCss_quote || "",
+    customJs_quote: invitation.settingsJSON?.customJs_quote || "",
     
     // Couple
     coupleBgUrl: invitation.settingsJSON?.coupleBgUrl || "",
@@ -51,6 +67,9 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     brideParents: invitation.settingsJSON?.brideParents || "Bapak Fulan & Ibu Fulanah",
     groomPhotoUrl: invitation.settingsJSON?.groomPhotoUrl || "",
     groomParents: invitation.settingsJSON?.groomParents || "Bapak Fulan & Ibu Fulanah",
+    customHtml_couple: invitation.settingsJSON?.customHtml_couple || "",
+    customCss_couple: invitation.settingsJSON?.customCss_couple || "",
+    customJs_couple: invitation.settingsJSON?.customJs_couple || "",
     
     // Events
     eventBgUrl: invitation.settingsJSON?.eventBgUrl || "",
@@ -68,6 +87,9 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     resepsiTime: invitation.settingsJSON?.resepsiTime || "11:00 WIB - 14:00 WIB",
     resepsiLocation: invitation.settingsJSON?.resepsiLocation || "Grand Ballroom, Jakarta",
     mapLink: invitation.settingsJSON?.mapLink || "",
+    customHtml_event: invitation.settingsJSON?.customHtml_event || "",
+    customCss_event: invitation.settingsJSON?.customCss_event || "",
+    customJs_event: invitation.settingsJSON?.customJs_event || "",
     
     // Gallery
     galleryBgUrl: invitation.settingsJSON?.galleryBgUrl || "",
@@ -75,6 +97,9 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     galleryTitleColor: invitation.settingsJSON?.galleryTitleColor || "",
     galleryIconColor: invitation.settingsJSON?.galleryIconColor || "",
     galleryPhotos: invitation.settingsJSON?.galleryPhotos || "",
+    customHtml_gallery: invitation.settingsJSON?.customHtml_gallery || "",
+    customCss_gallery: invitation.settingsJSON?.customCss_gallery || "",
+    customJs_gallery: invitation.settingsJSON?.customJs_gallery || "",
     
     // Gift
     giftBgUrl: invitation.settingsJSON?.giftBgUrl || "",
@@ -88,6 +113,9 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     bankName: invitation.settingsJSON?.bankName || "BCA / PIX",
     pixKey: invitation.settingsJSON?.pixKey || "1234 5678 90",
     accountHolder: invitation.settingsJSON?.accountHolder || "",
+    customHtml_gift: invitation.settingsJSON?.customHtml_gift || "",
+    customCss_gift: invitation.settingsJSON?.customCss_gift || "",
+    customJs_gift: invitation.settingsJSON?.customJs_gift || "",
     
     // RSVP
     rsvpBgUrl: invitation.settingsJSON?.rsvpBgUrl || "",
@@ -98,12 +126,18 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     rsvpFormTextColor: invitation.settingsJSON?.rsvpFormTextColor || "",
     rsvpButtonBgColor: invitation.settingsJSON?.rsvpButtonBgColor || "",
     rsvpButtonTextColor: invitation.settingsJSON?.rsvpButtonTextColor || "",
+    customHtml_rsvp: invitation.settingsJSON?.customHtml_rsvp || "",
+    customCss_rsvp: invitation.settingsJSON?.customCss_rsvp || "",
+    customJs_rsvp: invitation.settingsJSON?.customJs_rsvp || "",
     
     // Footer
     footerBgUrl: invitation.settingsJSON?.footerBgUrl || "",
     footerBgColor: invitation.settingsJSON?.footerBgColor || "",
     footerTitleColor: invitation.settingsJSON?.footerTitleColor || "",
     footerTextColor: invitation.settingsJSON?.footerTextColor || "",
+    customHtml_footer: invitation.settingsJSON?.customHtml_footer || "",
+    customCss_footer: invitation.settingsJSON?.customCss_footer || "",
+    customJs_footer: invitation.settingsJSON?.customJs_footer || "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -120,20 +154,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     }));
   };
 
-  const handleJsonChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setJsonText(e.target.value);
-    try {
-      const parsed = JSON.parse(e.target.value);
-      setFormData(parsed);
-    } catch (err) {
-      // Don't update formData if JSON is invalid, just let them keep typing
-    }
-  };
-
   const toggleCodeMode = () => {
-    if (!isCodeMode) {
-      setJsonText(JSON.stringify(formData, null, 2));
-    }
     setIsCodeMode(!isCodeMode);
   };
 
@@ -207,6 +228,44 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     </div>
   );
 
+  const CodeEditorGroup = ({ sectionId }: { sectionId: string }) => (
+    <div className="space-y-6">
+      <div className="bg-gray-900 p-4 rounded-xl border border-gray-700">
+        <label className="block text-xs font-semibold uppercase tracking-wider text-green-400 mb-2">Custom HTML</label>
+        <textarea
+          name={`customHtml_${sectionId}`}
+          value={formData[`customHtml_${sectionId}` as keyof typeof formData] as string || ''}
+          onChange={handleChange}
+          placeholder={`<div class="custom-block">...</div>`}
+          rows={4}
+          className="w-full bg-transparent text-gray-300 font-mono text-sm focus:outline-none resize-y"
+        />
+      </div>
+      <div className="bg-gray-900 p-4 rounded-xl border border-gray-700">
+        <label className="block text-xs font-semibold uppercase tracking-wider text-blue-400 mb-2">Custom CSS</label>
+        <textarea
+          name={`customCss_${sectionId}`}
+          value={formData[`customCss_${sectionId}` as keyof typeof formData] as string || ''}
+          onChange={handleChange}
+          placeholder={`.custom-block { color: red; }`}
+          rows={4}
+          className="w-full bg-transparent text-gray-300 font-mono text-sm focus:outline-none resize-y"
+        />
+      </div>
+      <div className="bg-gray-900 p-4 rounded-xl border border-gray-700">
+        <label className="block text-xs font-semibold uppercase tracking-wider text-yellow-400 mb-2">Custom JS</label>
+        <textarea
+          name={`customJs_${sectionId}`}
+          value={formData[`customJs_${sectionId}` as keyof typeof formData] as string || ''}
+          onChange={handleChange}
+          placeholder={`console.log("Hello from ${sectionId}");`}
+          rows={4}
+          className="w-full bg-transparent text-gray-300 font-mono text-sm focus:outline-none resize-y"
+        />
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
       {/* LEFT SIDEBAR: Editor Form */}
@@ -220,7 +279,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
           <div className="flex items-center gap-2">
             <button 
               onClick={toggleCodeMode}
-              className="p-2 bg-secondary/10 text-foreground rounded-xl hover:bg-secondary/30 transition-colors"
+              className={`p-2 rounded-xl transition-colors ${isCodeMode ? 'bg-gray-900 text-white' : 'bg-secondary/10 text-foreground hover:bg-secondary/30'}`}
               title={isCodeMode ? "Switch to Visual Editor" : "Switch to Code Editor"}
             >
               {isCodeMode ? <Eye className="w-5 h-5" /> : <Code className="w-5 h-5" />}
@@ -236,26 +295,41 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
           </div>
         </div>
 
-        <div className="p-4 overflow-y-auto flex-1 bg-secondary/5">
-          {isCodeMode ? (
-            <div className="h-full flex flex-col">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">JSON Configuration</label>
-              <p className="text-xs text-foreground/50 mb-4">Edit raw settings here. Make sure it is valid JSON.</p>
-              <textarea
-                value={jsonText}
-                onChange={handleJsonChange}
-                className="flex-1 w-full p-4 font-mono text-xs bg-gray-900 text-green-400 rounded-xl border border-secondary focus:ring-2 focus:ring-primary/50 resize-none"
-              />
-            </div>
-          ) : (
-            <>
-              <AccordionItem id="theme" title="Tema Global" icon={Palette}>
-                <InputField label="Global Primary Color" name="primaryColor" type="color" />
-                <InputField label="Global Secondary Color" name="secondaryColor" type="color" />
-                <InputField label="Global Background Color" name="bgColor" type="color" />
-              </AccordionItem>
+        <div className={`p-4 overflow-y-auto flex-1 ${isCodeMode ? 'bg-gray-800' : 'bg-secondary/5'}`}>
+          
+          {/* THEME (Only in visual mode) */}
+          {!isCodeMode && (
+            <AccordionItem id="theme" title="Tema Global" icon={Palette}>
+              <InputField label="Global Primary Color" name="primaryColor" type="color" />
+              <InputField label="Global Secondary Color" name="secondaryColor" type="color" />
+              <InputField label="Global Background Color" name="bgColor" type="color" />
+            </AccordionItem>
+          )}
 
-              <AccordionItem id="hero" title="Hero Section" icon={Layout}>
+          {/* COVER & AUDIO */}
+          <AccordionItem id="cover" title="Cover & Audio" icon={Music}>
+            {isCodeMode ? <CodeEditorGroup sectionId="cover" /> : (
+              <>
+                <FileUpload label="Background Music (Audio URL/Upload)" name="bgMusicUrl" value={formData.bgMusicUrl} onChange={handleUploadChange} placeholder="https://...mp3" />
+                
+                <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Cover Images</h4>
+                <FileUpload label="Cover Image (Desktop/Landscape)" name="coverDesktopBgUrl" value={formData.coverDesktopBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                <FileUpload label="Cover Image (Mobile/Portrait)" name="coverMobileBgUrl" value={formData.coverMobileBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                
+                <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Cover Colors</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Title Color" name="coverTitleColor" type="color" />
+                  <InputField label="Button Background" name="coverButtonBgColor" type="color" />
+                  <InputField label="Button Text Color" name="coverButtonTextColor" type="color" />
+                </div>
+              </>
+            )}
+          </AccordionItem>
+
+          {/* HERO */}
+          <AccordionItem id="hero" title="Hero Section" icon={Layout}>
+            {isCodeMode ? <CodeEditorGroup sectionId="hero" /> : (
+              <>
                 <FileUpload label="Background Media (URL/Upload)" name="heroBgUrl" value={formData.heroBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 <InputField label="Text Color" name="heroTextColor" type="color" />
                 <div className="grid grid-cols-2 gap-4 mt-4">
@@ -263,9 +337,14 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                   <InputField label="Groom Name" name="groomName" />
                 </div>
                 <InputField label="Wedding Date & Time" name="weddingDate" type="datetime-local" />
-              </AccordionItem>
+              </>
+            )}
+          </AccordionItem>
 
-              <AccordionItem id="quote" title="Quote Section" icon={Type}>
+          {/* QUOTE */}
+          <AccordionItem id="quote" title="Quote Section" icon={Type}>
+            {isCodeMode ? <CodeEditorGroup sectionId="quote" /> : (
+              <>
                 <FileUpload label="Background Media" name="quoteBgUrl" value={formData.quoteBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 <div className="grid grid-cols-2 gap-4">
                   <InputField label="Section Background Color" name="quoteBgColor" type="color" />
@@ -275,9 +354,14 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 </div>
                 <InputField label="Quote Text" name="quoteText" multiline />
                 <InputField label="Quote Source" name="quoteSource" placeholder="e.g. Ar-Rum: 21" />
-              </AccordionItem>
+              </>
+            )}
+          </AccordionItem>
 
-              <AccordionItem id="couple" title="Mempelai Section" icon={Heart}>
+          {/* COUPLE */}
+          <AccordionItem id="couple" title="Mempelai Section" icon={Heart}>
+            {isCodeMode ? <CodeEditorGroup sectionId="couple" /> : (
+              <>
                 <FileUpload label="Background Media" name="coupleBgUrl" value={formData.coupleBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
                 <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Section Colors</h4>
@@ -300,9 +384,14 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                   <FileUpload label="Photo" name="groomPhotoUrl" value={formData.groomPhotoUrl} onChange={handleUploadChange} placeholder="https://..." />
                   <InputField label="Parents Name" name="groomParents" placeholder="Putra dari..." />
                 </div>
-              </AccordionItem>
+              </>
+            )}
+          </AccordionItem>
 
-              <AccordionItem id="events" title="Detail Acara Section" icon={MapPin}>
+          {/* EVENTS */}
+          <AccordionItem id="events" title="Detail Acara Section" icon={MapPin}>
+            {isCodeMode ? <CodeEditorGroup sectionId="event" /> : (
+              <>
                 <FileUpload label="Background Media" name="eventBgUrl" value={formData.eventBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
                 <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Section Colors</h4>
@@ -334,9 +423,14 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                   <InputField label="Resepsi Time" name="resepsiTime" placeholder="11:00 WIB" />
                   <InputField label="Resepsi Location" name="resepsiLocation" placeholder="Gedung..." />
                 </div>
-              </AccordionItem>
+              </>
+            )}
+          </AccordionItem>
 
-              <AccordionItem id="gallery" title="Galeri Section" icon={Camera}>
+          {/* GALLERY */}
+          <AccordionItem id="gallery" title="Galeri Section" icon={Camera}>
+            {isCodeMode ? <CodeEditorGroup sectionId="gallery" /> : (
+              <>
                 <FileUpload label="Background Media" name="galleryBgUrl" value={formData.galleryBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
                 <div className="grid grid-cols-2 gap-4">
@@ -346,10 +440,15 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 </div>
 
                 <FileUpload label="Photos (URL/Upload)" name="galleryPhotos" value={formData.galleryPhotos} onChange={handleUploadChange} placeholder="Upload photos..." multiline />
-                <p className="text-xs text-foreground/50 mt-1 mb-4">Pilih file satu per satu, link akan ditambahkan otomatis.</p>
-              </AccordionItem>
+                <p className="text-xs text-foreground/50 mt-1 mb-4">Pisahkan dengan koma.</p>
+              </>
+            )}
+          </AccordionItem>
 
-              <AccordionItem id="gift" title="Wedding Gift Section" icon={Gift}>
+          {/* GIFT */}
+          <AccordionItem id="gift" title="Wedding Gift Section" icon={Gift}>
+            {isCodeMode ? <CodeEditorGroup sectionId="gift" /> : (
+              <>
                 <FileUpload label="Background Media" name="giftBgUrl" value={formData.giftBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
                 <div className="grid grid-cols-2 gap-4">
@@ -365,9 +464,14 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 <InputField label="Bank / Wallet Name" name="bankName" placeholder="BCA / Mandiri" />
                 <InputField label="Account Number / Pix Key" name="pixKey" />
                 <InputField label="Account Holder Name" name="accountHolder" placeholder="A.n Nova" />
-              </AccordionItem>
+              </>
+            )}
+          </AccordionItem>
 
-              <AccordionItem id="rsvp" title="RSVP Section" icon={Users}>
+          {/* RSVP */}
+          <AccordionItem id="rsvp" title="RSVP Section" icon={Users}>
+            {isCodeMode ? <CodeEditorGroup sectionId="rsvp" /> : (
+              <>
                 <FileUpload label="Background Media" name="rsvpBgUrl" value={formData.rsvpBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
                 <div className="grid grid-cols-2 gap-4">
@@ -379,28 +483,35 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                   <InputField label="Button Background" name="rsvpButtonBgColor" type="color" />
                   <InputField label="Button Text Color" name="rsvpButtonTextColor" type="color" />
                 </div>
-              </AccordionItem>
-              
-              <AccordionItem id="footer" title="Footer Section" icon={ImageIcon}>
+              </>
+            )}
+          </AccordionItem>
+          
+          {/* FOOTER */}
+          <AccordionItem id="footer" title="Footer Section" icon={ImageIcon}>
+            {isCodeMode ? <CodeEditorGroup sectionId="footer" /> : (
+              <>
                 <FileUpload label="Background Media" name="footerBgUrl" value={formData.footerBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 <div className="grid grid-cols-2 gap-4">
                   <InputField label="Background Color" name="footerBgColor" type="color" />
                   <InputField label="Title Color" name="footerTitleColor" type="color" />
                   <InputField label="Text Color" name="footerTextColor" type="color" />
                 </div>
-              </AccordionItem>
+              </>
+            )}
+          </AccordionItem>
 
-              <div className="pt-4 pb-8">
-                <Link 
-                  href={`/${invitation.slug}`} 
-                  target="_blank"
-                  className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-white text-foreground border border-secondary rounded-xl hover:bg-secondary/30 transition-colors shadow-sm font-medium text-sm"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  Open Live Link
-                </Link>
-              </div>
-            </>
+          {!isCodeMode && (
+            <div className="pt-4 pb-8">
+              <Link 
+                href={`/${invitation.slug}`} 
+                target="_blank"
+                className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-white text-foreground border border-secondary rounded-xl hover:bg-secondary/30 transition-colors shadow-sm font-medium text-sm"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Open Live Link
+              </Link>
+            </div>
           )}
         </div>
       </div>
