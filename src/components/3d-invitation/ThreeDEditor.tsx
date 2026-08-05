@@ -347,7 +347,24 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 <FileUpload label="Upload Background (Photo/Video)" name="heroBgUrl" value={formData.heroBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 <InputField label="Hero Text Color" name="heroTextColor" type="color" />
                 <InputField label="Overlay Color" name="heroOverlayColor" type="color" />
-                <InputField label="Overlay Opacity (0.0 to 1.0)" name="heroOverlayOpacity" placeholder="0.5" />
+                
+                <div className="mb-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/80">Overlay Opacity</label>
+                    <span className="text-xs font-mono bg-secondary/20 text-primary px-2 py-1 rounded">
+                      {Math.round(parseFloat(formData.heroOverlayOpacity as string || "0.4") * 100)}%
+                    </span>
+                  </div>
+                  <input 
+                    type="range" 
+                    name="heroOverlayOpacity"
+                    min="0" max="1" step="0.01" 
+                    value={formData.heroOverlayOpacity as string} 
+                    onChange={handleChange as any} 
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary" 
+                  />
+                </div>
+
                 <InputField label="Text Reveal Delay (Seconds)" name="heroTextDelay" placeholder="e.g. 2 or 5" type="number" />
               </AccordionItem>
 
