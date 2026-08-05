@@ -213,8 +213,8 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
                 }
               }
             `}} />
-            <div className="absolute inset-0 bg-cover bg-center cover-bg-image opacity-70" />
-            <div className="absolute inset-0 bg-black/40" /> {/* Dark overlay for readability */}
+            <div className="absolute inset-0 bg-cover bg-center cover-bg-image" />
+            <div className="absolute inset-0 transition-opacity" style={{ backgroundColor: data.coverOverlayColor || '#000000', opacity: data.coverOverlayOpacity || '0.4' }} />
             
             <div className="relative z-10 text-center px-6 flex flex-col items-center h-full w-full justify-between py-24">
               <div className="flex-1 flex flex-col items-center justify-center">

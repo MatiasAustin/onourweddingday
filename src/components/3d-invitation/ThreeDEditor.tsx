@@ -36,10 +36,12 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     // Cover & Audio
     coverDesktopBgUrl: invitation.settingsJSON?.coverDesktopBgUrl || "",
     coverMobileBgUrl: invitation.settingsJSON?.coverMobileBgUrl || "",
-    bgMusicUrl: invitation.settingsJSON?.bgMusicUrl || "",
     coverTitleColor: invitation.settingsJSON?.coverTitleColor || "#ffffff",
-    coverButtonBgColor: invitation.settingsJSON?.coverButtonBgColor || "#C8A24C",
+    coverButtonBgColor: invitation.settingsJSON?.coverButtonBgColor || "var(--secondary)",
     coverButtonTextColor: invitation.settingsJSON?.coverButtonTextColor || "#ffffff",
+    coverOverlayColor: invitation.settingsJSON?.coverOverlayColor || "#000000",
+    coverOverlayOpacity: invitation.settingsJSON?.coverOverlayOpacity || "0.4",
+    bgMusicUrl: invitation.settingsJSON?.bgMusicUrl || "",
     customHtml_cover: invitation.settingsJSON?.customHtml_cover || "",
     customCss_cover: invitation.settingsJSON?.customCss_cover || "",
     customJs_cover: invitation.settingsJSON?.customJs_cover || "",
@@ -396,6 +398,20 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 </div>
               </AccordionItem>
 
+              {/* QUOTE */}
+              <AccordionItem id="quote" title="Kutipan (Quote)" icon={Type}>
+                <FileUpload label="Background Media" name="quoteBgUrl" value={formData.quoteBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Section Background Color" name="quoteBgColor" type="color" />
+                  <InputField label="Quote Text Color" name="quoteTextColor" type="color" />
+                  <InputField label="Quote Icon Color" name="quoteIconColor" type="color" />
+                  <InputField label="Quote Source Color" name="quoteSourceColor" type="color" />
+                </div>
+                <InputField label="Quote Text" name="quoteText" multiline />
+                <InputField label="Quote Source" name="quoteSource" placeholder="e.g. Ar-Rum: 21" />
+              </AccordionItem>
+
+              {/* COUPLE */}
               <AccordionItem id="couple" title="Mempelai" icon={Users}>
                 <InputField label="Warna Background Section" name="coupleBgColor" type="color" />
                 <InputField label="Warna Teks Judul" name="coupleTitleColor" type="color" />
@@ -458,17 +474,43 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
           <AccordionItem id="cover" title="Cover & Audio" icon={Music}>
             {isCodeMode ? <CodeEditorGroup sectionId="cover" /> : (
               <>
-                <FileUpload label="Background Music (Audio URL/Upload)" name="bgMusicUrl" value={formData.bgMusicUrl} onChange={handleUploadChange} placeholder="https://...mp3" />
+                <h4 className="text-xs font-bold text-primary uppercase mt-2 mb-2 border-b pb-2">Informasi Utama</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField label="Nama Panggilan Wanita" name="brideName" />
+                  <InputField label="Nama Panggilan Pria" name="groomName" />
+                </div>
+                <InputField label="Tanggal Pernikahan" name="weddingDate" type="datetime-local" />
+
+                <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Media & Overlay</h4>
+                <FileUpload label="Background Music (MP3)" name="bgMusicUrl" value={formData.bgMusicUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
-                <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Cover Images</h4>
-                <FileUpload label="Cover Image (Desktop/Landscape)" name="coverDesktopBgUrl" value={formData.coverDesktopBgUrl} onChange={handleUploadChange} placeholder="https://..." />
-                <FileUpload label="Cover Image (Mobile/Portrait)" name="coverMobileBgUrl" value={formData.coverMobileBgUrl} onChange={handleUploadChange} placeholder="https://..." />
-                
-                <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Cover Colors</h4>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <FileUpload label="Cover Image (Desktop)" name="coverDesktopBgUrl" value={formData.coverDesktopBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                  <FileUpload label="Cover Image (Mobile)" name="coverMobileBgUrl" value={formData.coverMobileBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <InputField label="Overlay Color" name="coverOverlayColor" type="color" />
+                  <div className="col-span-1">
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-foreground/80">Overlay Opacity</label>
+                      <span className="text-xs font-mono bg-secondary/20 text-primary px-2 py-1 rounded">
+                        {Math.round(parseFloat(formData.coverOverlayOpacity as string || "0.4") * 100)}%
+                      </span>
+                    </div>
+                    <input 
+                      type="range" name="coverOverlayOpacity" min="0" max="1" step="0.01" 
+                      value={formData.coverOverlayOpacity as string || "0.4"} onChange={handleChange as any} 
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary" 
+                    />
+                  </div>
+                </div>
+
+                <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Warna Elemen</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <InputField label="Title Color" name="coverTitleColor" type="color" />
-                  <InputField label="Button Background" name="coverButtonBgColor" type="color" />
                   <InputField label="Button Text Color" name="coverButtonTextColor" type="color" />
+                  <InputField label="Button Bg Color" name="coverButtonBgColor" type="color" />
                 </div>
               </>
             )}
