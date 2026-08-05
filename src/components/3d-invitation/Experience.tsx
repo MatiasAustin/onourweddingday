@@ -283,7 +283,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
             className={`relative z-10 w-full p-8 pb-32 text-${data.heroTextAlign || 'center'}`}
             style={{ color: data.heroTextColor || '#ffffff' }}
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: parseInt(data.heroTranslateY || "0") }}
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
             <p className="font-sans font-bold tracking-[0.3em] uppercase text-sm mb-4">{data.heroTitleText || "The Wedding Of"}</p>

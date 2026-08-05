@@ -56,6 +56,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     heroLayout: invitation.settingsJSON?.heroLayout || "center",
     heroTextAlign: invitation.settingsJSON?.heroTextAlign || "center",
     heroLineHeight: invitation.settingsJSON?.heroLineHeight || "1.2",
+    heroTranslateY: invitation.settingsJSON?.heroTranslateY || "0",
     brideName: invitation.settingsJSON?.brideName || "Nova",
     groomName: invitation.settingsJSON?.groomName || "Partner",
     weddingDate: invitation.settingsJSON?.weddingDate || "2024-06-15T19:30",
@@ -376,6 +377,20 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                       <option value="right">Kanan (Right)</option>
                     </select>
                   </div>
+                </div>
+
+                <div className="mb-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/80">Geser Posisi (Y Offset)</label>
+                    <span className="text-xs font-mono bg-secondary/20 text-primary px-2 py-1 rounded">
+                      {formData.heroTranslateY}px
+                    </span>
+                  </div>
+                  <input 
+                    type="range" name="heroTranslateY" min="-300" max="300" step="1" 
+                    value={formData.heroTranslateY as string || "0"} onChange={handleChange as any} 
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary" 
+                  />
                 </div>
                 
                 <div className="mb-4">
