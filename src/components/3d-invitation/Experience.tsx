@@ -36,23 +36,8 @@ const CustomInjector = ({ html, css, js }: { html?: string, css?: string, js?: s
       console.error('Custom JS Error', e);
     }
   
-  const renderCornerOrnaments = () => (
-    <>
-      {data.globalTopLeftOrnamentUrl && (
-        <img src={data.globalTopLeftOrnamentUrl} className="absolute top-0 left-0 w-32 @md:w-64 object-contain pointer-events-none z-0 opacity-80" alt="" />
-      )}
-      {data.globalTopRightOrnamentUrl && (
-        <img src={data.globalTopRightOrnamentUrl} className="absolute top-0 right-0 w-32 @md:w-64 object-contain pointer-events-none z-0 opacity-80" alt="" />
-      )}
-      {data.globalBottomLeftOrnamentUrl && (
-        <img src={data.globalBottomLeftOrnamentUrl} className="absolute bottom-0 left-0 w-32 @md:w-64 object-contain pointer-events-none z-0 opacity-80" alt="" />
-      )}
-      {data.globalBottomRightOrnamentUrl && (
-        <img src={data.globalBottomRightOrnamentUrl} className="absolute bottom-0 right-0 w-32 @md:w-64 object-contain pointer-events-none z-0 opacity-80" alt="" />
-      )}
-    </>
-  );
-
+  
+  
   return () => { 
       if (script && document.body.contains(script)) {
         document.body.removeChild(script); 
@@ -107,6 +92,38 @@ interface ExperienceProps {
   children?: React.ReactNode;
   previewMode?: "desktop" | "tablet" | "mobile";
 }
+
+const renderDynamicOrnaments = (ornamentsStr: any) => {
+    if (!ornamentsStr) return null;
+    try {
+      const ornaments = typeof ornamentsStr === 'string' ? JSON.parse(ornamentsStr) : ornamentsStr;
+      return ornaments.map((orn: any, idx: number) => {
+        if (!orn.url) return null;
+        let positionClass = '';
+        if (orn.corner === 'top-left') positionClass = 'top-0 left-0';
+        else if (orn.corner === 'top-right') positionClass = 'top-0 right-0';
+        else if (orn.corner === 'bottom-left') positionClass = 'bottom-0 left-0';
+        else if (orn.corner === 'bottom-right') positionClass = 'bottom-0 right-0';
+        
+        return (
+          <img 
+            key={orn.id || idx}
+            src={orn.url} 
+            className={'absolute ' + positionClass + ' object-contain pointer-events-none z-0'} 
+            style={{ 
+              transform: 'translate(' + orn.offsetX + '%, ' + orn.offsetY + '%) scale(' + (orn.scale / 100) + ')',
+              transformOrigin: orn.corner === 'top-left' ? 'top left' : orn.corner === 'top-right' ? 'top right' : orn.corner === 'bottom-left' ? 'bottom left' : 'bottom right',
+              width: '256px',
+              maxWidth: '50vw'
+            }} 
+            alt="" 
+          />
+        );
+      });
+    } catch (e) {
+      return null;
+    }
+  };
 
 export default function Experience({ data, children, previewMode = "desktop" }: ExperienceProps) {
   const [mounted, setMounted] = useState(false);
@@ -383,7 +400,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.quoteBgColor || 'var(--bg-color)' }}>
         {renderBg(data.quoteBgUrl, "")}
 
-        {renderCornerOrnaments()}
+        {renderDynamicOrnaments(data.quoteOrnaments)}
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <motion.div
@@ -408,7 +425,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       <section className="relative w-full py-24 border-y border-[var(--secondary)]/20 px-8 overflow-hidden" style={{ backgroundColor: data.coupleBgColor || 'rgba(255,255,255,0.5)' }}>
         {renderBg(data.coupleBgUrl, "")}
 
-        {renderCornerOrnaments()}
+        {renderDynamicOrnaments(data.coupleOrnaments)}
 
         <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div 
@@ -566,7 +583,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.eventBgColor || 'var(--bg-color)' }}>
         {renderBg(data.eventBgUrl, "")}
 
-        {renderCornerOrnaments()}
+        {renderDynamicOrnaments(data.eventsOrnaments)}
 
         <div className="relative z-10 max-w-5xl mx-auto">
           <motion.div 
@@ -671,7 +688,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       <section className="relative w-full py-24 px-8 border-y border-[var(--secondary)]/20 overflow-hidden" style={{ backgroundColor: data.galleryBgColor || 'rgba(255,255,255,0.3)' }}>
         {renderBg(data.galleryBgUrl, "")}
 
-        {renderCornerOrnaments()}
+        {renderDynamicOrnaments(data.galleryOrnaments)}
 
         <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div 
@@ -732,7 +749,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.giftBgColor || 'var(--bg-color)' }}>
         {renderBg(data.giftBgUrl, "")}
 
-        {renderCornerOrnaments()}
+        {renderDynamicOrnaments(data.giftOrnaments)}
 
         <div className="relative z-10 max-w-3xl mx-auto text-center">
           <motion.div 
@@ -791,6 +808,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       {/* 7. RSVP SECTION */}
       <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.rsvpBgColor || 'var(--primary)' }}>
         {renderBg(data.rsvpBgUrl, "")}
+        {renderDynamicOrnaments(data.rsvpOrnaments)}
 
         <div className="relative z-10 max-w-2xl mx-auto">
           <motion.div 

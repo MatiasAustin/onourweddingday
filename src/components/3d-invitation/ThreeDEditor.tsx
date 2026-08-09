@@ -107,6 +107,92 @@ interface ThreeDEditorProps {
     </div>
   );
 
+
+  const SectionOrnamentEditor = ({ sectionKey, formData, onChange, handleUploadChange }: any) => {
+    const ornamentsKey = sectionKey + 'Ornaments';
+    let ornaments = [];
+    try {
+      if (formData[ornamentsKey]) {
+        ornaments = typeof formData[ornamentsKey] === 'string' ? JSON.parse(formData[ornamentsKey]) : formData[ornamentsKey];
+      }
+    } catch (e) {}
+
+    const updateOrnaments = (newOrnaments: any) => {
+      onChange({ target: { name: ornamentsKey, value: JSON.stringify(newOrnaments) } });
+    };
+
+    const addOrnament = () => {
+      updateOrnaments([...ornaments, { id: Date.now().toString(), url: '', corner: 'top-left', offsetX: 0, offsetY: 0, scale: 100 }]);
+    };
+
+    const removeOrnament = (id: string) => {
+      updateOrnaments(ornaments.filter((o: any) => o.id !== id));
+    };
+
+    const updateOrnament = (id: string, field: string, value: any) => {
+      updateOrnaments(ornaments.map((o: any) => o.id === id ? { ...o, [field]: value } : o));
+    };
+
+    return (
+      <div className="mt-8 border-t border-secondary/20 pt-4 pb-4">
+        <h4 className="text-xs font-bold text-primary uppercase mb-4 flex items-center justify-between">
+          Ornamen Tambahan
+          <button type="button" onClick={addOrnament} className="bg-primary/10 text-primary px-2 py-1 rounded text-[10px]">+ Tambah</button>
+        </h4>
+        {ornaments.length === 0 && <p className="text-[10px] text-foreground/50 italic mb-4">Tambahkan gambar ornamen (bunga/bingkai) khusus untuk section ini.</p>}
+        
+        {ornaments.map((orn: any, index: number) => (
+          <div key={orn.id} className="p-3 bg-secondary/5 rounded-lg border border-secondary/20 mb-3 space-y-3">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-xs font-bold">Ornamen #{index + 1}</span>
+              <button type="button" onClick={() => removeOrnament(orn.id)} className="text-red-500 text-xs">Hapus</button>
+            </div>
+            
+            <div className="mb-2">
+              <label className="block text-[10px] font-semibold uppercase text-foreground/80 mb-1">URL / Gambar (Upload)</label>
+              <input 
+                type="text" 
+                value={orn.url} 
+                onChange={(e) => updateOrnament(orn.id, 'url', e.target.value)} 
+                className="w-full px-2 py-1 text-xs rounded border border-secondary bg-white" 
+                placeholder="https://..." 
+              />
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-semibold uppercase text-foreground/80 mb-1">Posisi Sudut</label>
+              <select 
+                value={orn.corner} 
+                onChange={(e) => updateOrnament(orn.id, 'corner', e.target.value)}
+                className="w-full px-2 py-1 text-xs rounded border border-secondary bg-white"
+              >
+                <option value="top-left">Kiri Atas</option>
+                <option value="top-right">Kanan Atas</option>
+                <option value="bottom-left">Kiri Bawah</option>
+                <option value="bottom-right">Kanan Bawah</option>
+              </select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[10px] font-semibold uppercase text-foreground/80 mb-1">Offset X ({orn.offsetX}%)</label>
+                <input type="range" min="-100" max="100" value={orn.offsetX} onChange={(e) => updateOrnament(orn.id, 'offsetX', parseInt(e.target.value))} className="w-full accent-primary" />
+              </div>
+              <div>
+                <label className="block text-[10px] font-semibold uppercase text-foreground/80 mb-1">Offset Y ({orn.offsetY}%)</label>
+                <input type="range" min="-100" max="100" value={orn.offsetY} onChange={(e) => updateOrnament(orn.id, 'offsetY', parseInt(e.target.value))} className="w-full accent-primary" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-[10px] font-semibold uppercase text-foreground/80 mb-1">Ukuran / Skala ({orn.scale}%)</label>
+              <input type="range" min="10" max="300" value={orn.scale} onChange={(e) => updateOrnament(orn.id, 'scale', parseInt(e.target.value))} className="w-full accent-primary" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
 export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("cover");
@@ -392,12 +478,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 <InputField formData={formData} onChange={handleChange} label="Global Secondary Color" name="secondaryColor" type="color" />
                 <InputField formData={formData} onChange={handleChange} label="Global Background Color" name="bgColor" type="color" />
 
-                <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Ornamen Sudut (Bunga Kiri/Kanan)</h4>
-                <FileUpload label="Ornamen Kiri Atas" name="globalTopLeftOrnamentUrl" value={formData.globalTopLeftOrnamentUrl} onChange={handleUploadChange} placeholder="Gambar Bunga Kiri Atas (PNG)" />
-                <FileUpload label="Ornamen Kanan Atas" name="globalTopRightOrnamentUrl" value={formData.globalTopRightOrnamentUrl} onChange={handleUploadChange} placeholder="Gambar Bunga Kanan Atas (PNG)" />
-                <FileUpload label="Ornamen Kiri Bawah" name="globalBottomLeftOrnamentUrl" value={formData.globalBottomLeftOrnamentUrl} onChange={handleUploadChange} placeholder="Gambar Bunga Kiri Bawah (PNG)" />
-                <FileUpload label="Ornamen Kanan Bawah" name="globalBottomRightOrnamentUrl" value={formData.globalBottomRightOrnamentUrl} onChange={handleUploadChange} placeholder="Gambar Bunga Kanan Bawah (PNG)" />
-              </AccordionItem>
+                             </AccordionItem>
 
               <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="hero" title="Hero / Utama" icon={Heart}>
                 <h4 className="text-xs font-bold text-primary uppercase mb-2 border-b pb-2">Teks & Konten</h4>
@@ -495,6 +576,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 </div>
 
                 <InputField formData={formData} onChange={handleChange} label="Text Reveal Delay (Seconds)" name="heroTextDelay" placeholder="e.g. 2 or 5" type="number" />
+                <SectionOrnamentEditor sectionKey="hero" formData={formData} onChange={handleChange} handleUploadChange={handleUploadChange} />
               </AccordionItem>
 
               <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="typography" title="Tipografi & Format" icon={Type}>
@@ -536,6 +618,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 </div>
                 <InputField formData={formData} onChange={handleChange} label="Quote Text" name="quoteText" multiline />
                 <InputField formData={formData} onChange={handleChange} label="Quote Source" name="quoteSource" placeholder="e.g. Ar-Rum: 21" />
+                <SectionOrnamentEditor sectionKey="quote" formData={formData} onChange={handleChange} handleUploadChange={handleUploadChange} />
               </AccordionItem>
 
               {/* COUPLE */}
@@ -565,6 +648,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                     <FileUpload label="Upload Foto Pria" name="groomPhotoUrl" value={formData.groomPhotoUrl} onChange={handleUploadChange} placeholder="https://..." />
                   </div>
                 </div>
+                <SectionOrnamentEditor sectionKey="couple" formData={formData} onChange={handleChange} handleUploadChange={handleUploadChange} />
               </AccordionItem>
 
               <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="story" title="Kisah Kami" icon={BookOpen}>
@@ -606,6 +690,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                     <FileUpload label="Upload Foto Cerita 4" name="story4Image" value={formData.story4Image} onChange={handleUploadChange} placeholder="https://..." />
                   </div>
                 </div>
+                <SectionOrnamentEditor sectionKey="story" formData={formData} onChange={handleChange} handleUploadChange={handleUploadChange} />
               </AccordionItem>
             </>
           )}
@@ -667,7 +752,8 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 <InputField formData={formData} onChange={handleChange} label="Text Color" name="countdownTextColor" type="color" />
               </>
             )}
-          </AccordionItem>
+            <SectionOrnamentEditor sectionKey="countdown" formData={formData} onChange={handleChange} handleUploadChange={handleUploadChange} />
+              </AccordionItem>
 
           {/* EVENTS */}
           <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="events" title="Detail Acara Section" icon={MapPin}>
@@ -718,7 +804,8 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 </div>
               </>
             )}
-          </AccordionItem>
+            <SectionOrnamentEditor sectionKey="events" formData={formData} onChange={handleChange} handleUploadChange={handleUploadChange} />
+              </AccordionItem>
 
           {/* VIDEO PREWEDDING */}
           <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="video" title="Video Prewedding" icon={Camera}>
@@ -752,7 +839,8 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 <FileUpload label="Gallery Photos (Pisahkan URL dengan koma)" name="galleryPhotos" value={formData.galleryPhotos} onChange={handleUploadChange} placeholder="https://..., https://..." multiline />
               </>
             )}
-          </AccordionItem>
+            <SectionOrnamentEditor sectionKey="gallery" formData={formData} onChange={handleChange} handleUploadChange={handleUploadChange} />
+              </AccordionItem>
 
           {/* GIFT */}
           <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="gift" title="Wedding Gift Section" icon={Gift}>
@@ -796,7 +884,8 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 </div>
               </>
             )}
-          </AccordionItem>
+            <SectionOrnamentEditor sectionKey="gift" formData={formData} onChange={handleChange} handleUploadChange={handleUploadChange} />
+              </AccordionItem>
 
           {/* RSVP */}
           <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="rsvp" title="RSVP Section" icon={Users}>
@@ -815,7 +904,8 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 </div>
               </>
             )}
-          </AccordionItem>
+            <SectionOrnamentEditor sectionKey="rsvp" formData={formData} onChange={handleChange} handleUploadChange={handleUploadChange} />
+              </AccordionItem>
           
           {/* FOOTER */}
           <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="footer" title="Footer Section" icon={ImageIcon}>
