@@ -511,18 +511,22 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
             <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
               <h2 className="font-script text-5xl @md:text-6xl mb-12" style={{ color: data.countdownTextColor || '#ffffff' }}>Save The Date</h2>
               
-              <div className="flex flex-wrap justify-center gap-4 @md:gap-8">
+              <div className="flex justify-center gap-2 @md:gap-8">
                 {[
                   { label: "DAYS", value: timeLeft.days },
                   { label: "HOURS", value: timeLeft.hours },
                   { label: "MINUTES", value: timeLeft.minutes },
                   { label: "SECONDS", value: timeLeft.seconds }
                 ].map((item, idx) => (
-                  <div key={idx} className="flex flex-col items-center justify-center w-24 h-24 @md:w-32 @md:h-32 border rounded-xl backdrop-blur-sm" style={{ borderColor: data.secondaryColor ? `${data.secondaryColor}80` : 'rgba(197,160,89,0.5)', backgroundColor: 'rgba(0,0,0,0.1)' }}>
-                    <span className="font-serif text-3xl @md:text-4xl font-bold mb-1" style={{ color: data.countdownTextColor || '#ffffff' }}>{String(item.value).padStart(2, '0')}</span>
-                    <span className="font-sans text-[9px] @md:text-xs tracking-widest uppercase opacity-70" style={{ color: data.countdownTextColor || '#ffffff' }}>{item.label}</span>
+                  <div key={idx} className="flex flex-col items-center justify-center w-[72px] h-[72px] @sm:w-20 @sm:h-20 @md:w-32 @md:h-32 border rounded-xl backdrop-blur-sm shrink-0" style={{ borderColor: data.secondaryColor ? `${data.secondaryColor}80` : 'rgba(197,160,89,0.5)', backgroundColor: 'rgba(0,0,0,0.1)' }}>
+                    <span className="font-serif text-2xl @md:text-4xl font-bold mb-1" style={{ color: data.countdownTextColor || '#ffffff' }}>{String(item.value).padStart(2, '0')}</span>
+                    <span className="font-sans text-[8px] @md:text-xs tracking-widest uppercase opacity-70" style={{ color: data.countdownTextColor || '#ffffff' }}>{item.label}</span>
                   </div>
                 ))}
+              </div>
+              
+              <div className="mt-8 font-sans font-bold tracking-[0.15em] text-sm @md:text-base uppercase" style={{ color: data.countdownTextColor || '#ffffff' }}>
+                {data.akadHari ? `${data.akadHari}, ${data.akadTanggal}` : formattedDate}
               </div>
             </motion.div>
           </div>
