@@ -11,6 +11,102 @@ interface ThreeDEditorProps {
   invitation: any;
 }
 
+  const AccordionItem = ({ id, title, icon: Icon, children, activeTab, setActiveTab }: any) => {
+    const isActive = activeTab === id;
+    return (
+      <div className="border border-secondary/30 rounded-xl overflow-hidden bg-white mb-3">
+        <button
+          onClick={() => setActiveTab(isActive ? "" : id)}
+          className={`w-full flex items-center justify-between p-4 text-left transition-colors ${isActive ? 'bg-primary/5' : 'hover:bg-secondary/10'}`}
+        >
+          <div className="flex items-center gap-3">
+            <Icon className={`w-4 h-4 ${isActive ? 'text-primary' : 'text-foreground/50'}`} />
+            <span className={`text-sm font-semibold uppercase tracking-wider ${isActive ? 'text-primary' : 'text-foreground/70'}`}>
+              {title}
+            </span>
+          </div>
+          {isActive ? <ChevronDown className="w-4 h-4 text-primary" /> : <ChevronRight className="w-4 h-4 text-foreground/40" />}
+        </button>
+        {isActive && (
+          <div className="p-5 border-t border-secondary/20 bg-secondary/5 space-y-4">
+            {children}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const InputField = ({ label, name, type = "text", placeholder = "", multiline = false, formData, onChange }: any) => (
+    <div className="mb-4">
+      <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">{label}</label>
+      {multiline ? (
+        <textarea
+          name={name}
+          value={formData[name as keyof typeof formData]}
+          onChange={onChange}
+          placeholder={placeholder}
+          rows={3}
+          className="w-full px-3 py-2 rounded-lg border border-secondary bg-white focus:bg-white focus:ring-2 focus:ring-primary/50 transition-colors resize-none text-sm font-mono"
+        />
+      ) : (
+        <div className="flex items-center gap-2">
+          {type === 'color' && (
+             <div 
+               className="w-8 h-8 rounded-lg border border-secondary flex-shrink-0"
+               style={{ backgroundColor: formData[name as keyof typeof formData] || 'transparent' }}
+             />
+          )}
+          <input
+            type={type}
+            name={name}
+            value={formData[name as keyof typeof formData]}
+            onChange={onChange}
+            placeholder={placeholder}
+            className={`w-full px-3 py-2 rounded-lg border border-secondary bg-white focus:bg-white focus:ring-2 focus:ring-primary/50 transition-colors text-sm ${type === 'color' ? 'h-10 cursor-pointer p-1' : ''}`}
+          />
+        </div>
+      )}
+    </div>
+  );
+
+  const CodeEditorGroup = ({ sectionId, formData, onChange }: { sectionId: string, formData: any, onChange: any }) => (
+    <div className="space-y-6">
+      <div className="bg-gray-900 p-4 rounded-xl border border-gray-700">
+        <label className="block text-xs font-semibold uppercase tracking-wider text-green-400 mb-2">Custom HTML</label>
+        <textarea
+          name={`customHtml_${sectionId}`}
+          value={formData[`customHtml_${sectionId}` as keyof typeof formData] as string || ''}
+          onChange={onChange}
+          placeholder={`<div class="custom-block">...</div>`}
+          rows={4}
+          className="w-full bg-transparent text-gray-300 font-mono text-sm focus:outline-none resize-y"
+        />
+      </div>
+      <div className="bg-gray-900 p-4 rounded-xl border border-gray-700">
+        <label className="block text-xs font-semibold uppercase tracking-wider text-blue-400 mb-2">Custom CSS</label>
+        <textarea
+          name={`customCss_${sectionId}`}
+          value={formData[`customCss_${sectionId}` as keyof typeof formData] as string || ''}
+          onChange={onChange}
+          placeholder={`.custom-block { color: red; }`}
+          rows={4}
+          className="w-full bg-transparent text-gray-300 font-mono text-sm focus:outline-none resize-y"
+        />
+      </div>
+      <div className="bg-gray-900 p-4 rounded-xl border border-gray-700">
+        <label className="block text-xs font-semibold uppercase tracking-wider text-yellow-400 mb-2">Custom JS</label>
+        <textarea
+          name={`customJs_${sectionId}`}
+          value={formData[`customJs_${sectionId}` as keyof typeof formData] as string || ''}
+          onChange={onChange}
+          placeholder={`console.log("Hello from ${sectionId}");`}
+          rows={4}
+          className="w-full bg-transparent text-gray-300 font-mono text-sm focus:outline-none resize-y"
+        />
+      </div>
+    </div>
+  );
+
 export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("cover");
@@ -251,101 +347,11 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     }
   };
 
-  const AccordionItem = ({ id, title, icon: Icon, children }: any) => {
-    const isActive = activeTab === id;
-    return (
-      <div className="border border-secondary/30 rounded-xl overflow-hidden bg-white mb-3">
-        <button
-          onClick={() => setActiveTab(isActive ? "" : id)}
-          className={`w-full flex items-center justify-between p-4 text-left transition-colors ${isActive ? 'bg-primary/5' : 'hover:bg-secondary/10'}`}
-        >
-          <div className="flex items-center gap-3">
-            <Icon className={`w-4 h-4 ${isActive ? 'text-primary' : 'text-foreground/50'}`} />
-            <span className={`text-sm font-semibold uppercase tracking-wider ${isActive ? 'text-primary' : 'text-foreground/70'}`}>
-              {title}
-            </span>
-          </div>
-          {isActive ? <ChevronDown className="w-4 h-4 text-primary" /> : <ChevronRight className="w-4 h-4 text-foreground/40" />}
-        </button>
-        {isActive && (
-          <div className="p-5 border-t border-secondary/20 bg-secondary/5 space-y-4">
-            {children}
-          </div>
-        )}
-      </div>
-    );
-  };
 
-  const InputField = ({ label, name, type = "text", placeholder = "", multiline = false }: any) => (
-    <div className="mb-4">
-      <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">{label}</label>
-      {multiline ? (
-        <textarea
-          name={name}
-          value={formData[name as keyof typeof formData]}
-          onChange={handleChange}
-          placeholder={placeholder}
-          rows={3}
-          className="w-full px-3 py-2 rounded-lg border border-secondary bg-white focus:bg-white focus:ring-2 focus:ring-primary/50 transition-colors resize-none text-sm font-mono"
-        />
-      ) : (
-        <div className="flex items-center gap-2">
-          {type === 'color' && (
-             <div 
-               className="w-8 h-8 rounded-lg border border-secondary flex-shrink-0"
-               style={{ backgroundColor: formData[name as keyof typeof formData] || 'transparent' }}
-             />
-          )}
-          <input
-            type={type}
-            name={name}
-            value={formData[name as keyof typeof formData]}
-            onChange={handleChange}
-            placeholder={placeholder}
-            className={`w-full px-3 py-2 rounded-lg border border-secondary bg-white focus:bg-white focus:ring-2 focus:ring-primary/50 transition-colors text-sm ${type === 'color' ? 'h-10 cursor-pointer p-1' : ''}`}
-          />
-        </div>
-      )}
-    </div>
-  );
 
-  const CodeEditorGroup = ({ sectionId }: { sectionId: string }) => (
-    <div className="space-y-6">
-      <div className="bg-gray-900 p-4 rounded-xl border border-gray-700">
-        <label className="block text-xs font-semibold uppercase tracking-wider text-green-400 mb-2">Custom HTML</label>
-        <textarea
-          name={`customHtml_${sectionId}`}
-          value={formData[`customHtml_${sectionId}` as keyof typeof formData] as string || ''}
-          onChange={handleChange}
-          placeholder={`<div class="custom-block">...</div>`}
-          rows={4}
-          className="w-full bg-transparent text-gray-300 font-mono text-sm focus:outline-none resize-y"
-        />
-      </div>
-      <div className="bg-gray-900 p-4 rounded-xl border border-gray-700">
-        <label className="block text-xs font-semibold uppercase tracking-wider text-blue-400 mb-2">Custom CSS</label>
-        <textarea
-          name={`customCss_${sectionId}`}
-          value={formData[`customCss_${sectionId}` as keyof typeof formData] as string || ''}
-          onChange={handleChange}
-          placeholder={`.custom-block { color: red; }`}
-          rows={4}
-          className="w-full bg-transparent text-gray-300 font-mono text-sm focus:outline-none resize-y"
-        />
-      </div>
-      <div className="bg-gray-900 p-4 rounded-xl border border-gray-700">
-        <label className="block text-xs font-semibold uppercase tracking-wider text-yellow-400 mb-2">Custom JS</label>
-        <textarea
-          name={`customJs_${sectionId}`}
-          value={formData[`customJs_${sectionId}` as keyof typeof formData] as string || ''}
-          onChange={handleChange}
-          placeholder={`console.log("Hello from ${sectionId}");`}
-          rows={4}
-          className="w-full bg-transparent text-gray-300 font-mono text-sm focus:outline-none resize-y"
-        />
-      </div>
-    </div>
-  );
+
+
+
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
@@ -381,20 +387,20 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
           {/* THEME (Only in visual mode) */}
           {!isCodeMode && (
             <>
-              <AccordionItem id="theme" title="Tema Global" icon={Palette}>
-                <InputField label="Global Primary Color" name="primaryColor" type="color" />
-                <InputField label="Global Secondary Color" name="secondaryColor" type="color" />
-                <InputField label="Global Background Color" name="bgColor" type="color" />
+              <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="theme" title="Tema Global" icon={Palette}>
+                <InputField formData={formData} onChange={handleChange} label="Global Primary Color" name="primaryColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Global Secondary Color" name="secondaryColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Global Background Color" name="bgColor" type="color" />
               </AccordionItem>
 
-              <AccordionItem id="hero" title="Hero / Utama" icon={Heart}>
+              <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="hero" title="Hero / Utama" icon={Heart}>
                 <h4 className="text-xs font-bold text-primary uppercase mb-2 border-b pb-2">Teks & Konten</h4>
-                <InputField label="Teks Atas" name="heroTitleText" placeholder="The Wedding Of" />
+                <InputField formData={formData} onChange={handleChange} label="Teks Atas" name="heroTitleText" placeholder="The Wedding Of" />
                 <div className="flex flex-col gap-4">
-                  <InputField label="Nama Panggilan Wanita" name="brideName" />
-                  <InputField label="Nama Panggilan Pria" name="groomName" />
+                  <InputField formData={formData} onChange={handleChange} label="Nama Panggilan Wanita" name="brideName" />
+                  <InputField formData={formData} onChange={handleChange} label="Nama Panggilan Pria" name="groomName" />
                 </div>
-                <InputField label="Tanggal Pernikahan" name="weddingDate" type="datetime-local" />
+                <InputField formData={formData} onChange={handleChange} label="Tanggal Pernikahan" name="weddingDate" type="datetime-local" />
 
                 <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Layout & Tipografi</h4>
                 <div className="flex flex-col gap-4">
@@ -460,8 +466,8 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
 
                 <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Media & Overlay</h4>
                 <FileUpload label="Upload Background (Photo/Video)" name="heroBgUrl" value={formData.heroBgUrl} onChange={handleUploadChange} placeholder="https://..." />
-                  <InputField label="Text Color" name="heroTextColor" type="color" />
-                  <InputField label="Overlay Color" name="heroOverlayColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Text Color" name="heroTextColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Overlay Color" name="heroOverlayColor" type="color" />
                   <FileUpload label="Top Ornament (PNG)" name="topOrnamentUrl" value={formData.topOrnamentUrl} onChange={handleUploadChange} placeholder="https://..." />
                   <FileUpload label="Bottom Ornament (PNG)" name="bottomOrnamentUrl" value={formData.bottomOrnamentUrl} onChange={handleUploadChange} placeholder="https://..." />
                   
@@ -482,20 +488,20 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                   />
                 </div>
 
-                <InputField label="Text Reveal Delay (Seconds)" name="heroTextDelay" placeholder="e.g. 2 or 5" type="number" />
+                <InputField formData={formData} onChange={handleChange} label="Text Reveal Delay (Seconds)" name="heroTextDelay" placeholder="e.g. 2 or 5" type="number" />
               </AccordionItem>
 
-              <AccordionItem id="typography" title="Tipografi & Format" icon={Type}>
-                <InputField label="Title Font Family (Google Fonts)" name="fontFamilyTitle" placeholder="e.g. Great Vibes" />
-                <InputField label="Body Font Family (Google Fonts)" name="fontFamilyBody" placeholder="e.g. Montserrat" />
+              <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="typography" title="Tipografi & Format" icon={Type}>
+                <InputField formData={formData} onChange={handleChange} label="Title Font Family (Google Fonts)" name="fontFamilyTitle" placeholder="e.g. Great Vibes" />
+                <InputField formData={formData} onChange={handleChange} label="Body Font Family (Google Fonts)" name="fontFamilyBody" placeholder="e.g. Montserrat" />
                 <div className="flex flex-col gap-4">
-                  <InputField label="Title Font Size" name="fontSizeTitle" placeholder="e.g. 4rem or 64px" />
-                  <InputField label="Title Font Weight" name="fontWeightTitle" placeholder="e.g. 400, 700" />
-                  <InputField label="Body Font Size" name="fontSizeBody" placeholder="e.g. 1rem or 16px" />
-                  <InputField label="Body Font Weight" name="fontWeightBody" placeholder="e.g. 400, 700" />
+                  <InputField formData={formData} onChange={handleChange} label="Title Font Size" name="fontSizeTitle" placeholder="e.g. 4rem or 64px" />
+                  <InputField formData={formData} onChange={handleChange} label="Title Font Weight" name="fontWeightTitle" placeholder="e.g. 400, 700" />
+                  <InputField formData={formData} onChange={handleChange} label="Body Font Size" name="fontSizeBody" placeholder="e.g. 1rem or 16px" />
+                  <InputField formData={formData} onChange={handleChange} label="Body Font Weight" name="fontWeightBody" placeholder="e.g. 400, 700" />
                 </div>
                 <div className="flex flex-col gap-4">
-                  <InputField label="Body Line Height" name="lineHeightBody" placeholder="e.g. 1.6" />
+                  <InputField formData={formData} onChange={handleChange} label="Body Line Height" name="lineHeightBody" placeholder="e.g. 1.6" />
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">Text Alignment</label>
                     <select
@@ -514,83 +520,83 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
               </AccordionItem>
 
               {/* QUOTE */}
-              <AccordionItem id="quote" title="Kutipan (Quote)" icon={Type}>
+              <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="quote" title="Kutipan (Quote)" icon={Type}>
                 <FileUpload label="Background Media" name="quoteBgUrl" value={formData.quoteBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 <div className="flex flex-col gap-4">
-                  <InputField label="Section Background Color" name="quoteBgColor" type="color" />
-                  <InputField label="Quote Text Color" name="quoteTextColor" type="color" />
-                  <InputField label="Quote Icon Color" name="quoteIconColor" type="color" />
-                  <InputField label="Quote Source Color" name="quoteSourceColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Section Background Color" name="quoteBgColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Quote Text Color" name="quoteTextColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Quote Icon Color" name="quoteIconColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Quote Source Color" name="quoteSourceColor" type="color" />
                 </div>
-                <InputField label="Quote Text" name="quoteText" multiline />
-                <InputField label="Quote Source" name="quoteSource" placeholder="e.g. Ar-Rum: 21" />
+                <InputField formData={formData} onChange={handleChange} label="Quote Text" name="quoteText" multiline />
+                <InputField formData={formData} onChange={handleChange} label="Quote Source" name="quoteSource" placeholder="e.g. Ar-Rum: 21" />
               </AccordionItem>
 
               {/* COUPLE */}
-              <AccordionItem id="couple" title="Mempelai" icon={Users}>
-                <InputField label="Warna Background Section" name="coupleBgColor" type="color" />
-                <InputField label="Warna Teks Judul" name="coupleTitleColor" type="color" />
-                <InputField label="Warna Teks Subjudul" name="coupleSubtitleColor" type="color" />
-                <InputField label="Warna Nama Mempelai" name="coupleNameColor" type="color" />
-                <InputField label="Warna Aksen (Batas Foto & Dan)" name="coupleAccentColor" type="color" />
-                <InputField label="Warna Teks Orang Tua" name="coupleTextColor" type="color" />
+              <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="couple" title="Mempelai" icon={Users}>
+                <InputField formData={formData} onChange={handleChange} label="Warna Background Section" name="coupleBgColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Warna Teks Judul" name="coupleTitleColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Warna Teks Subjudul" name="coupleSubtitleColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Warna Nama Mempelai" name="coupleNameColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Warna Aksen (Batas Foto & Dan)" name="coupleAccentColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Warna Teks Orang Tua" name="coupleTextColor" type="color" />
                 <FileUpload label="Upload PNG Frame Mempelai (Opsional)" name="coupleFrameUrl" value={formData.coupleFrameUrl} onChange={handleUploadChange} placeholder="https://..." />
                 <div className="space-y-6 mt-4">
                   <div className="p-4 bg-black/5 rounded-xl border">
                     <h4 className="font-bold mb-4 flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-pink-500" /> Mempelai Wanita</h4>
-                    <InputField label="Nama Lengkap" name="brideFullName" placeholder="Nova Nursaniah" />
-                    <InputField label="Nama Panggilan" name="brideName" placeholder="Nova" />
-                    <InputField label="Anak ke-berapa" name="brideChildOrder" placeholder="Putri ke-2" />
-                    <InputField label="Nama Orang Tua" name="brideParents" placeholder="Bapak Nurdani & Ibu Supriyanti" />
+                    <InputField formData={formData} onChange={handleChange} label="Nama Lengkap" name="brideFullName" placeholder="Nova Nursaniah" />
+                    <InputField formData={formData} onChange={handleChange} label="Nama Panggilan" name="brideName" placeholder="Nova" />
+                    <InputField formData={formData} onChange={handleChange} label="Anak ke-berapa" name="brideChildOrder" placeholder="Putri ke-2" />
+                    <InputField formData={formData} onChange={handleChange} label="Nama Orang Tua" name="brideParents" placeholder="Bapak Nurdani & Ibu Supriyanti" />
                     <FileUpload label="Upload Foto Wanita" name="bridePhotoUrl" value={formData.bridePhotoUrl} onChange={handleUploadChange} placeholder="https://..." />
                   </div>
                   <div className="p-4 bg-black/5 rounded-xl border">
                     <h4 className="font-bold mb-4 flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-blue-500" /> Mempelai Pria</h4>
-                    <InputField label="Nama Lengkap" name="groomFullName" placeholder="Muhamad Irfan Zidni" />
-                    <InputField label="Nama Panggilan" name="groomName" placeholder="Irfan" />
-                    <InputField label="Anak ke-berapa" name="groomChildOrder" placeholder="Putra ke-3" />
-                    <InputField label="Nama Orang Tua" name="groomParents" placeholder="Bapak Abu Hasan & Ibu Imbriyah" />
+                    <InputField formData={formData} onChange={handleChange} label="Nama Lengkap" name="groomFullName" placeholder="Muhamad Irfan Zidni" />
+                    <InputField formData={formData} onChange={handleChange} label="Nama Panggilan" name="groomName" placeholder="Irfan" />
+                    <InputField formData={formData} onChange={handleChange} label="Anak ke-berapa" name="groomChildOrder" placeholder="Putra ke-3" />
+                    <InputField formData={formData} onChange={handleChange} label="Nama Orang Tua" name="groomParents" placeholder="Bapak Abu Hasan & Ibu Imbriyah" />
                     <FileUpload label="Upload Foto Pria" name="groomPhotoUrl" value={formData.groomPhotoUrl} onChange={handleUploadChange} placeholder="https://..." />
                   </div>
                 </div>
               </AccordionItem>
 
-              <AccordionItem id="story" title="Kisah Kami" icon={BookOpen}>
-                <InputField label="Warna Background Section" name="storyBgColor" type="color" />
-                <InputField label="Warna Judul" name="storyTitleColor" type="color" />
-                <InputField label="Warna Garis Timeline" name="storyLineColor" type="color" />
-                <InputField label="Warna Teks Deskripsi" name="storyTextColor" type="color" />
+              <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="story" title="Kisah Kami" icon={BookOpen}>
+                <InputField formData={formData} onChange={handleChange} label="Warna Background Section" name="storyBgColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Warna Judul" name="storyTitleColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Warna Garis Timeline" name="storyLineColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Warna Teks Deskripsi" name="storyTextColor" type="color" />
                 
                 <div className="space-y-6 mt-4">
                   <div className="p-4 bg-black/5 rounded-xl border space-y-3">
                     <h4 className="font-bold flex items-center gap-2">Cerita 1</h4>
-                    <InputField label="Tanggal/Tahun" name="story1Date" placeholder="Maret 2020" />
-                    <InputField label="Judul Cerita" name="story1Title" placeholder="Pertama Bertemu" />
-                    <InputField label="Deskripsi Cerita" name="story1Desc" placeholder="Berawal dari..." />
+                    <InputField formData={formData} onChange={handleChange} label="Tanggal/Tahun" name="story1Date" placeholder="Maret 2020" />
+                    <InputField formData={formData} onChange={handleChange} label="Judul Cerita" name="story1Title" placeholder="Pertama Bertemu" />
+                    <InputField formData={formData} onChange={handleChange} label="Deskripsi Cerita" name="story1Desc" placeholder="Berawal dari..." />
                     <FileUpload label="Upload Foto Cerita 1" name="story1Image" value={formData.story1Image} onChange={handleUploadChange} placeholder="https://..." />
                   </div>
                   
                   <div className="p-4 bg-black/5 rounded-xl border space-y-3">
                     <h4 className="font-bold flex items-center gap-2">Cerita 2</h4>
-                    <InputField label="Tanggal/Tahun" name="story2Date" placeholder="Desember 2022" />
-                    <InputField label="Judul Cerita" name="story2Title" placeholder="Resmi Bersama" />
-                    <InputField label="Deskripsi Cerita" name="story2Desc" placeholder="Hari di mana..." />
+                    <InputField formData={formData} onChange={handleChange} label="Tanggal/Tahun" name="story2Date" placeholder="Desember 2022" />
+                    <InputField formData={formData} onChange={handleChange} label="Judul Cerita" name="story2Title" placeholder="Resmi Bersama" />
+                    <InputField formData={formData} onChange={handleChange} label="Deskripsi Cerita" name="story2Desc" placeholder="Hari di mana..." />
                     <FileUpload label="Upload Foto Cerita 2" name="story2Image" value={formData.story2Image} onChange={handleUploadChange} placeholder="https://..." />
                   </div>
 
                   <div className="p-4 bg-black/5 rounded-xl border space-y-3">
                     <h4 className="font-bold flex items-center gap-2">Cerita 3</h4>
-                    <InputField label="Tanggal/Tahun" name="story3Date" placeholder="Januari 2024" />
-                    <InputField label="Judul Cerita" name="story3Title" placeholder="Lamaran" />
-                    <InputField label="Deskripsi Cerita" name="story3Desc" placeholder="Sebuah janji..." />
+                    <InputField formData={formData} onChange={handleChange} label="Tanggal/Tahun" name="story3Date" placeholder="Januari 2024" />
+                    <InputField formData={formData} onChange={handleChange} label="Judul Cerita" name="story3Title" placeholder="Lamaran" />
+                    <InputField formData={formData} onChange={handleChange} label="Deskripsi Cerita" name="story3Desc" placeholder="Sebuah janji..." />
                     <FileUpload label="Upload Foto Cerita 3" name="story3Image" value={formData.story3Image} onChange={handleUploadChange} placeholder="https://..." />
                   </div>
 
                   <div className="p-4 bg-black/5 rounded-xl border space-y-3">
                     <h4 className="font-bold flex items-center gap-2">Cerita 4</h4>
-                    <InputField label="Tanggal/Tahun" name="story4Date" placeholder="Oktober 2026" />
-                    <InputField label="Judul Cerita" name="story4Title" placeholder="Pernikahan" />
-                    <InputField label="Deskripsi Cerita" name="story4Desc" placeholder="Hari bahagia..." />
+                    <InputField formData={formData} onChange={handleChange} label="Tanggal/Tahun" name="story4Date" placeholder="Oktober 2026" />
+                    <InputField formData={formData} onChange={handleChange} label="Judul Cerita" name="story4Title" placeholder="Pernikahan" />
+                    <InputField formData={formData} onChange={handleChange} label="Deskripsi Cerita" name="story4Desc" placeholder="Hari bahagia..." />
                     <FileUpload label="Upload Foto Cerita 4" name="story4Image" value={formData.story4Image} onChange={handleUploadChange} placeholder="https://..." />
                   </div>
                 </div>
@@ -599,17 +605,17 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
           )}
 
           {/* COVER & AUDIO */}
-          <AccordionItem id="cover" title="Cover & Audio" icon={Music}>
-            {isCodeMode ? <CodeEditorGroup sectionId="cover" /> : (
+          <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="cover" title="Cover & Audio" icon={Music}>
+            {isCodeMode ? <CodeEditorGroup formData={formData} onChange={handleChange} sectionId="cover" /> : (
               <>
                 <h4 className="text-xs font-bold text-primary uppercase mt-2 mb-2 border-b pb-2">Informasi Utama</h4>
                 <div className="flex flex-col gap-4">
-                  <InputField label="Judul Cover" name="coverTitleText" placeholder="WEDDING INVITATION" />
-                  <InputField label="Subjudul Cover" name="coverSubtitleText" placeholder="Kepada Yth." />
-                  <InputField label="Nama Panggilan Wanita" name="brideName" />
-                  <InputField label="Nama Panggilan Pria" name="groomName" />
+                  <InputField formData={formData} onChange={handleChange} label="Judul Cover" name="coverTitleText" placeholder="WEDDING INVITATION" />
+                  <InputField formData={formData} onChange={handleChange} label="Subjudul Cover" name="coverSubtitleText" placeholder="Kepada Yth." />
+                  <InputField formData={formData} onChange={handleChange} label="Nama Panggilan Wanita" name="brideName" />
+                  <InputField formData={formData} onChange={handleChange} label="Nama Panggilan Pria" name="groomName" />
                 </div>
-                <InputField label="Tanggal Pernikahan" name="weddingDate" type="datetime-local" />
+                <InputField formData={formData} onChange={handleChange} label="Tanggal Pernikahan" name="weddingDate" type="datetime-local" />
 
                 <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Media & Overlay</h4>
                 <FileUpload label="Background Music (MP3)" name="bgMusicUrl" value={formData.bgMusicUrl} onChange={handleUploadChange} placeholder="https://..." />
@@ -620,7 +626,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 </div>
 
                 <div className="flex flex-col gap-4 mt-4">
-                  <InputField label="Overlay Color" name="coverOverlayColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Overlay Color" name="coverOverlayColor" type="color" />
                   <div className="w-full">
                     <div className="flex justify-between items-center mb-2">
                       <label className="text-xs font-semibold uppercase tracking-wider text-foreground/80">Overlay Opacity</label>
@@ -638,70 +644,70 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
 
                 <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Warna Elemen</h4>
                 <div className="flex flex-col gap-4">
-                  <InputField label="Title Color" name="coverTitleColor" type="color" />
-                  <InputField label="Button Text Color" name="coverButtonTextColor" type="color" />
-                  <InputField label="Button Bg Color" name="coverButtonBgColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Title Color" name="coverTitleColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Button Text Color" name="coverButtonTextColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Button Bg Color" name="coverButtonBgColor" type="color" />
                 </div>
               </>
             )}
           </AccordionItem>
 
           {/* COUNTDOWN */}
-          <AccordionItem id="countdown" title="Hitung Mundur (Countdown)" icon={Heart}>
-            {isCodeMode ? <CodeEditorGroup sectionId="countdown" /> : (
+          <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="countdown" title="Hitung Mundur (Countdown)" icon={Heart}>
+            {isCodeMode ? <CodeEditorGroup formData={formData} onChange={handleChange} sectionId="countdown" /> : (
               <>
-                <InputField label="Tanggal & Waktu (YYYY-MM-DDTHH:mm)" name="countdownDate" type="datetime-local" />
-                <InputField label="Background Color" name="countdownBgColor" type="color" />
-                <InputField label="Text Color" name="countdownTextColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Tanggal & Waktu (YYYY-MM-DDTHH:mm)" name="countdownDate" type="datetime-local" />
+                <InputField formData={formData} onChange={handleChange} label="Background Color" name="countdownBgColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Text Color" name="countdownTextColor" type="color" />
               </>
             )}
           </AccordionItem>
 
           {/* EVENTS */}
-          <AccordionItem id="events" title="Detail Acara Section" icon={MapPin}>
-            {isCodeMode ? <CodeEditorGroup sectionId="event" /> : (
+          <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="events" title="Detail Acara Section" icon={MapPin}>
+            {isCodeMode ? <CodeEditorGroup formData={formData} onChange={handleChange} sectionId="event" /> : (
               <>
                 <FileUpload label="Background Media" name="eventBgUrl" value={formData.eventBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
                 <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Section Colors</h4>
                 <div className="flex flex-col gap-4">
-                  <InputField label="Background Color" name="eventBgColor" type="color" />
-                  <InputField label="Title Color" name="eventTitleColor" type="color" />
-                  <InputField label="Subtitle Color" name="eventSubtitleColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Background Color" name="eventBgColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Title Color" name="eventTitleColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Subtitle Color" name="eventSubtitleColor" type="color" />
                 </div>
 
                 <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Akad Card Colors</h4>
                 <div className="flex flex-col gap-4">
-                  <InputField label="Card Background" name="eventCard1BgColor" type="color" />
-                  <InputField label="Card Text Color" name="eventCard1TextColor" type="color" />
-                  <InputField label="Accent / Button" name="eventCard1AccentColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Card Background" name="eventCard1BgColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Card Text Color" name="eventCard1TextColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Accent / Button" name="eventCard1AccentColor" type="color" />
                 </div>
 
                 <h4 className="text-xs font-bold text-primary uppercase mt-4 border-b border-secondary/20 pb-2 mb-2">Resepsi Card Colors</h4>
                 <div className="flex flex-col gap-4">
-                  <InputField label="Card Background" name="eventCard2BgColor" type="color" />
-                  <InputField label="Card Text Color" name="eventCard2TextColor" type="color" />
-                  <InputField label="Accent / Button" name="eventCard2AccentColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Card Background" name="eventCard2BgColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Card Text Color" name="eventCard2TextColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Accent / Button" name="eventCard2AccentColor" type="color" />
                 </div>
 
                 <div className="flex flex-col gap-4 mt-4">
                   <div className="p-4 bg-black/5 rounded-xl border">
                     <h4 className="font-bold mb-4">Data Akad Nikah</h4>
-                    <InputField label="Hari" name="akadHari" placeholder="Minggu" />
-                    <InputField label="Tanggal" name="akadTanggal" placeholder="04 Oktober 2026" />
-                    <InputField label="Waktu" name="akadWaktu" placeholder="Menyusul" />
-                    <InputField label="Nama Lokasi" name="akadLokasi" placeholder="Kediaman Mempelai Wanita" />
-                    <InputField label="Alamat Lengkap" name="akadAlamat" multiline placeholder="Jl.Bbk Kaum..." />
-                    <InputField label="Link Google Maps" name="akadMapLink" placeholder="https://maps..." />
+                    <InputField formData={formData} onChange={handleChange} label="Hari" name="akadHari" placeholder="Minggu" />
+                    <InputField formData={formData} onChange={handleChange} label="Tanggal" name="akadTanggal" placeholder="04 Oktober 2026" />
+                    <InputField formData={formData} onChange={handleChange} label="Waktu" name="akadWaktu" placeholder="Menyusul" />
+                    <InputField formData={formData} onChange={handleChange} label="Nama Lokasi" name="akadLokasi" placeholder="Kediaman Mempelai Wanita" />
+                    <InputField formData={formData} onChange={handleChange} label="Alamat Lengkap" name="akadAlamat" multiline placeholder="Jl.Bbk Kaum..." />
+                    <InputField formData={formData} onChange={handleChange} label="Link Google Maps" name="akadMapLink" placeholder="https://maps..." />
                   </div>
                   <div className="p-4 bg-black/5 rounded-xl border">
                     <h4 className="font-bold mb-4">Data Resepsi</h4>
-                    <InputField label="Hari" name="resepsiHari" placeholder="Minggu" />
-                    <InputField label="Tanggal" name="resepsiTanggal" placeholder="04 Oktober 2026" />
-                    <InputField label="Waktu" name="resepsiWaktu" placeholder="Menyusul" />
-                    <InputField label="Nama Lokasi" name="resepsiLokasi" placeholder="Kediaman Mempelai Wanita" />
-                    <InputField label="Alamat Lengkap" name="resepsiAlamat" multiline placeholder="Jl.Bbk Kaum..." />
-                    <InputField label="Link Google Maps" name="resepsiMapLink" placeholder="https://maps..." />
+                    <InputField formData={formData} onChange={handleChange} label="Hari" name="resepsiHari" placeholder="Minggu" />
+                    <InputField formData={formData} onChange={handleChange} label="Tanggal" name="resepsiTanggal" placeholder="04 Oktober 2026" />
+                    <InputField formData={formData} onChange={handleChange} label="Waktu" name="resepsiWaktu" placeholder="Menyusul" />
+                    <InputField formData={formData} onChange={handleChange} label="Nama Lokasi" name="resepsiLokasi" placeholder="Kediaman Mempelai Wanita" />
+                    <InputField formData={formData} onChange={handleChange} label="Alamat Lengkap" name="resepsiAlamat" multiline placeholder="Jl.Bbk Kaum..." />
+                    <InputField formData={formData} onChange={handleChange} label="Link Google Maps" name="resepsiMapLink" placeholder="https://maps..." />
                   </div>
                 </div>
               </>
@@ -709,21 +715,21 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
           </AccordionItem>
 
           {/* VIDEO PREWEDDING */}
-          <AccordionItem id="video" title="Video Prewedding" icon={Camera}>
-             {isCodeMode ? <CodeEditorGroup sectionId="video" /> : (
+          <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="video" title="Video Prewedding" icon={Camera}>
+             {isCodeMode ? <CodeEditorGroup formData={formData} onChange={handleChange} sectionId="video" /> : (
               <>
-                <InputField label="Link Video YouTube/Vimeo" name="videoUrl" placeholder="https://www.youtube.com/watch?v=..." />
+                <InputField formData={formData} onChange={handleChange} label="Link Video YouTube/Vimeo" name="videoUrl" placeholder="https://www.youtube.com/watch?v=..." />
               </>
             )}
           </AccordionItem>
 
           {/* GALLERY */}
-          <AccordionItem id="gallery" title="Galeri" icon={ImageIcon}>
-             {isCodeMode ? <CodeEditorGroup sectionId="gallery" /> : (
+          <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="gallery" title="Galeri" icon={ImageIcon}>
+             {isCodeMode ? <CodeEditorGroup formData={formData} onChange={handleChange} sectionId="gallery" /> : (
               <>
-                <InputField label="Warna Background Section" name="galleryBgColor" type="color" />
-                <InputField label="Warna Judul" name="galleryTitleColor" type="color" />
-                <InputField label="Warna Ikon Kamera" name="galleryIconColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Warna Background Section" name="galleryBgColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Warna Judul" name="galleryTitleColor" type="color" />
+                <InputField formData={formData} onChange={handleChange} label="Warna Ikon Kamera" name="galleryIconColor" type="color" />
                 <div className="mb-4">
                   <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">Gallery Mode</label>
                   <select
@@ -743,33 +749,33 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
           </AccordionItem>
 
           {/* GIFT */}
-          <AccordionItem id="gift" title="Wedding Gift Section" icon={Gift}>
-            {isCodeMode ? <CodeEditorGroup sectionId="gift" /> : (
+          <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="gift" title="Wedding Gift Section" icon={Gift}>
+            {isCodeMode ? <CodeEditorGroup formData={formData} onChange={handleChange} sectionId="gift" /> : (
               <>
                 <FileUpload label="Background Media" name="giftBgUrl" value={formData.giftBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
                 <div className="flex flex-col gap-4">
-                  <InputField label="Background Color" name="giftBgColor" type="color" />
-                  <InputField label="Title Color" name="giftTitleColor" type="color" />
-                  <InputField label="Icon Color" name="giftIconColor" type="color" />
-                  <InputField label="Text Color" name="giftTextColor" type="color" />
-                  <InputField label="Card Background" name="giftCardBgColor" type="color" />
-                  <InputField label="Card Title Color" name="giftCardTitleColor" type="color" />
-                  <InputField label="Card Text Color" name="giftCardTextColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Background Color" name="giftBgColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Title Color" name="giftTitleColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Icon Color" name="giftIconColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Text Color" name="giftTextColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Card Background" name="giftCardBgColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Card Title Color" name="giftCardTitleColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Card Text Color" name="giftCardTextColor" type="color" />
                 </div>
 
                 <div className="flex flex-col gap-4 mt-4">
                   <div className="p-4 bg-black/5 rounded-xl border">
                     <h4 className="font-bold mb-4">Rekening 1</h4>
-                    <InputField label="Nama Bank/Dompet" name="bank1Name" placeholder="BRI" />
-                    <InputField label="Atas Nama" name="bank1Holder" placeholder="NOVA NURSANIAH" />
-                    <InputField label="Nomor Rekening" name="bank1Number" placeholder="3260 0104 1138 532" />
+                    <InputField formData={formData} onChange={handleChange} label="Nama Bank/Dompet" name="bank1Name" placeholder="BRI" />
+                    <InputField formData={formData} onChange={handleChange} label="Atas Nama" name="bank1Holder" placeholder="NOVA NURSANIAH" />
+                    <InputField formData={formData} onChange={handleChange} label="Nomor Rekening" name="bank1Number" placeholder="3260 0104 1138 532" />
                   </div>
                   <div className="p-4 bg-black/5 rounded-xl border">
                     <h4 className="font-bold mb-4">Rekening 2</h4>
-                    <InputField label="Nama Bank/Dompet" name="bank2Name" placeholder="BCA" />
-                    <InputField label="Atas Nama" name="bank2Holder" placeholder="MUHAMAD IRFAN ZIDNI" />
-                    <InputField label="Nomor Rekening" name="bank2Number" placeholder="3781961530" />
+                    <InputField formData={formData} onChange={handleChange} label="Nama Bank/Dompet" name="bank2Name" placeholder="BCA" />
+                    <InputField formData={formData} onChange={handleChange} label="Atas Nama" name="bank2Holder" placeholder="MUHAMAD IRFAN ZIDNI" />
+                    <InputField formData={formData} onChange={handleChange} label="Nomor Rekening" name="bank2Number" placeholder="3781961530" />
                   </div>
                   <div className="p-4 bg-black/5 rounded-xl border">
                     <h4 className="font-bold mb-4">QRIS</h4>
@@ -777,9 +783,9 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                   </div>
                   <div className="p-4 bg-black/5 rounded-xl border">
                     <h4 className="font-bold mb-4">Kirim Kado (Fisik)</h4>
-                    <InputField label="Nama Penerima" name="giftPenerima" placeholder="Nova Nursaniah" />
-                    <InputField label="Nomor HP" name="giftHp" placeholder="085155143885" />
-                    <InputField label="Alamat Lengkap" name="giftAlamat" multiline placeholder="Jl. bbk kaum..." />
+                    <InputField formData={formData} onChange={handleChange} label="Nama Penerima" name="giftPenerima" placeholder="Nova Nursaniah" />
+                    <InputField formData={formData} onChange={handleChange} label="Nomor HP" name="giftHp" placeholder="085155143885" />
+                    <InputField formData={formData} onChange={handleChange} label="Alamat Lengkap" name="giftAlamat" multiline placeholder="Jl. bbk kaum..." />
                   </div>
                 </div>
               </>
@@ -787,33 +793,33 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
           </AccordionItem>
 
           {/* RSVP */}
-          <AccordionItem id="rsvp" title="RSVP Section" icon={Users}>
-            {isCodeMode ? <CodeEditorGroup sectionId="rsvp" /> : (
+          <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="rsvp" title="RSVP Section" icon={Users}>
+            {isCodeMode ? <CodeEditorGroup formData={formData} onChange={handleChange} sectionId="rsvp" /> : (
               <>
                 <FileUpload label="Background Media" name="rsvpBgUrl" value={formData.rsvpBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 
                 <div className="flex flex-col gap-4">
-                  <InputField label="Background Color" name="rsvpBgColor" type="color" />
-                  <InputField label="Title Color" name="rsvpTitleColor" type="color" />
-                  <InputField label="Subtitle Color" name="rsvpSubtitleColor" type="color" />
-                  <InputField label="Form Background" name="rsvpFormBgColor" type="color" />
-                  <InputField label="Form Text Color" name="rsvpFormTextColor" type="color" />
-                  <InputField label="Button Background" name="rsvpButtonBgColor" type="color" />
-                  <InputField label="Button Text Color" name="rsvpButtonTextColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Background Color" name="rsvpBgColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Title Color" name="rsvpTitleColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Subtitle Color" name="rsvpSubtitleColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Form Background" name="rsvpFormBgColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Form Text Color" name="rsvpFormTextColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Button Background" name="rsvpButtonBgColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Button Text Color" name="rsvpButtonTextColor" type="color" />
                 </div>
               </>
             )}
           </AccordionItem>
           
           {/* FOOTER */}
-          <AccordionItem id="footer" title="Footer Section" icon={ImageIcon}>
-            {isCodeMode ? <CodeEditorGroup sectionId="footer" /> : (
+          <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="footer" title="Footer Section" icon={ImageIcon}>
+            {isCodeMode ? <CodeEditorGroup formData={formData} onChange={handleChange} sectionId="footer" /> : (
               <>
                 <FileUpload label="Background Media" name="footerBgUrl" value={formData.footerBgUrl} onChange={handleUploadChange} placeholder="https://..." />
                 <div className="flex flex-col gap-4">
-                  <InputField label="Background Color" name="footerBgColor" type="color" />
-                  <InputField label="Title Color" name="footerTitleColor" type="color" />
-                  <InputField label="Text Color" name="footerTextColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Background Color" name="footerBgColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Title Color" name="footerTitleColor" type="color" />
+                  <InputField formData={formData} onChange={handleChange} label="Text Color" name="footerTextColor" type="color" />
                 </div>
               </>
             )}
