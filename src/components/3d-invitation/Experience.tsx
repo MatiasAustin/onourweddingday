@@ -213,7 +213,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
   const googleFontsUrl = `https://fonts.googleapis.com/css2?family=${(data.fontFamilyTitle || 'Great Vibes').replace(/ /g, '+')}:wght@${data.fontWeightTitle || '400'}&family=${(data.fontFamilyBody || 'Montserrat').replace(/ /g, '+')}:wght@${data.fontWeightBody || '400'}&display=swap`;
 
   return (
-    <div style={{ ...customStyles, minHeight: exactScreenHeight, height: !isOpened ? exactScreenHeight : 'auto' }} className={`w-full bg-[var(--bg-color)] font-sans text-[var(--primary)] overflow-x-hidden relative ${!isOpened ? 'overflow-hidden' : ''}`}>
+    <div style={{ ...customStyles, minHeight: exactScreenHeight, height: !isOpened ? exactScreenHeight : 'auto' }} className={`@container w-full bg-[var(--bg-color)] font-sans text-[var(--primary)] overflow-x-hidden relative ${!isOpened ? 'overflow-hidden' : ''}`}>
       <style dangerouslySetInnerHTML={{__html: `
         @import url('${googleFontsUrl}');
         .font-script { font-family: var(--font-title) !important; font-size: var(--title-size) !important; font-weight: var(--title-weight) !important; line-height: 1.2; }
@@ -234,7 +234,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
               .cover-bg-image {
                 background-image: url('${data.coverMobileBgUrl || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop"}');
               }
-              @media (min-width: 768px) {
+              @container (min-width: 768px) {
                 .cover-bg-image {
                   background-image: url('${data.coverDesktopBgUrl || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2000&auto=format&fit=crop"}');
                 }
@@ -246,7 +246,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
             <div className="relative z-10 text-center px-6 flex flex-col items-center h-full w-full justify-between py-24">
               <div className="flex-1 flex flex-col items-center justify-center">
                 <p className="tracking-[0.3em] uppercase text-xs mb-6 opacity-80 font-bold" style={{ color: data.coverTitleColor || '#ffffff' }}>{data.coverTitleText || "Undangan Pernikahan"}</p>
-                <h1 className="font-script text-7xl md:text-9xl mb-4 drop-shadow-xl" style={{ color: data.coverTitleColor || '#ffffff' }}>
+                <h1 className="font-script text-7xl @md:text-9xl mb-4 drop-shadow-xl" style={{ color: data.coverTitleColor || '#ffffff' }}>
                   {data.brideName || "Nova"} & {data.groomName || "Irfan"}
                 </h1>
                 {data.coverSubtitleText && (
@@ -254,7 +254,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
                 )}
               </div>
 
-              <div className="mt-auto flex flex-col md:flex-row items-center gap-4">
+              <div className="mt-auto flex flex-col @md:flex-row items-center gap-4">
                 <motion.button
                   onClick={() => setIsOpened(true)}
                   whileHover={{ scale: 1.05 }}
@@ -327,10 +327,10 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
         
         {/* Floral Ornaments */}
         {data.topOrnamentUrl && (
-          <img src={data.topOrnamentUrl} className="absolute top-0 left-0 w-full md:w-2/3 object-contain z-0 pointer-events-none drop-shadow-xl" alt="Top Ornament" />
+          <img src={data.topOrnamentUrl} className="absolute top-0 left-0 w-full @md:w-2/3 object-contain z-0 pointer-events-none drop-shadow-xl" alt="Top Ornament" />
         )}
         {data.bottomOrnamentUrl && (
-          <img src={data.bottomOrnamentUrl} className="absolute bottom-0 right-0 w-full md:w-2/3 object-contain z-0 pointer-events-none drop-shadow-xl" style={{ transform: 'rotate(180deg)' }} alt="Bottom Ornament" />
+          <img src={data.bottomOrnamentUrl} className="absolute bottom-0 right-0 w-full @md:w-2/3 object-contain z-0 pointer-events-none drop-shadow-xl" style={{ transform: 'rotate(180deg)' }} alt="Bottom Ornament" />
         )}
         
         {/* Content Layer (Only animate in if isOpened is true) */}
@@ -343,7 +343,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
             <p className="font-sans font-bold tracking-[0.3em] uppercase text-xs mb-8 opacity-80" style={{ color: data.secondaryColor || 'var(--secondary)' }}>{data.heroTitleText || "VINTAGE JAVANESE WEDDING"}</p>
-            <h1 className="font-script text-6xl md:text-7xl mb-8" style={{ lineHeight: data.heroLineHeight || "1.2", letterSpacing: "-0.02em" }}>
+            <h1 className="font-script text-6xl @md:text-7xl mb-8" style={{ lineHeight: data.heroLineHeight || "1.2", letterSpacing: "-0.02em" }}>
               {data.brideName || "Nova"} & {data.groomName || "Irfan"}
             </h1>
             
@@ -373,7 +373,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
             viewport={{ once: true, margin: "-100px" }}
           >
             <Quote className="w-12 h-12 mx-auto mb-8 opacity-50" style={{ color: data.quoteIconColor || 'var(--secondary)' }} />
-            <p className="font-serif text-xl md:text-2xl leading-relaxed italic opacity-80" style={{ color: data.quoteTextColor || 'var(--primary)' }}>
+            <p className="font-serif text-xl @md:text-2xl leading-relaxed italic opacity-80" style={{ color: data.quoteTextColor || 'var(--primary)' }}>
               "{data.quoteText || "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang."}"
             </p>
             <p className="mt-6 font-sans font-semibold tracking-widest text-sm uppercase" style={{ color: data.quoteSourceColor || 'var(--secondary)' }}>
@@ -398,14 +398,14 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
           >
             <p className="font-sans font-bold tracking-[0.2em] uppercase text-xs mb-4" style={{ color: data.secondaryColor || 'var(--secondary)' }}>BRIDE & GROOM</p>
             <div className="w-12 h-px mb-6" style={{ backgroundColor: data.secondaryColor || 'var(--secondary)' }} />
-            <h2 className="font-script text-4xl md:text-5xl px-4" style={{ color: data.coupleTitleColor || 'var(--primary)' }}>Two Families, One Sacred Promise</h2>
+            <h2 className="font-script text-4xl @md:text-5xl px-4" style={{ color: data.coupleTitleColor || 'var(--primary)' }}>Two Families, One Sacred Promise</h2>
             <div className="w-12 h-px mt-6 mb-6" style={{ backgroundColor: data.secondaryColor || 'var(--secondary)' }} />
             <p className="font-serif text-sm opacity-70 max-w-md mx-auto leading-relaxed px-4" style={{ color: data.coupleSubtitleColor || 'var(--primary)' }}>In the warmth of tradition and the blessing of our parents, we begin a new home together.</p>
           </motion.div>
 
-          <div className="flex flex-col md:flex-row justify-center items-center gap-16 md:gap-32">
+          <div className="flex flex-col @md:flex-row justify-center items-center gap-16 @md:gap-32">
             <motion.div 
-              className={`text-center ${data.coupleFrameUrl ? 'p-8 md:p-12 rounded-[40px] border shadow-sm w-full max-w-md' : ''}`}
+              className={`text-center ${data.coupleFrameUrl ? 'p-8 @md:p-12 rounded-[40px] border shadow-sm w-full max-w-md' : ''}`}
               style={data.coupleFrameUrl ? { backgroundColor: data.coupleBgColor || 'var(--bg-color)', borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'rgba(200,162,76,0.3)' } : {}}
               variants={fadeInUp}
               initial="hidden"
@@ -413,7 +413,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
               viewport={{ once: true }}
             >
               {data.coupleFrameUrl ? (
-                <div className="relative w-64 md:w-80 mx-auto aspect-[3/4] mb-8">
+                <div className="relative w-64 @md:w-80 mx-auto aspect-[3/4] mb-8">
                   <div className="absolute inset-0 p-[20%]">
                     <img src={data.bridePhotoUrl || "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop"} alt="Bride" className="w-full h-full object-cover rounded-xl" />
                   </div>
@@ -434,7 +434,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
             <span className="font-script text-7xl" style={{ color: data.coupleAccentColor || 'var(--secondary)' }}>&</span>
 
             <motion.div 
-              className={`text-center ${data.coupleFrameUrl ? 'p-8 md:p-12 rounded-[40px] border shadow-sm w-full max-w-md' : ''}`}
+              className={`text-center ${data.coupleFrameUrl ? 'p-8 @md:p-12 rounded-[40px] border shadow-sm w-full max-w-md' : ''}`}
               style={data.coupleFrameUrl ? { backgroundColor: data.coupleBgColor || 'var(--bg-color)', borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'rgba(200,162,76,0.3)' } : {}}
               variants={fadeInUp}
               initial="hidden"
@@ -442,7 +442,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
               viewport={{ once: true }}
             >
               {data.coupleFrameUrl ? (
-                <div className="relative w-64 md:w-80 mx-auto aspect-[3/4] mb-8">
+                <div className="relative w-64 @md:w-80 mx-auto aspect-[3/4] mb-8">
                   <div className="absolute inset-0 p-[20%]">
                     <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-xl" />
                   </div>
@@ -471,9 +471,9 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
              <h2 className="font-script text-6xl mb-4" style={{ color: data.storyTitleColor || 'var(--primary)' }}>Kisah Kami</h2>
            </motion.div>
            
-           <div className="relative border-l-2 ml-4 md:ml-0 md:border-l-0" style={{ borderColor: data.storyLineColor || 'var(--secondary)' }}>
+           <div className="relative border-l-2 ml-4 @md:ml-0 @md:border-l-0" style={{ borderColor: data.storyLineColor || 'var(--secondary)' }}>
              {/* Desktop Timeline Line */}
-             <div className="hidden md:block absolute top-0 bottom-0 left-1/2 -ml-[1px] w-0.5" style={{ backgroundColor: data.storyLineColor || 'var(--secondary)' }} />
+             <div className="hidden @md:block absolute top-0 bottom-0 left-1/2 -ml-[1px] w-0.5" style={{ backgroundColor: data.storyLineColor || 'var(--secondary)' }} />
              
              {[
                { date: data.story1Date, title: data.story1Title, desc: data.story1Desc, img: data.story1Image },
@@ -481,17 +481,17 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
                { date: data.story3Date, title: data.story3Title, desc: data.story3Desc, img: data.story3Image },
                { date: data.story4Date, title: data.story4Title, desc: data.story4Desc, img: data.story4Image },
              ].filter(s => s.title || s.desc).map((story, i) => (
-               <motion.div key={i} variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className={`relative mb-12 flex flex-col md:flex-row items-center justify-between ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
-                  <div className="hidden md:block w-5 h-5 rounded-full absolute left-1/2 -ml-[10px] top-4 border-4 border-white shadow-md z-10" style={{ backgroundColor: data.storyLineColor || 'var(--secondary)' }} />
-                  <div className="absolute w-4 h-4 rounded-full md:hidden -left-[9px] top-6 border-4 border-white shadow-md z-10" style={{ backgroundColor: data.storyLineColor || 'var(--secondary)' }} />
+               <motion.div key={i} variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className={`relative mb-12 flex flex-col @md:flex-row items-center justify-between ${i % 2 === 0 ? '@md:flex-row-reverse' : ''}`}>
+                  <div className="hidden @md:block w-5 h-5 rounded-full absolute left-1/2 -ml-[10px] top-4 border-4 border-white shadow-md z-10" style={{ backgroundColor: data.storyLineColor || 'var(--secondary)' }} />
+                  <div className="absolute w-4 h-4 rounded-full @md:hidden -left-[9px] top-6 border-4 border-white shadow-md z-10" style={{ backgroundColor: data.storyLineColor || 'var(--secondary)' }} />
                   
-                  <div className={`w-full md:w-[45%] pl-8 md:pl-0 ${i % 2 === 0 ? 'md:pl-12 md:text-left' : 'md:pr-12 md:text-right'}`}>
+                  <div className={`w-full @md:w-[45%] pl-8 @md:pl-0 ${i % 2 === 0 ? '@md:pl-12 @md:text-left' : '@md:pr-12 @md:text-right'}`}>
                      <p className="font-sans font-bold text-sm tracking-widest uppercase mb-2 global-align" style={{ color: data.storyLineColor || 'var(--secondary)' }}>{story.date}</p>
                      <h3 className="font-serif text-3xl font-bold mb-4 global-align" style={{ color: data.storyTitleColor || 'var(--primary)' }}>{story.title}</h3>
                      <p className="opacity-80 leading-relaxed global-align" style={{ color: data.storyTextColor || 'var(--primary)' }}>{story.desc}</p>
                   </div>
                   
-                  <div className={`w-full md:w-[45%] pl-8 md:pl-0 mt-6 md:mt-0 ${i % 2 === 0 ? 'md:pr-12' : 'md:pl-12'}`}>
+                  <div className={`w-full @md:w-[45%] pl-8 @md:pl-0 mt-6 @md:mt-0 ${i % 2 === 0 ? '@md:pr-12' : '@md:pl-12'}`}>
                      {story.img && (
                        <div className="rounded-2xl overflow-hidden shadow-xl aspect-video border-4" style={{ borderColor: 'rgba(255,255,255,0.5)' }}>
                          <img src={story.img} alt={story.title} className="w-full h-full object-cover" />
@@ -509,18 +509,18 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
         <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.countdownBgColor || '#4A0E17' }}>
           <div className="relative z-10 max-w-4xl mx-auto text-center">
             <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <h2 className="font-script text-5xl md:text-6xl mb-12" style={{ color: data.countdownTextColor || '#ffffff' }}>Save The Date</h2>
+              <h2 className="font-script text-5xl @md:text-6xl mb-12" style={{ color: data.countdownTextColor || '#ffffff' }}>Save The Date</h2>
               
-              <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+              <div className="flex flex-wrap justify-center gap-4 @md:gap-8">
                 {[
                   { label: "DAYS", value: timeLeft.days },
                   { label: "HOURS", value: timeLeft.hours },
                   { label: "MINUTES", value: timeLeft.minutes },
                   { label: "SECONDS", value: timeLeft.seconds }
                 ].map((item, idx) => (
-                  <div key={idx} className="flex flex-col items-center justify-center w-24 h-24 md:w-32 md:h-32 border rounded-xl backdrop-blur-sm" style={{ borderColor: data.secondaryColor ? `${data.secondaryColor}80` : 'rgba(197,160,89,0.5)', backgroundColor: 'rgba(0,0,0,0.1)' }}>
-                    <span className="font-serif text-3xl md:text-4xl font-bold mb-1" style={{ color: data.countdownTextColor || '#ffffff' }}>{String(item.value).padStart(2, '0')}</span>
-                    <span className="font-sans text-[9px] md:text-xs tracking-widest uppercase opacity-70" style={{ color: data.countdownTextColor || '#ffffff' }}>{item.label}</span>
+                  <div key={idx} className="flex flex-col items-center justify-center w-24 h-24 @md:w-32 @md:h-32 border rounded-xl backdrop-blur-sm" style={{ borderColor: data.secondaryColor ? `${data.secondaryColor}80` : 'rgba(197,160,89,0.5)', backgroundColor: 'rgba(0,0,0,0.1)' }}>
+                    <span className="font-serif text-3xl @md:text-4xl font-bold mb-1" style={{ color: data.countdownTextColor || '#ffffff' }}>{String(item.value).padStart(2, '0')}</span>
+                    <span className="font-sans text-[9px] @md:text-xs tracking-widest uppercase opacity-70" style={{ color: data.countdownTextColor || '#ffffff' }}>{item.label}</span>
                   </div>
                 ))}
               </div>
@@ -550,12 +550,12 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
           >
             <p className="font-sans font-bold tracking-[0.2em] uppercase text-xs mb-4" style={{ color: data.secondaryColor || 'var(--secondary)' }}>WEDDING EVENTS</p>
             <div className="w-12 h-px mb-6" style={{ backgroundColor: data.secondaryColor || 'var(--secondary)' }} />
-            <h2 className="font-script text-4xl md:text-5xl px-4" style={{ color: data.eventTitleColor || 'var(--primary)' }}>Akad & Reception</h2>
+            <h2 className="font-script text-4xl @md:text-5xl px-4" style={{ color: data.eventTitleColor || 'var(--primary)' }}>Akad & Reception</h2>
             <div className="w-12 h-px mt-6 mb-6" style={{ backgroundColor: data.secondaryColor || 'var(--secondary)' }} />
             <p className="font-serif text-sm opacity-70 max-w-md mx-auto leading-relaxed px-4" style={{ color: data.eventTitleColor || 'var(--primary)' }}>We would be honored by your presence and prayers as we celebrate with sacred tradition and family warmth.</p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid @md:grid-cols-2 gap-8">
             {/* Akad Card */}
             <motion.div 
               className="p-10 rounded-[30px] border shadow-sm text-center relative overflow-hidden"
@@ -682,7 +682,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
             ) : data.galleryMode === 'stars' ? (
                <TwinklingStarsGallery photos={data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`)} />
             ) : (
-               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+               <div className="grid grid-cols-2 @md:grid-cols-4 gap-4 mt-8">
                  {(() => {
                    const photos = data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6,7,8].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`);
                    return photos.map((photoUrl: string, i: number) => (
