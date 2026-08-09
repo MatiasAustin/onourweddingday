@@ -391,6 +391,12 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
                 <InputField formData={formData} onChange={handleChange} label="Global Primary Color" name="primaryColor" type="color" />
                 <InputField formData={formData} onChange={handleChange} label="Global Secondary Color" name="secondaryColor" type="color" />
                 <InputField formData={formData} onChange={handleChange} label="Global Background Color" name="bgColor" type="color" />
+
+                <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Ornamen Sudut (Bunga Kiri/Kanan)</h4>
+                <FileUpload label="Ornamen Kiri Atas" name="globalTopLeftOrnamentUrl" value={formData.globalTopLeftOrnamentUrl} onChange={handleUploadChange} placeholder="Gambar Bunga Kiri Atas (PNG)" />
+                <FileUpload label="Ornamen Kanan Atas" name="globalTopRightOrnamentUrl" value={formData.globalTopRightOrnamentUrl} onChange={handleUploadChange} placeholder="Gambar Bunga Kanan Atas (PNG)" />
+                <FileUpload label="Ornamen Kiri Bawah" name="globalBottomLeftOrnamentUrl" value={formData.globalBottomLeftOrnamentUrl} onChange={handleUploadChange} placeholder="Gambar Bunga Kiri Bawah (PNG)" />
+                <FileUpload label="Ornamen Kanan Bawah" name="globalBottomRightOrnamentUrl" value={formData.globalBottomRightOrnamentUrl} onChange={handleUploadChange} placeholder="Gambar Bunga Kanan Bawah (PNG)" />
               </AccordionItem>
 
               <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="hero" title="Hero / Utama" icon={Heart}>

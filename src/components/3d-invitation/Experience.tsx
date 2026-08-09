@@ -35,7 +35,25 @@ const CustomInjector = ({ html, css, js }: { html?: string, css?: string, js?: s
     } catch (e) {
       console.error('Custom JS Error', e);
     }
-    return () => { 
+  
+  const renderCornerOrnaments = () => (
+    <>
+      {data.globalTopLeftOrnamentUrl && (
+        <img src={data.globalTopLeftOrnamentUrl} className="absolute top-0 left-0 w-32 @md:w-64 object-contain pointer-events-none z-0 opacity-80" alt="" />
+      )}
+      {data.globalTopRightOrnamentUrl && (
+        <img src={data.globalTopRightOrnamentUrl} className="absolute top-0 right-0 w-32 @md:w-64 object-contain pointer-events-none z-0 opacity-80" alt="" />
+      )}
+      {data.globalBottomLeftOrnamentUrl && (
+        <img src={data.globalBottomLeftOrnamentUrl} className="absolute bottom-0 left-0 w-32 @md:w-64 object-contain pointer-events-none z-0 opacity-80" alt="" />
+      )}
+      {data.globalBottomRightOrnamentUrl && (
+        <img src={data.globalBottomRightOrnamentUrl} className="absolute bottom-0 right-0 w-32 @md:w-64 object-contain pointer-events-none z-0 opacity-80" alt="" />
+      )}
+    </>
+  );
+
+  return () => { 
       if (script && document.body.contains(script)) {
         document.body.removeChild(script); 
       }
@@ -365,6 +383,8 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.quoteBgColor || 'var(--bg-color)' }}>
         {renderBg(data.quoteBgUrl, "")}
 
+        {renderCornerOrnaments()}
+
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <motion.div
             variants={fadeInUp}
@@ -387,6 +407,8 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       {/* 3. COUPLE SECTION */}
       <section className="relative w-full py-24 border-y border-[var(--secondary)]/20 px-8 overflow-hidden" style={{ backgroundColor: data.coupleBgColor || 'rgba(255,255,255,0.5)' }}>
         {renderBg(data.coupleBgUrl, "")}
+
+        {renderCornerOrnaments()}
 
         <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div 
@@ -544,6 +566,8 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.eventBgColor || 'var(--bg-color)' }}>
         {renderBg(data.eventBgUrl, "")}
 
+        {renderCornerOrnaments()}
+
         <div className="relative z-10 max-w-5xl mx-auto">
           <motion.div 
             className="text-center mb-16 flex flex-col items-center"
@@ -647,6 +671,8 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       <section className="relative w-full py-24 px-8 border-y border-[var(--secondary)]/20 overflow-hidden" style={{ backgroundColor: data.galleryBgColor || 'rgba(255,255,255,0.3)' }}>
         {renderBg(data.galleryBgUrl, "")}
 
+        {renderCornerOrnaments()}
+
         <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div 
             className="text-center mb-16"
@@ -705,6 +731,8 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
       {/* 6. GIFT SECTION */}
       <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.giftBgColor || 'var(--bg-color)' }}>
         {renderBg(data.giftBgUrl, "")}
+
+        {renderCornerOrnaments()}
 
         <div className="relative z-10 max-w-3xl mx-auto text-center">
           <motion.div 
