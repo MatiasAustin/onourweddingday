@@ -770,6 +770,40 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             )}
           </motion.div>
         </div>
+        {/* WISHES DISPLAY IN GALLERY */}
+        <div className="relative z-10 max-w-4xl mx-auto px-8 pb-24">
+          {/* WISHES DISPLAY (Slider / List) */}
+          {wishes && wishes.length > 0 && (
+            <motion.div 
+              className="mt-16 w-full"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <h3 className="font-serif text-3xl mb-8 text-center" style={{ color: data.rsvpTitleColor || '#ffffff' }}>Ucapan & Doa</h3>
+              <div className="w-full max-h-[500px] overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+                {wishes.map((wish: any) => (
+                  <div key={wish.id} className="p-6 rounded-2xl border backdrop-blur-sm" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.1)', color: data.rsvpFormTextColor || '#ffffff', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}33` : 'rgba(255,255,255,0.2)' }}>
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-bold text-lg">{wish.name}</h4>
+                      <span className="text-xs uppercase tracking-wider opacity-60 bg-white/10 px-2 py-1 rounded-full">
+                        {wish.attendance === 'hadir' ? 'Hadir' : 'Tidak Hadir'}
+                      </span>
+                    </div>
+                    <p className="opacity-90 font-serif leading-relaxed">{wish.message}</p>
+                  </div>
+                ))}
+              </div>
+              
+              <style dangerouslySetInnerHTML={{__html: `
+                .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: ${data.rsvpTitleColor || '#ffffff'}80; border-radius: 10px; }
+              `}} />
+            </motion.div>
+          )}
+        </div>
         <CustomInjector html={data.customHtml_gallery} css={data.customCss_gallery} js={data.customJs_gallery} />
       </section>
 
@@ -898,37 +932,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             </button>
           </motion.form>
           
-          {/* WISHES DISPLAY (Slider / List) */}
-          {wishes && wishes.length > 0 && (
-            <motion.div 
-              className="mt-16 w-full"
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              <h3 className="font-serif text-3xl mb-8 text-center" style={{ color: data.rsvpTitleColor || '#ffffff' }}>Ucapan & Doa</h3>
-              <div className="w-full max-h-[500px] overflow-y-auto space-y-4 pr-2 custom-scrollbar">
-                {wishes.map((wish: any) => (
-                  <div key={wish.id} className="p-6 rounded-2xl border backdrop-blur-sm" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.1)', color: data.rsvpFormTextColor || '#ffffff', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}33` : 'rgba(255,255,255,0.2)' }}>
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-bold text-lg">{wish.name}</h4>
-                      <span className="text-xs uppercase tracking-wider opacity-60 bg-white/10 px-2 py-1 rounded-full">
-                        {wish.attendance === 'hadir' ? 'Hadir' : 'Tidak Hadir'}
-                      </span>
-                    </div>
-                    <p className="opacity-90 font-serif leading-relaxed">{wish.message}</p>
-                  </div>
-                ))}
-              </div>
-              
-              <style dangerouslySetInnerHTML={{__html: `
-                .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-                .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: ${data.rsvpTitleColor || '#ffffff'}80; border-radius: 10px; }
-              `}} />
-            </motion.div>
-          )}
+
         </div>
         <CustomInjector html={data.customHtml_rsvp} css={data.customCss_rsvp} js={data.customJs_rsvp} />
       </section>
