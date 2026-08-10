@@ -99,14 +99,26 @@ export default function FileUpload({ label, name, value, onChange, placeholder, 
 
         <div className="flex gap-2">
           {!multiline && (
-            <input
-              type="text"
-              name={name}
-              value={value}
-              onChange={(e: any) => onChange(e)}
-              placeholder={placeholder}
-              className="flex-1 px-3 py-2 rounded-lg border border-secondary bg-white focus:ring-2 focus:ring-primary/50 text-sm"
-            />
+            <>
+              {value && !value.match(/\.(mp4|webm|ogg)$/i) && (
+                <div className="shrink-0 w-10 h-10 rounded-md overflow-hidden border border-secondary/20 bg-gray-100 flex items-center justify-center">
+                  <img src={value} alt="Preview" className="w-full h-full object-cover" />
+                </div>
+              )}
+              {value && value.match(/\.(mp4|webm|ogg)$/i) && (
+                <div className="shrink-0 w-10 h-10 rounded-md overflow-hidden border border-secondary/20 bg-gray-100 flex items-center justify-center text-[10px] text-center p-1">
+                  Video
+                </div>
+              )}
+              <input
+                type="text"
+                name={name}
+                value={value}
+                onChange={(e: any) => onChange(e)}
+                placeholder={placeholder}
+                className="flex-1 px-3 py-2 rounded-lg border border-secondary bg-white focus:ring-2 focus:ring-primary/50 text-sm min-w-0"
+              />
+            </>
           )}
           
           <div className={`relative shrink-0 ${multiline ? 'w-full' : ''}`}>

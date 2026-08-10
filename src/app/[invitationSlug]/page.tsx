@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { BlockRenderer } from "@/components/blocks/BlockRenderer";
 import Experience from "@/components/3d-invitation/Experience";
+import { getGuestbookEntries } from "@/app/actions/guestbook";
 
 interface InvitationPageProps {
   params: Promise<{
@@ -16,6 +17,7 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
 
   // Attempt to fetch the invitation and its active sections from the database
   let invitation;
+  let wishes: any[] = [];
   try {
     const { data } = await supabase
       .from('Invitation')
@@ -31,6 +33,11 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
         .sort((a: any, b: any) => a.order - b.order);
         
       invitation = { ...data, sections: sortedSections };
+      
+      const wishesResult = await getGuestbookEntries(invitation.id);
+      if (wishesResult.data) {
+        wishes = wishesResult.data;
+      }
     }
   } catch (error) {
     // If the database is not connected yet, we'll log the error but still throw 404
@@ -51,7 +58,7 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
   // Determine which template to render
   if (invitation.templateId === "elegance-3d") {
     return (
-      <Experience data={invitation.settingsJSON || {}}>
+      <Experience data={invitation.settingsJSON || {}} invitationId={invitation.id} wishes={wishes}>
         <main className="w-full flex flex-col items-center py-32 px-8">
           {invitation.sections.map((section: any) => (
             <BlockRenderer

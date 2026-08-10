@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, Variants, AnimatePresence } from "framer-motion";
 import { CalendarHeart, Gift, Camera, Heart, Quote, Navigation, Music2, VolumeX, MailOpen } from "lucide-react";
+import { submitGuestbookEntry } from "@/app/actions/guestbook";
 
 // Reusable Animation Variants
 const fadeInUp: Variants = {
@@ -89,6 +90,8 @@ const TwinklingStarsGallery = ({ photos }: { photos: string[] }) => {
 
 interface ExperienceProps {
   data: any;
+  invitationId?: string;
+  wishes?: any[];
   children?: React.ReactNode;
   previewMode?: "desktop" | "tablet" | "mobile";
 }
@@ -125,12 +128,37 @@ const renderDynamicOrnaments = (ornamentsStr: any) => {
     }
   };
 
-export default function Experience({ data, children, previewMode = "desktop" }: ExperienceProps) {
+export default function Experience({ data, invitationId, wishes = [], children, previewMode = "desktop" }: ExperienceProps) {
   const [mounted, setMounted] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [isHeroTextVisible, setIsHeroTextVisible] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [rsvpForm, setRsvpForm] = useState({ name: '', attendance: 'hadir', guestsCount: '1', message: '' });
+  const [isSubmittingRsvp, setIsSubmittingRsvp] = useState(false);
+  const [rsvpStatus, setRsvpStatus] = useState<null | 'success' | 'error'>(null);
+  
+  const handleRsvpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!invitationId) return; // In editor preview mode, just return
+    setIsSubmittingRsvp(true);
+    setRsvpStatus(null);
+    const res = await submitGuestbookEntry({
+      invitationId,
+      name: rsvpForm.name,
+      attendance: rsvpForm.attendance,
+      guestsCount: parseInt(rsvpForm.guestsCount),
+      message: rsvpForm.message
+    });
+    setIsSubmittingRsvp(false);
+    if (res.success) {
+      setRsvpStatus('success');
+      setRsvpForm({ name: '', attendance: 'hadir', guestsCount: '1', message: '' });
+    } else {
+      setRsvpStatus('error');
+    }
+  };
+  
   const audioRef = useRef<HTMLAudioElement>(null);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   
@@ -823,6 +851,7 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
           </motion.div>
 
           <motion.form 
+            onSubmit={handleRsvpSubmit}
             className="backdrop-blur-md p-8 rounded-3xl border flex flex-col gap-6"
             style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.1)', color: data.rsvpFormTextColor || '#ffffff', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}33` : 'rgba(255,255,255,0.2)' }}
             variants={fadeInUp}
@@ -830,28 +859,76 @@ export default function Experience({ data, children, previewMode = "desktop" }: 
             whileInView="visible"
             viewport={{ once: true }}
           >
+            {rsvpStatus === 'success' && (
+              <div className="p-4 rounded-xl bg-green-500/20 border border-green-500/50 text-center">
+                Terima kasih! RSVP dan Ucapan Anda telah terkirim.
+              </div>
+            )}
+            {rsvpStatus === 'error' && (
+              <div className="p-4 rounded-xl bg-red-500/20 border border-red-500/50 text-center">
+                Maaf, terjadi kesalahan. Silakan coba lagi.
+              </div>
+            )}
             <div>
               <label className="block font-sans text-sm tracking-wider uppercase mb-2 opacity-80">Nama Anda</label>
-              <input type="text" className="w-full bg-white/5 border rounded-xl p-4 focus:outline-none transition-colors" style={{ borderColor: 'inherit', color: 'inherit' }} placeholder="Masukkan nama..." />
+              <input type="text" required value={rsvpForm.name} onChange={e => setRsvpForm({...rsvpForm, name: e.target.value})} className="w-full bg-white/5 border rounded-xl p-4 focus:outline-none transition-colors" style={{ borderColor: 'inherit', color: 'inherit' }} placeholder="Masukkan nama..." />
             </div>
             <div>
               <label className="block font-sans text-sm tracking-wider uppercase mb-2 opacity-80">Kehadiran</label>
-              <select className="w-full bg-white/5 border rounded-xl p-4 focus:outline-none transition-colors appearance-none" style={{ borderColor: 'inherit', color: 'inherit' }}>
+              <select value={rsvpForm.attendance} onChange={e => setRsvpForm({...rsvpForm, attendance: e.target.value})} className="w-full bg-white/5 border rounded-xl p-4 focus:outline-none transition-colors appearance-none" style={{ borderColor: 'inherit', color: 'inherit' }}>
                 <option value="hadir" className="text-black">Ya, Saya akan hadir</option>
                 <option value="tidak" className="text-black">Maaf, Saya tidak bisa hadir</option>
               </select>
             </div>
+            {rsvpForm.attendance === 'hadir' && (
+              <div>
+                <label className="block font-sans text-sm tracking-wider uppercase mb-2 opacity-80">Jumlah Tamu</label>
+                <select value={rsvpForm.guestsCount} onChange={e => setRsvpForm({...rsvpForm, guestsCount: e.target.value})} className="w-full bg-white/5 border rounded-xl p-4 focus:outline-none transition-colors appearance-none" style={{ borderColor: 'inherit', color: 'inherit' }}>
+                  <option value="1" className="text-black">1 Orang</option>
+                  <option value="2" className="text-black">2 Orang</option>
+                </select>
+              </div>
+            )}
             <div>
-              <label className="block font-sans text-sm tracking-wider uppercase mb-2 opacity-80">Jumlah Tamu</label>
-              <select className="w-full bg-white/5 border rounded-xl p-4 focus:outline-none transition-colors appearance-none" style={{ borderColor: 'inherit', color: 'inherit' }}>
-                <option value="1" className="text-black">1 Orang</option>
-                <option value="2" className="text-black">2 Orang</option>
-              </select>
+              <label className="block font-sans text-sm tracking-wider uppercase mb-2 opacity-80">Ucapan & Doa</label>
+              <textarea required value={rsvpForm.message} onChange={e => setRsvpForm({...rsvpForm, message: e.target.value})} rows={3} className="w-full bg-white/5 border rounded-xl p-4 focus:outline-none transition-colors resize-none" style={{ borderColor: 'inherit', color: 'inherit' }} placeholder="Tuliskan ucapan dan doa untuk mempelai..."></textarea>
             </div>
-            <button type="button" className="w-full py-4 mt-4 font-bold tracking-widest uppercase rounded-xl hover:opacity-80 transition-opacity" style={{ backgroundColor: data.rsvpButtonBgColor || 'var(--secondary)', color: data.rsvpButtonTextColor || '#ffffff' }}>
-              Kirim Konfirmasi
+            <button type="submit" disabled={isSubmittingRsvp} className="w-full py-4 mt-4 font-bold tracking-widest uppercase rounded-xl hover:opacity-80 transition-opacity disabled:opacity-50" style={{ backgroundColor: data.rsvpButtonBgColor || 'var(--secondary)', color: data.rsvpButtonTextColor || '#ffffff' }}>
+              {isSubmittingRsvp ? 'Mengirim...' : 'Kirim Konfirmasi'}
             </button>
           </motion.form>
+          
+          {/* WISHES DISPLAY (Slider / List) */}
+          {wishes && wishes.length > 0 && (
+            <motion.div 
+              className="mt-16 w-full"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <h3 className="font-serif text-3xl mb-8 text-center" style={{ color: data.rsvpTitleColor || '#ffffff' }}>Ucapan & Doa</h3>
+              <div className="w-full max-h-[500px] overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+                {wishes.map((wish: any) => (
+                  <div key={wish.id} className="p-6 rounded-2xl border backdrop-blur-sm" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.1)', color: data.rsvpFormTextColor || '#ffffff', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}33` : 'rgba(255,255,255,0.2)' }}>
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-bold text-lg">{wish.name}</h4>
+                      <span className="text-xs uppercase tracking-wider opacity-60 bg-white/10 px-2 py-1 rounded-full">
+                        {wish.attendance === 'hadir' ? 'Hadir' : 'Tidak Hadir'}
+                      </span>
+                    </div>
+                    <p className="opacity-90 font-serif leading-relaxed">{wish.message}</p>
+                  </div>
+                ))}
+              </div>
+              
+              <style dangerouslySetInnerHTML={{__html: `
+                .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: ${data.rsvpTitleColor || '#ffffff'}80; border-radius: 10px; }
+              `}} />
+            </motion.div>
+          )}
         </div>
         <CustomInjector html={data.customHtml_rsvp} css={data.customCss_rsvp} js={data.customJs_rsvp} />
       </section>

@@ -149,12 +149,11 @@ interface ThreeDEditorProps {
             </div>
             
             <div className="mb-2">
-              <label className="block text-[10px] font-semibold uppercase text-foreground/80 mb-1">URL / Gambar (Upload)</label>
-              <input 
-                type="text" 
+              <FileUpload 
+                label="URL / Gambar (Upload)" 
+                name={`ornament_${orn.id}`} 
                 value={orn.url} 
-                onChange={(e) => updateOrnament(orn.id, 'url', e.target.value)} 
-                className="w-full px-2 py-1 text-xs rounded border border-secondary bg-white" 
+                onChange={(e: any) => updateOrnament(orn.id, 'url', e.target.value)} 
                 placeholder="https://..." 
               />
             </div>
@@ -957,7 +956,15 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
             previewMode === 'tablet' ? 'w-[768px] h-[1024px] my-auto mt-20 border-[8px] border-gray-800 rounded-[30px] shadow-2xl overflow-y-auto overflow-x-hidden relative shrink-0' : 
             'w-full h-full overflow-y-auto overflow-x-hidden relative'
          }`}>
-            <Experience data={{...invitation.settingsJSON, ...formData}} previewMode={previewMode} />
+            <Experience 
+              data={{...invitation.settingsJSON, ...formData}} 
+              previewMode={previewMode} 
+              invitationId={invitation.id}
+              wishes={[
+                { id: '1', name: 'John Doe', attendance: 'hadir', message: 'Selamat menempuh hidup baru! Semoga samawa selalu.' },
+                { id: '2', name: 'Jane Smith', attendance: 'tidak', message: 'Maaf tidak bisa hadir, tapi doa terbaik untuk kalian berdua.' }
+              ]}
+            />
          </div>
       </div>
     </div>
