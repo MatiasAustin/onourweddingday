@@ -140,6 +140,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
   const [rsvpStatus, setRsvpStatus] = useState<null | 'success' | 'error'>(null);
   const [visibleWishesCount, setVisibleWishesCount] = useState(3);
   const [wishesSort, setWishesSort] = useState<'newest' | 'oldest'>('newest');
+  const [galleryIndex, setGalleryIndex] = useState(0);
   
   const galleryRef = useRef<HTMLDivElement>(null);
   const isUserScrollingGallery = useRef(false);
@@ -178,10 +179,17 @@ export default function Experience({ data, invitationId, wishes = [], children, 
       }, 5000);
     };
 
+    const handleScroll = () => {
+      handleUserInteraction();
+      const slideWidth = container.clientWidth;
+      const newIndex = Math.round(container.scrollLeft / slideWidth);
+      setGalleryIndex(prev => prev !== newIndex ? newIndex : prev);
+    };
+
     container.addEventListener('touchstart', handleUserInteraction, { passive: true });
     container.addEventListener('mousedown', handleUserInteraction, { passive: true });
     container.addEventListener('wheel', handleUserInteraction, { passive: true });
-    container.addEventListener('scroll', handleUserInteraction, { passive: true });
+    container.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       if (autoScrollInterval) clearInterval(autoScrollInterval);
@@ -189,7 +197,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
       container.removeEventListener('touchstart', handleUserInteraction);
       container.removeEventListener('mousedown', handleUserInteraction);
       container.removeEventListener('wheel', handleUserInteraction);
-      container.removeEventListener('scroll', handleUserInteraction);
+      container.removeEventListener('scroll', handleScroll);
     };
   }, [data.galleryMode, isOpened]);
 
@@ -846,16 +854,34 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             viewport={{ once: true }}
           >
             {data.galleryMode === 'slider' ? (
-                 <div ref={galleryRef} className="w-[calc(100%+4rem)] -mx-8 flex overflow-x-auto snap-x snap-mandatory mt-8 hide-scroll" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                    <style>{`.hide-scroll::-webkit-scrollbar { display: none; }`}</style>
-                    {(() => {
-                      const photos = data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`);
-                      return photos.map((photoUrl: string, i: number) => (
-                        <div key={i} className="w-full shrink-0 snap-center bg-[var(--primary)]/10" style={{ height: '65vh' }}>
-                          <img src={photoUrl.trim()} className="w-full h-full object-cover" />
+                 <div className="relative w-full">
+                   <div ref={galleryRef} className="w-[calc(100%+4rem)] -mx-8 flex overflow-x-auto snap-x snap-mandatory mt-8 hide-scroll relative z-10" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                      <style>{`.hide-scroll::-webkit-scrollbar { display: none; }`}</style>
+                      {(() => {
+                        const photos = data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`);
+                        return photos.map((photoUrl: string, i: number) => (
+                          <div key={i} className="w-full shrink-0 snap-center bg-[var(--primary)]/10" style={{ height: '65vh' }}>
+                            <img src={photoUrl.trim()} className="w-full h-full object-cover" />
+                          </div>
+                        ));
+                      })()}
+                   </div>
+                   
+                   {/* Dot Indicators */}
+                   {(() => {
+                      const photos = data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6];
+                      if (photos.length <= 1) return null;
+                      return (
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20 bg-black/20 px-3 py-2 rounded-full backdrop-blur-sm">
+                          {photos.map((_: any, i: number) => (
+                            <div 
+                              key={i} 
+                              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${galleryIndex === i ? 'bg-white w-4' : 'bg-white/50'}`} 
+                            />
+                          ))}
                         </div>
-                      ));
-                    })()}
+                      );
+                   })()}
                  </div>
             ) : data.galleryMode === 'stars' ? (
                <TwinklingStarsGallery photos={data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`)} />
@@ -874,7 +900,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
           </motion.div>
         </div>
         {/* WISHES DISPLAY IN GALLERY */}
-        <div className="relative z-10 max-w-4xl mx-auto px-4 @md:px-8 pb-24">
+        <div className="relative z-10 max-w-4xl mx-auto px-3 @md:px-8 pb-24">
           {/* WISHES DISPLAY (Slider / List) */}
           {wishes && wishes.filter((w: any) => w.isVisible !== false).length > 0 && (
             <motion.div 
@@ -886,11 +912,11 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             >
               <h3 className="font-script text-6xl mb-8 text-center" style={{ color: data.rsvpTitleColor && data.rsvpTitleColor !== '#ffffff' ? data.rsvpTitleColor : 'var(--primary)' }}>Ucapan & Doa</h3>
               
-              <div className="flex justify-between items-center mb-6 px-1">
+              <div className="flex justify-between items-center mb-6">
                 <span className="text-sm opacity-60 font-sans tracking-wide">{wishes.filter((w: any) => w.isVisible !== false).length} Ucapan</span>
                 <button 
                   onClick={() => setWishesSort(prev => prev === 'newest' ? 'oldest' : 'newest')}
-                  className="bg-transparent border opacity-70 hover:opacity-100 text-[10px] uppercase font-bold tracking-widest px-4 py-2 rounded-full outline-none font-sans flex items-center gap-2 transition-all"
+                  className="bg-transparent border opacity-70 hover:opacity-100 text-[9px] uppercase font-bold tracking-widest px-3 py-1.5 rounded-full outline-none font-sans flex items-center gap-1.5 transition-all"
                   style={{ borderColor: 'inherit' }}
                 >
                   {wishesSort === 'newest' ? 'Terbaru' : 'Terlama'}
@@ -993,7 +1019,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
       </section>
 
       {/* 7. RSVP SECTION */}
-      <section className="relative w-full py-24 px-4 @md:px-8 overflow-hidden" style={{ backgroundColor: data.rsvpBgColor || 'var(--primary)' }}>
+      <section className="relative w-full py-24 px-3 @md:px-8 overflow-hidden" style={{ backgroundColor: data.rsvpBgColor || 'var(--primary)' }}>
         {renderBg(data.rsvpBgUrl, "")}
         {renderDynamicOrnaments(data.rsvpOrnaments)}
 
@@ -1011,7 +1037,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
 
           <motion.form 
             onSubmit={handleRsvpSubmit}
-            className="backdrop-blur-md p-8 rounded-3xl border flex flex-col gap-6"
+            className="backdrop-blur-md p-5 @md:p-8 rounded-3xl border flex flex-col gap-5 @md:gap-6"
             style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.1)', color: data.rsvpFormTextColor || '#ffffff', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}33` : 'rgba(255,255,255,0.2)' }}
             variants={fadeInUp}
             initial="hidden"
