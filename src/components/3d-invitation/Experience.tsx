@@ -832,22 +832,45 @@ export default function Experience({ data, invitationId, wishes = [], children, 
               viewport={{ once: true }}
             >
               <h3 className="font-script text-6xl mb-8 text-center" style={{ color: data.rsvpTitleColor && data.rsvpTitleColor !== '#ffffff' ? data.rsvpTitleColor : 'var(--primary)' }}>Ucapan & Doa</h3>
-              <div className="w-full flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory custom-scrollbar">
-                {wishes.filter((w: any) => w.isVisible !== false).map((wish: any) => (
-                    <div key={wish.id} className="w-[85vw] max-w-[320px] shrink-0 snap-center p-6 rounded-3xl border shadow-md backdrop-blur-md" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.7)', color: data.rsvpFormTextColor || 'var(--foreground)', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
+              
+              <div className="flex justify-between items-center mb-6">
+                <span className="text-sm opacity-60 font-sans">{wishes.filter((w: any) => w.isVisible !== false).length} Ucapan</span>
+                <select 
+                  value={wishesSort} 
+                  onChange={(e) => setWishesSort(e.target.value as 'newest'|'oldest')}
+                  className="bg-transparent border border-current opacity-70 text-sm px-2 py-1 rounded-md outline-none font-sans"
+                >
+                  <option value="newest" className="text-black">Terbaru</option>
+                  <option value="oldest" className="text-black">Terlama</option>
+                </select>
+              </div>
+
+              <div className="w-full flex flex-col gap-4">
+                {[...wishes.filter((w: any) => w.isVisible !== false)]
+                  .sort((a, b) => {
+                    if (wishesSort === 'newest') return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+                    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+                  })
+                  .slice(0, visibleWishesCount)
+                  .map((wish: any) => (
+                    <div key={wish.id} className="w-full p-6 rounded-3xl border shadow-md backdrop-blur-md" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.7)', color: data.rsvpFormTextColor || 'var(--foreground)', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
                       <div className="mb-2 pb-2 border-b" style={{ borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
                         <h4 className="guestbook-name">{wish.name}</h4>
                       </div>
-                      <p className="guestbook-msg line-clamp-4">{wish.message}</p>
+                      <p className="guestbook-msg">{wish.message}</p>
                     </div>
                 ))}
               </div>
-              
-              <style dangerouslySetInnerHTML={{__html: `
-                .custom-scrollbar::-webkit-scrollbar { height: 6px; }
-                .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: ${data.rsvpTitleColor || '#ffffff'}80; border-radius: 10px; }
-              `}} />
+
+              {visibleWishesCount < wishes.filter((w: any) => w.isVisible !== false).length && (
+                <button 
+                  onClick={() => setVisibleWishesCount(prev => prev + 3)}
+                  className="mt-8 mx-auto block px-6 py-2 border rounded-full text-sm font-semibold hover:opacity-70 transition-opacity font-sans"
+                  style={{ borderColor: 'inherit', color: 'inherit' }}
+                >
+                  Lihat Lebih Banyak
+                </button>
+              )}
             </motion.div>
           )}
         </div>
