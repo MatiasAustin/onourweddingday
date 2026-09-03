@@ -166,7 +166,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             container.scrollBy({ left: slideWidth, behavior: 'smooth' });
           }
         }
-      }, 3000);
+      }, 2000);
     };
 
     startAutoScroll();
@@ -346,6 +346,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
         .font-sans, .font-serif, .font-mono, p { font-family: var(--font-body) !important; font-size: var(--body-size) !important; line-height: var(--body-line-height) !important; font-weight: var(--body-weight) !important; }
         .guestbook-name { font-family: var(--font-title) !important; font-size: calc(var(--body-size) * 1.8) !important; font-weight: bold !important; margin-bottom: 4px; }
         .guestbook-msg { font-family: var(--font-body) !important; font-size: calc(var(--body-size) * 0.85) !important; opacity: 0.8; }
+        .sort-btn { font-size: 9px !important; }
         .text-center { text-align: var(--text-alignment) !important; }
       `}} />
       
@@ -830,7 +831,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
       )}
 
       {/* 5. GALLERY SECTION */}
-      <section className="relative w-full py-24 px-8 border-y border-[var(--secondary)]/20 overflow-hidden" style={{ backgroundColor: data.galleryBgColor || 'rgba(255,255,255,0.3)' }}>
+      <section className="relative w-full py-24 px-4 @md:px-8 border-y border-[var(--secondary)]/20 overflow-hidden" style={{ backgroundColor: data.galleryBgColor || 'rgba(255,255,255,0.3)' }}>
         {renderBg(data.galleryBgUrl, "")}
 
         {renderDynamicOrnaments(data.galleryOrnaments)}
@@ -855,7 +856,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
           >
             {data.galleryMode === 'slider' ? (
                  <div className="relative w-full">
-                   <div ref={galleryRef} className="w-[calc(100%+4rem)] -mx-8 flex overflow-x-auto snap-x snap-mandatory mt-8 hide-scroll relative z-10" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                   <div ref={galleryRef} className="w-[calc(100%+2rem)] @md:w-[calc(100%+4rem)] -mx-4 @md:-mx-8 flex overflow-x-auto snap-x snap-mandatory mt-8 hide-scroll relative z-10" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                       <style>{`.hide-scroll::-webkit-scrollbar { display: none; }`}</style>
                       {(() => {
                         const photos = data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`);
@@ -900,7 +901,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
           </motion.div>
         </div>
         {/* WISHES DISPLAY IN GALLERY */}
-        <div className="relative z-10 max-w-4xl mx-auto px-3 @md:px-8 pb-24">
+        <div className="relative z-10 max-w-4xl mx-auto px-0 pb-24">
           {/* WISHES DISPLAY (Slider / List) */}
           {wishes && wishes.filter((w: any) => w.isVisible !== false).length > 0 && (
             <motion.div 
@@ -916,8 +917,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                 <span className="text-sm opacity-60 font-sans tracking-wide">{wishes.filter((w: any) => w.isVisible !== false).length} Ucapan</span>
                 <button 
                   onClick={() => setWishesSort(prev => prev === 'newest' ? 'oldest' : 'newest')}
-                  className="bg-transparent border opacity-70 hover:opacity-100 text-[9px] uppercase font-bold tracking-widest px-3 py-1.5 rounded-full outline-none font-sans flex items-center gap-1.5 transition-all"
-                  style={{ borderColor: 'inherit' }}
+                  className="sort-btn bg-transparent border opacity-70 hover:opacity-100 uppercase font-bold tracking-widest px-3 py-1.5 rounded-full outline-none font-sans flex items-center gap-1.5 transition-all" style={{ borderColor: 'inherit' }}
                 >
                   {wishesSort === 'newest' ? 'Terbaru' : 'Terlama'}
                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">

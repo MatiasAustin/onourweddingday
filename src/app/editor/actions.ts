@@ -7,10 +7,25 @@ export async function updateInvitationSettings(invitationId: string, settingsJSO
   const supabase = await createClient();
   
   try {
+    // Fetch current settings to prevent overwriting non-editor data like guestList
+    const { data: currentInv } = await supabase
+      .from('Invitation')
+      .select('settingsJSON')
+      .eq('id', invitationId)
+      .single();
+      
+    const currentSettings = currentInv?.settingsJSON || {};
+    const mergedSettings = {
+      ...currentSettings,
+      ...settingsJSON,
+      // explicitly preserve guestList if it exists and isn't provided by the editor
+      guestList: settingsJSON.guestList || currentSettings.guestList
+    };
+
     const { error } = await supabase
       .from('Invitation')
       .update({ 
-        settingsJSON,
+        settingsJSON: mergedSettings,
         updatedAt: new Date().toISOString()
       })
       .eq('id', invitationId);
