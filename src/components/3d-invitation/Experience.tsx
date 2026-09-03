@@ -94,6 +94,7 @@ interface ExperienceProps {
   wishes?: any[];
   children?: React.ReactNode;
   previewMode?: "desktop" | "tablet" | "mobile";
+  guestName?: string;
 }
 
 const renderDynamicOrnaments = (ornamentsStr: any) => {
@@ -128,7 +129,7 @@ const renderDynamicOrnaments = (ornamentsStr: any) => {
     }
   };
 
-export default function Experience({ data, invitationId, wishes = [], children, previewMode = "desktop" }: ExperienceProps) {
+export default function Experience({ data, invitationId, wishes = [], children, previewMode = "desktop", guestName }: ExperienceProps) {
   const [mounted, setMounted] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [isHeroTextVisible, setIsHeroTextVisible] = useState(false);
@@ -318,6 +319,12 @@ export default function Experience({ data, invitationId, wishes = [], children, 
               </div>
 
               <div className="mt-auto flex flex-col @md:flex-row items-center gap-4">
+                {guestName && (
+                  <div className="mb-6 text-center absolute bottom-32 left-0 right-0">
+                    <p className="text-[10px] tracking-widest uppercase opacity-80 mb-2" style={{ color: data.coverTitleColor || '#ffffff' }}>Kepada Yth. Bapak/Ibu/Saudara/i</p>
+                    <p className="font-serif text-2xl font-bold" style={{ color: data.coverTitleColor || '#ffffff' }}>{guestName}</p>
+                  </div>
+                )}
                 <motion.button
                   onClick={() => setIsOpened(true)}
                   whileHover={{ scale: 1.05 }}

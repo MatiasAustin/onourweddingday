@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createInvitation, updateInvitationStatus } from "./actions";
 import Link from "next/link";
-import { Plus, Edit, Eye, Globe, Archive, Loader2 } from "lucide-react";
+import { Plus, Edit, Eye, Globe, Archive, Loader2, MessageSquare } from "lucide-react";
 
 export function InvitationsClient({ initialInvitations, users, templates }: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -96,6 +96,9 @@ export function InvitationsClient({ initialInvitations, users, templates }: any)
                         <Globe className="w-4 h-4" />
                       </Link>
                     )}
+                    <Link href={`/invitations/${inv.id}/guestbook`} className="text-foreground/50 hover:text-primary transition-colors" title="Manage Guestbook">
+                      <MessageSquare className="w-4 h-4" />
+                    </Link>
                     <Link href={`/editor/${inv.id}`} className="text-foreground/50 hover:text-primary transition-colors" title="Edit in Antigravity">
                       <Edit className="w-4 h-4" />
                     </Link>

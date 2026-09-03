@@ -8,11 +8,14 @@ interface InvitationPageProps {
   params: Promise<{
     invitationSlug: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function InvitationPage({ params }: InvitationPageProps) {
-  // In Next.js 15, params is a Promise that must be awaited
+export default async function InvitationPage({ params, searchParams }: InvitationPageProps) {
+  // In Next.js 15, params and searchParams are Promises that must be awaited
   const { invitationSlug } = await params;
+  const resolvedSearchParams = await searchParams;
+  const guestName = typeof resolvedSearchParams.to === 'string' ? resolvedSearchParams.to : '';
   const supabase = await createClient();
 
   // Attempt to fetch the invitation and its active sections from the database
@@ -58,7 +61,7 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
   // Determine which template to render
   if (invitation.templateId === "elegance-3d") {
     return (
-      <Experience data={invitation.settingsJSON || {}} invitationId={invitation.id} wishes={wishes}>
+      <Experience data={invitation.settingsJSON || {}} invitationId={invitation.id} wishes={wishes} guestName={guestName}>
         <main className="w-full flex flex-col items-center py-32 px-8">
           {invitation.sections.map((section: any) => (
             <BlockRenderer
