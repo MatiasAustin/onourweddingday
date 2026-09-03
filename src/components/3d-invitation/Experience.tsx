@@ -319,20 +319,22 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                 <h1 className="font-script text-7xl @md:text-9xl mb-4 drop-shadow-xl" style={{ color: data.coverTitleColor || '#ffffff' }}>
                   {data.brideName || "Nova"} & {data.groomName || "Irfan"}
                 </h1>
+                
                 {data.coverSubtitleText && !guestName && (
                   <p className="tracking-[0.2em] mt-2 uppercase text-[10px] opacity-70 font-semibold" style={{ color: data.coverTitleColor || '#ffffff' }}>{data.coverSubtitleText}</p>
                 )}
-              </div>
 
-              <div className="mt-auto flex flex-col @md:flex-row items-center gap-4">
                 {guestName && (
-                  <div className="mb-6 text-center absolute bottom-32 left-0 right-0 flex flex-col items-center">
+                  <div className="mt-8 text-center flex flex-col items-center">
                     {data.coverSubtitleText && (
-                      <p className="text-[10px] tracking-widest uppercase opacity-80 mb-3" style={{ color: data.coverTitleColor || '#ffffff' }}>{data.coverSubtitleText}</p>
+                      <p className="text-[10px] tracking-widest uppercase opacity-80 mb-3 font-semibold" style={{ color: data.coverTitleColor || '#ffffff' }}>{data.coverSubtitleText}</p>
                     )}
                     <p className="font-serif text-xl font-bold bg-white text-black rounded" style={{ padding: '12px 60px' }}>{guestName}</p>
                   </div>
                 )}
+              </div>
+
+              <div className="mt-auto flex flex-col @md:flex-row items-center gap-4">
                 <motion.button
                   onClick={() => setIsOpened(true)}
                   whileHover={{ scale: 1.05 }}
