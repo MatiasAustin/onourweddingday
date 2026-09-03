@@ -121,21 +121,23 @@ Terima kasih.`;
             ) : (
               <div className="space-y-4">
                 {guestbook.map(entry => (
-                  <div key={entry.id} className={`border rounded-xl p-4 flex justify-between items-start gap-4 ${entry.isVisible === false ? 'border-secondary/30 bg-secondary/10 opacity-70' : 'border-secondary/50 bg-white'}`}>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-semibold">{entry.name}</h4>
+                  <div key={entry.id} className={`border rounded-xl p-4 flex flex-col sm:flex-row sm:items-start justify-between gap-4 ${entry.isVisible === false ? 'border-secondary/30 bg-secondary/10 opacity-70' : 'border-secondary/50 bg-white'}`}>
+                    <div className="flex-1 w-full">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className="font-semibold text-lg">{entry.name}</h4>
                         {entry.isVisible === false && <span className="text-[10px] font-bold bg-secondary/20 px-2 py-0.5 rounded text-foreground/70 uppercase">Sembunyi</span>}
                       </div>
-                      <p className="text-sm text-foreground/60 mb-2">Attendance: {entry.attendance} • Guests: {entry.guestsCount}</p>
-                      <p className="text-sm">{entry.message}</p>
+                      <p className="text-xs text-foreground/60 mb-3 bg-secondary/10 inline-block px-2 py-1 rounded-md">
+                        Attendance: {entry.attendance} • Guests: {entry.guestsCount}
+                      </p>
+                      <p className="text-sm leading-relaxed">{entry.message}</p>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex flex-row sm:flex-col gap-2">
                       <button 
-                        onClick={() => handleToggleVisibility(entry.id, entry.isVisible)}
+                        onClick={() => handleToggleVisibility(entry.id, entry.isVisible !== false)}
                         disabled={isToggling === entry.id}
-                        className="p-2 text-foreground/70 hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50"
-                        title={entry.isVisible === false ? "Tampilkan Ucapan" : "Sembunyikan Ucapan"}
+                        className={`p-3 sm:p-2 rounded-lg transition-colors flex shrink-0 justify-center w-full sm:w-auto ${entry.isVisible === false ? 'bg-secondary/30 text-foreground hover:bg-secondary/50' : 'bg-red-50 text-red-500 hover:bg-red-100'}`}
+                        title={entry.isVisible === false ? "Show message" : "Hide message"}
                       >
                         {entry.isVisible === false ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </button>
@@ -159,18 +161,18 @@ Terima kasih.`;
           <div>
             <h2 className="text-xl font-semibold mb-6">Manage Guest List</h2>
             
-            <form onSubmit={handleAddGuest} className="flex gap-4 mb-8">
+            <form onSubmit={handleAddGuest} className="flex flex-col sm:flex-row gap-4 mb-8">
               <input 
                 type="text" 
                 value={newGuestName}
                 onChange={(e) => setNewGuestName(e.target.value)}
                 placeholder="Enter guest name..." 
-                className="flex-1 border border-secondary/50 rounded-xl px-4 py-2 focus:outline-none focus:border-primary"
+                className="flex-1 border border-secondary/50 rounded-xl px-4 py-3 sm:py-2 focus:outline-none focus:border-primary"
               />
               <button 
                 type="submit"
                 disabled={!newGuestName.trim() || isSavingGuests}
-                className="bg-primary text-white px-6 py-2 rounded-xl font-medium hover:bg-primary/90 transition-colors flex items-center gap-2 disabled:opacity-50"
+                className="bg-primary text-white px-6 py-3 sm:py-2 rounded-xl font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 <Plus className="w-4 h-4" />
                 Add Guest
@@ -182,12 +184,12 @@ Terima kasih.`;
             ) : (
               <div className="space-y-3">
                 {guestList.map(guest => (
-                  <div key={guest.id} className="flex items-center justify-between border border-secondary/30 rounded-xl p-4">
-                    <div className="font-medium">{guest.name}</div>
-                    <div className="flex items-center gap-2">
+                  <div key={guest.id} className="flex flex-col sm:flex-row sm:items-center justify-between border border-secondary/30 rounded-xl p-4 gap-4">
+                    <div className="font-medium truncate max-w-full text-lg sm:text-base">{guest.name}</div>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
                       <button 
                         onClick={() => copyLink(guest.name)}
-                        className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium border border-secondary/50 rounded-lg hover:bg-secondary/10 transition-colors"
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 py-3 sm:py-1.5 text-sm font-medium border border-secondary/50 rounded-lg hover:bg-secondary/10 transition-colors"
                       >
                         <Copy className="w-4 h-4" />
                         Copy Link
@@ -195,9 +197,9 @@ Terima kasih.`;
                       <button 
                         onClick={() => handleRemoveGuest(guest.id)}
                         disabled={isSavingGuests}
-                        className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                        className="p-3 sm:p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors border sm:border-0 border-red-100 disabled:opacity-50 flex items-center justify-center shrink-0"
                       >
-                        <X className="w-5 h-5" />
+                        <X className="w-5 h-5 sm:w-5 sm:h-5" />
                       </button>
                     </div>
                   </div>
