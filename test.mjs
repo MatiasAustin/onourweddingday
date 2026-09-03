@@ -9,4 +9,4 @@ const env = envFile.split('\n').reduce((acc, line) => {
 }, {});
 
 const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-supabase.rpc('get_schema').then(console.log).catch(console.error);
+supabase.from('Invitation').select('id, title, slug, templateId').then(({data}) => console.log(data)).catch(console.error);

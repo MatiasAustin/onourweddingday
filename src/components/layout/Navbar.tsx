@@ -7,6 +7,12 @@ export default async function Navbar() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  let dbUser = null;
+  if (user) {
+    const { data } = await supabase.from('User').select('role').eq('supabaseId', user.id).single();
+    dbUser = data;
+  }
+
   return (
     <nav className="fixed w-full z-50 bg-background/80 backdrop-blur-md border-b border-secondary/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -32,7 +38,7 @@ export default async function Navbar() {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
-                <Link href="/dashboard" className="text-foreground/80 hover:text-primary transition-colors font-medium mr-4">
+                <Link href={dbUser?.role === 'ADMIN' ? "/dashboard" : "/client-dashboard"} className="text-foreground/80 hover:text-primary transition-colors font-medium mr-4">
                   Dashboard
                 </Link>
                 <form action="/auth/signout" method="post">
