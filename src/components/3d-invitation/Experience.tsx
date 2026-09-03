@@ -138,6 +138,8 @@ export default function Experience({ data, invitationId, wishes = [], children, 
   const [rsvpForm, setRsvpForm] = useState({ name: '', attendance: 'hadir', guestsCount: '1', message: '' });
   const [isSubmittingRsvp, setIsSubmittingRsvp] = useState(false);
   const [rsvpStatus, setRsvpStatus] = useState<null | 'success' | 'error'>(null);
+  const [visibleWishesCount, setVisibleWishesCount] = useState(3);
+  const [wishesSort, setWishesSort] = useState<'newest' | 'oldest'>('newest');
   
   const handleRsvpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -282,6 +284,8 @@ export default function Experience({ data, invitationId, wishes = [], children, 
         @import url('${googleFontsUrl}');
         .font-script { font-family: var(--font-title) !important; font-size: var(--title-size) !important; font-weight: var(--title-weight) !important; line-height: 1.2; }
         .font-sans, .font-serif, .font-mono, p { font-family: var(--font-body) !important; font-size: var(--body-size) !important; line-height: var(--body-line-height) !important; font-weight: var(--body-weight) !important; }
+        .guestbook-name { font-family: var(--font-title) !important; font-size: calc(var(--body-size) * 1.8) !important; font-weight: bold !important; margin-bottom: 4px; }
+        .guestbook-msg { font-family: var(--font-body) !important; font-size: calc(var(--body-size) * 0.85) !important; opacity: 0.8; }
         .text-center { text-align: var(--text-alignment) !important; }
       `}} />
       
@@ -315,13 +319,27 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                   marginTop: data.coverMarginTop ? `${data.coverMarginTop}px` : '0px'
                 }}
               >
-                <p className="tracking-[0.3em] uppercase text-xs mb-6 opacity-80 font-bold" style={{ color: data.coverTitleColor || '#ffffff' }}>{data.coverTitleText || "Undangan Pernikahan"}</p>
-                <h1 className="font-script text-7xl @md:text-9xl mb-4 drop-shadow-xl" style={{ color: data.coverTitleColor || '#ffffff' }}>
+                <p className="uppercase font-bold mb-6 opacity-80" style={{ 
+                  color: data.coverTitleColor || '#ffffff',
+                  fontSize: data.coverTitleSize || '0.75rem',
+                  letterSpacing: data.coverTitleSpace || '0.3em',
+                  lineHeight: data.coverTitleHeight || 'normal'
+                }}>{data.coverTitleText || "Undangan Pernikahan"}</p>
+                <h1 className="font-script drop-shadow-xl mb-4" style={{ 
+                  color: data.coverTitleColor || '#ffffff',
+                  fontSize: data.coverNameSize || '4.5rem',
+                  letterSpacing: data.coverNameSpace || 'normal',
+                  lineHeight: data.coverNameHeight || '1'
+                }}>
                   {data.brideName || "Nova"} & {data.groomName || "Irfan"}
                 </h1>
                 
                 {data.coverSubtitleText && !guestName && (
-                  <p className="tracking-[0.2em] mt-2 uppercase text-[10px] opacity-70 font-semibold" style={{ color: data.coverTitleColor || '#ffffff' }}>{data.coverSubtitleText}</p>
+                  <p className="mt-2 uppercase font-semibold opacity-70" style={{ 
+                    color: data.coverTitleColor || '#ffffff',
+                    fontSize: data.coverSubtitleSize || '10px',
+                    letterSpacing: data.coverSubtitleSpace || '0.2em'
+                  }}>{data.coverSubtitleText}</p>
                 )}
 
                 {guestName && (
@@ -480,11 +498,25 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <p className="font-sans font-bold tracking-[0.2em] uppercase text-xs mb-4" style={{ color: data.secondaryColor || 'var(--secondary)' }}>BRIDE & GROOM</p>
-            <div className="w-12 h-px mb-6" style={{ backgroundColor: data.secondaryColor || 'var(--secondary)' }} />
-            <h2 className="font-script text-4xl @md:text-5xl px-4" style={{ color: data.coupleTitleColor || 'var(--primary)' }}>Two Families, One Sacred Promise</h2>
-            <div className="w-12 h-px mt-6 mb-6" style={{ backgroundColor: data.secondaryColor || 'var(--secondary)' }} />
-            <p className="font-serif text-sm opacity-70 max-w-md mx-auto leading-relaxed px-4" style={{ color: data.coupleSubtitleColor || 'var(--primary)' }}>In the warmth of tradition and the blessing of our parents, we begin a new home together.</p>
+              <p className="font-sans font-bold uppercase mb-4" style={{ 
+                color: data.secondaryColor || 'var(--secondary)',
+                fontSize: data.heroTopSize || '0.75rem',
+                letterSpacing: data.heroTopSpace || '0.2em'
+              }}>BRIDE & GROOM</p>
+              <div className="w-12 h-px mb-6" style={{ backgroundColor: data.secondaryColor || 'var(--secondary)' }} />
+              <h2 className="font-script px-4" style={{ 
+                color: data.coupleTitleColor || 'var(--primary)',
+                fontSize: data.heroTitleSize || '2.25rem',
+                letterSpacing: data.heroTitleSpace || 'normal',
+                lineHeight: data.heroTitleHeight || '1.2'
+              }}>Two Families, One Sacred Promise</h2>
+              <div className="w-12 h-px mt-6 mb-6" style={{ backgroundColor: data.secondaryColor || 'var(--secondary)' }} />
+              <p className="font-serif opacity-70 max-w-md mx-auto px-4" style={{ 
+                color: data.coupleSubtitleColor || 'var(--primary)',
+                fontSize: data.heroSubtitleSize || '0.875rem',
+                letterSpacing: data.heroSubtitleSpace || 'normal',
+                lineHeight: data.heroSubtitleHeight || '1.625'
+              }}>In the warmth of tradition and the blessing of our parents, we begin a new home together.</p>
           </motion.div>
 
           <div className="flex flex-col @md:flex-row justify-center items-center gap-16 @md:gap-32">
@@ -802,12 +834,12 @@ export default function Experience({ data, invitationId, wishes = [], children, 
               <h3 className="font-script text-6xl mb-8 text-center" style={{ color: data.rsvpTitleColor && data.rsvpTitleColor !== '#ffffff' ? data.rsvpTitleColor : 'var(--primary)' }}>Ucapan & Doa</h3>
               <div className="w-full flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory custom-scrollbar">
                 {wishes.filter((w: any) => w.isVisible !== false).map((wish: any) => (
-                  <div key={wish.id} className="w-[85vw] max-w-[320px] shrink-0 snap-center p-6 rounded-3xl border shadow-md backdrop-blur-md" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.7)', color: data.rsvpFormTextColor || 'var(--foreground)', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
-                    <div className="mb-3 pb-2 border-b" style={{ borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
-                      <h4 className="font-serif font-bold text-xl tracking-wide">{wish.name}</h4>
+                    <div key={wish.id} className="w-[85vw] max-w-[320px] shrink-0 snap-center p-6 rounded-3xl border shadow-md backdrop-blur-md" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.7)', color: data.rsvpFormTextColor || 'var(--foreground)', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
+                      <div className="mb-2 pb-2 border-b" style={{ borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
+                        <h4 className="guestbook-name">{wish.name}</h4>
+                      </div>
+                      <p className="guestbook-msg line-clamp-4">{wish.message}</p>
                     </div>
-                    <p className="opacity-80 font-serif leading-relaxed line-clamp-4 text-sm">{wish.message}</p>
-                  </div>
                 ))}
               </div>
               

@@ -625,6 +625,16 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
 
               {/* COUPLE */}
               <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="couple" title="Mempelai" icon={Users}>
+                <h4 className="text-[10px] font-bold text-primary uppercase mt-2 mb-2 border-b pb-2">Typografi Teks Pembuka</h4>
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  <InputField formData={formData} onChange={handleChange} label="Ukuran Teks 'BRIDE & GROOM'" name="heroTopSize" placeholder="e.g. 0.75rem" />
+                  <InputField formData={formData} onChange={handleChange} label="Spasi Huruf Atas" name="heroTopSpace" placeholder="e.g. 0.2em" />
+                  <InputField formData={formData} onChange={handleChange} label="Ukuran Judul (Two Families)" name="heroTitleSize" placeholder="e.g. 2.25rem" />
+                  <InputField formData={formData} onChange={handleChange} label="Tinggi Baris Judul" name="heroTitleHeight" placeholder="e.g. 1.2" />
+                  <InputField formData={formData} onChange={handleChange} label="Ukuran Subjudul" name="heroSubtitleSize" placeholder="e.g. 0.875rem" />
+                  <InputField formData={formData} onChange={handleChange} label="Tinggi Baris Subjudul" name="heroSubtitleHeight" placeholder="e.g. 1.625" />
+                </div>
+                <h4 className="text-[10px] font-bold text-primary uppercase mt-4 mb-2 border-b pb-2">Warna & Elemen</h4>
                 <InputField formData={formData} onChange={handleChange} label="Warna Background Section" name="coupleBgColor" type="color" />
                 <InputField formData={formData} onChange={handleChange} label="Warna Teks Judul" name="coupleTitleColor" type="color" />
                 <InputField formData={formData} onChange={handleChange} label="Warna Teks Subjudul" name="coupleSubtitleColor" type="color" />
@@ -717,6 +727,16 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
                   <InputField formData={formData} onChange={handleChange} label="Nama Panggilan Wanita" name="brideName" />
                   <InputField formData={formData} onChange={handleChange} label="Nama Panggilan Pria" name="groomName" />
                 </div>
+                
+                <h4 className="text-[10px] font-bold text-primary uppercase mt-4 mb-2 border-b pb-2">Typografi Teks Cover</h4>
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  <InputField formData={formData} onChange={handleChange} label="Ukuran Nama" name="coverNameSize" placeholder="e.g. 4.5rem" />
+                  <InputField formData={formData} onChange={handleChange} label="Spasi Huruf Nama" name="coverNameSpace" placeholder="e.g. normal" />
+                  <InputField formData={formData} onChange={handleChange} label="Tinggi Baris Nama" name="coverNameHeight" placeholder="e.g. 1" />
+                  <InputField formData={formData} onChange={handleChange} label="Ukuran Judul" name="coverTitleSize" placeholder="e.g. 0.75rem" />
+                  <InputField formData={formData} onChange={handleChange} label="Spasi Huruf Judul" name="coverTitleSpace" placeholder="e.g. 0.3em" />
+                </div>
+
                 <InputField formData={formData} onChange={handleChange} label="Tanggal Pernikahan" name="weddingDate" type="datetime-local" />
 
                 <h4 className="text-xs font-bold text-primary uppercase mt-6 mb-2 border-b pb-2">Media & Overlay</h4>
