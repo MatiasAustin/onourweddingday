@@ -308,7 +308,13 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             <div className="absolute inset-0 transition-opacity" style={{ backgroundColor: data.coverOverlayColor || '#000000', opacity: data.coverOverlayOpacity || '0.4' }} />
             
             <div className="relative z-10 text-center px-6 flex flex-col items-center h-full w-full justify-between py-24">
-              <div className="flex-1 flex flex-col items-center justify-center">
+              <div 
+                className="flex-1 flex flex-col items-center w-full" 
+                style={{ 
+                  justifyContent: data.coverLayout === 'start' ? 'flex-start' : (data.coverLayout === 'end' ? 'flex-end' : 'center'),
+                  marginTop: data.coverMarginTop ? `${data.coverMarginTop}px` : '0px'
+                }}
+              >
                 <p className="tracking-[0.3em] uppercase text-xs mb-6 opacity-80 font-bold" style={{ color: data.coverTitleColor || '#ffffff' }}>{data.coverTitleText || "Undangan Pernikahan"}</p>
                 <h1 className="font-script text-7xl @md:text-9xl mb-4 drop-shadow-xl" style={{ color: data.coverTitleColor || '#ffffff' }}>
                   {data.brideName || "Nova"} & {data.groomName || "Irfan"}
@@ -593,8 +599,9 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                   { label: "SECONDS", value: timeLeft.seconds }
                 ].map((item, idx) => (
                   <div key={idx} className="flex flex-col items-center justify-center w-[72px] h-[72px] @sm:w-20 @sm:h-20 @md:w-32 @md:h-32 border rounded-xl backdrop-blur-sm shrink-0" style={{ borderColor: data.secondaryColor ? `${data.secondaryColor}80` : 'rgba(197,160,89,0.5)', backgroundColor: 'rgba(0,0,0,0.1)' }}>
-                    <span className="font-serif text-lg @md:text-2xl font-bold mb-0.5 @md:mb-1" style={{ color: data.countdownTextColor || '#ffffff' }}>{String(item.value).padStart(2, '0')}</span>
-                    <span className="font-sans text-[9px] @md:text-[10px] uppercase opacity-80" style={{ color: data.countdownTextColor || '#ffffff' }}>{item.label}</span>
+                    <style>{`.cd-num { font-size: 16px; } .cd-lbl { font-size: 8px; letter-spacing: -0.05em; } @container (min-width: 768px) { .cd-num { font-size: 24px; } .cd-lbl { font-size: 11px; } }`}</style>
+                    <span className="font-serif font-bold mb-0.5 @md:mb-1 cd-num" style={{ color: data.countdownTextColor || '#ffffff' }}>{String(item.value).padStart(2, '0')}</span>
+                    <span className="font-sans uppercase opacity-80 cd-lbl" style={{ color: data.countdownTextColor || '#ffffff' }}>{item.label}</span>
                   </div>
                 ))}
               </div>

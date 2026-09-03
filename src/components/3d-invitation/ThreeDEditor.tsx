@@ -215,6 +215,8 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
     textAlignment: invitation.settingsJSON?.textAlignment || "center",
 
     // Cover
+    coverLayout: invitation.settingsJSON?.coverLayout || "center",
+    coverMarginTop: invitation.settingsJSON?.coverMarginTop || 0,
     coverTitleText: invitation.settingsJSON?.coverTitleText || "WEDDING INVITATION",
     coverSubtitleText: invitation.settingsJSON?.coverSubtitleText || "Kepada Yth.",
     coverDesktopBgUrl: invitation.settingsJSON?.coverDesktopBgUrl || "",
@@ -698,8 +700,17 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
           <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="cover" title="Cover & Audio" icon={Music}>
             {isCodeMode ? <CodeEditorGroup formData={formData} onChange={handleChange} sectionId="cover" /> : (
               <>
-                <h4 className="text-xs font-bold text-primary uppercase mt-2 mb-2 border-b pb-2">Informasi Utama</h4>
+                <h4 className="text-xs font-bold text-primary uppercase mt-2 mb-2 border-b pb-2">Posisi & Teks Cover</h4>
                 <div className="flex flex-col gap-4">
+                  <div className="mb-2">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80 mb-2">Posisi Teks Vertikal</label>
+                    <select name="coverLayout" value={formData.coverLayout as string} onChange={handleChange as any} className="w-full px-3 py-2 rounded-lg border border-secondary bg-white text-sm">
+                      <option value="start">Atas (Top)</option>
+                      <option value="center">Tengah (Center)</option>
+                      <option value="end">Bawah (Bottom)</option>
+                    </select>
+                  </div>
+                  <InputField formData={formData} onChange={handleChange} label="Geser Posisi (pixel)" name="coverMarginTop" type="number" />
                   <InputField formData={formData} onChange={handleChange} label="Judul Cover" name="coverTitleText" placeholder="WEDDING INVITATION" />
                   <InputField formData={formData} onChange={handleChange} label="Subjudul Cover" name="coverSubtitleText" placeholder="Kepada Yth." />
                   <InputField formData={formData} onChange={handleChange} label="Nama Panggilan Wanita" name="brideName" />
