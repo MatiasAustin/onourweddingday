@@ -800,10 +800,10 @@ export default function Experience({ data, invitationId, wishes = [], children, 
               <h3 className="font-serif text-3xl mb-8 text-center" style={{ color: data.rsvpTitleColor || '#ffffff' }}>Ucapan & Doa</h3>
               <div className="w-full flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory custom-scrollbar">
                 {wishes.filter((w: any) => w.isVisible !== false).map((wish: any) => (
-                  <div key={wish.id} className="w-[85vw] max-w-[320px] shrink-0 snap-center p-6 rounded-2xl border backdrop-blur-sm" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.1)', color: data.rsvpFormTextColor || '#ffffff', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}33` : 'rgba(255,255,255,0.2)' }}>
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-bold text-lg">{wish.name}</h4>
-                      <span className="text-[10px] uppercase tracking-wider opacity-60 bg-white/10 px-2 py-1 rounded-full">
+                  <div key={wish.id} className="w-[85vw] max-w-[320px] shrink-0 snap-center p-6 rounded-3xl border shadow-lg backdrop-blur-md" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.1)', color: data.rsvpFormTextColor || 'inherit', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
+                    <div className="flex items-center justify-between mb-4 pb-3 border-b" style={{ borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
+                      <h4 className="font-serif font-bold text-xl tracking-wide">{wish.name}</h4>
+                      <span className="text-[9px] font-sans font-bold uppercase tracking-widest opacity-70 border px-3 py-1 rounded-full" style={{ borderColor: 'inherit' }}>
                         {wish.attendance === 'hadir' ? 'Hadir' : 'Tidak Hadir'}
                       </span>
                     </div>
