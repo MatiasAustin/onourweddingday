@@ -141,6 +141,58 @@ export default function Experience({ data, invitationId, wishes = [], children, 
   const [visibleWishesCount, setVisibleWishesCount] = useState(3);
   const [wishesSort, setWishesSort] = useState<'newest' | 'oldest'>('newest');
   
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const isUserScrollingGallery = useRef(false);
+
+  useEffect(() => {
+    if (data.galleryMode !== 'slider' || !isOpened) return;
+    const container = galleryRef.current;
+    if (!container) return;
+
+    let autoScrollInterval: NodeJS.Timeout;
+    let resumeTimeout: NodeJS.Timeout;
+
+    const startAutoScroll = () => {
+      autoScrollInterval = setInterval(() => {
+        if (!isUserScrollingGallery.current && container) {
+          const slideWidth = container.clientWidth;
+          const currentScroll = container.scrollLeft;
+          const maxScroll = container.scrollWidth - container.clientWidth;
+          
+          if (currentScroll >= maxScroll - 10) {
+            container.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            container.scrollBy({ left: slideWidth, behavior: 'smooth' });
+          }
+        }
+      }, 3000);
+    };
+
+    startAutoScroll();
+
+    const handleUserInteraction = () => {
+      isUserScrollingGallery.current = true;
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+      resumeTimeout = setTimeout(() => {
+        isUserScrollingGallery.current = false;
+      }, 5000);
+    };
+
+    container.addEventListener('touchstart', handleUserInteraction, { passive: true });
+    container.addEventListener('mousedown', handleUserInteraction, { passive: true });
+    container.addEventListener('wheel', handleUserInteraction, { passive: true });
+    container.addEventListener('scroll', handleUserInteraction, { passive: true });
+
+    return () => {
+      if (autoScrollInterval) clearInterval(autoScrollInterval);
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+      container.removeEventListener('touchstart', handleUserInteraction);
+      container.removeEventListener('mousedown', handleUserInteraction);
+      container.removeEventListener('wheel', handleUserInteraction);
+      container.removeEventListener('scroll', handleUserInteraction);
+    };
+  }, [data.galleryMode, isOpened]);
+
   const handleRsvpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!invitationId) return; // In editor preview mode, just return
@@ -794,7 +846,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             viewport={{ once: true }}
           >
             {data.galleryMode === 'slider' ? (
-                 <div className="w-[calc(100%+4rem)] -mx-8 flex overflow-x-auto snap-x snap-mandatory mt-8 hide-scroll" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                 <div ref={galleryRef} className="w-[calc(100%+4rem)] -mx-8 flex overflow-x-auto snap-x snap-mandatory mt-8 hide-scroll" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                     <style>{`.hide-scroll::-webkit-scrollbar { display: none; }`}</style>
                     {(() => {
                       const photos = data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`);
