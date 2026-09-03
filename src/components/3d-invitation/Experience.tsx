@@ -794,23 +794,17 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             viewport={{ once: true }}
           >
             {data.galleryMode === 'slider' ? (
-               <div className="w-full overflow-hidden flex flex-nowrap py-4 mt-8 relative">
-                  <motion.div 
-                    className="flex gap-4"
-                    animate={{ x: ["0%", "-50%"] }}
-                    transition={{ ease: "linear", duration: 20, repeat: Infinity }}
-                  >
-                     {(() => {
-                       const photos = data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`);
-                       const duplicated = [...photos, ...photos];
-                       return duplicated.map((photoUrl: string, i: number) => (
-                         <div key={i} className="w-64 h-80 shrink-0 rounded-2xl overflow-hidden shadow-lg border-4 border-white/50 bg-[var(--primary)]/10">
-                           <img src={photoUrl.trim()} className="w-full h-full object-cover" />
-                         </div>
-                       ));
-                     })()}
-                  </motion.div>
-               </div>
+                 <div className="w-[calc(100%+4rem)] -mx-8 flex overflow-x-auto snap-x snap-mandatory mt-8 hide-scroll" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                    <style>{`.hide-scroll::-webkit-scrollbar { display: none; }`}</style>
+                    {(() => {
+                      const photos = data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`);
+                      return photos.map((photoUrl: string, i: number) => (
+                        <div key={i} className="w-full shrink-0 snap-center bg-[var(--primary)]/10" style={{ height: '65vh' }}>
+                          <img src={photoUrl.trim()} className="w-full h-full object-cover" />
+                        </div>
+                      ));
+                    })()}
+                 </div>
             ) : data.galleryMode === 'stars' ? (
                <TwinklingStarsGallery photos={data.galleryPhotos ? data.galleryPhotos.split(',').filter(Boolean) : [1,2,3,4,5,6].map(i => `https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop&sig=${i}`)} />
             ) : (
