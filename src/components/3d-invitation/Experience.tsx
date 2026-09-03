@@ -318,8 +318,8 @@ export default function Experience({ data, invitationId, wishes = [], children, 
   };
 
   const formattedDate = data.weddingDate 
-    ? new Date(data.weddingDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) 
-    : "15 Juni 2024";
+      ? new Date(data.weddingDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) 
+      : (data.akadTanggal || "15 Juni 2024");
 
   const customStyles = {
     '--primary': data.primaryColor || '#500000',
