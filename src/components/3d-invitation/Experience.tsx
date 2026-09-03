@@ -586,8 +586,8 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                   { label: "SECONDS", value: timeLeft.seconds }
                 ].map((item, idx) => (
                   <div key={idx} className="flex flex-col items-center justify-center w-[72px] h-[72px] @sm:w-20 @sm:h-20 @md:w-32 @md:h-32 border rounded-xl backdrop-blur-sm shrink-0" style={{ borderColor: data.secondaryColor ? `${data.secondaryColor}80` : 'rgba(197,160,89,0.5)', backgroundColor: 'rgba(0,0,0,0.1)' }}>
-                    <span className="font-serif text-xl @md:text-4xl font-bold mb-0.5 @md:mb-1" style={{ color: data.countdownTextColor || '#ffffff' }}>{String(item.value).padStart(2, '0')}</span>
-                    <span className="font-sans text-[7px] @md:text-xs tracking-wide @md:tracking-widest uppercase opacity-70" style={{ color: data.countdownTextColor || '#ffffff' }}>{item.label}</span>
+                    <span className="font-serif text-lg @md:text-2xl font-bold mb-0.5 @md:mb-1" style={{ color: data.countdownTextColor || '#ffffff' }}>{String(item.value).padStart(2, '0')}</span>
+                    <span className="font-sans text-[7px] @md:text-[10px] tracking-wide @md:tracking-widest uppercase opacity-70" style={{ color: data.countdownTextColor || '#ffffff' }}>{item.label}</span>
                   </div>
                 ))}
               </div>
