@@ -822,7 +822,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
           </motion.div>
         </div>
         {/* WISHES DISPLAY IN GALLERY */}
-        <div className="relative z-10 max-w-4xl mx-auto px-8 pb-24">
+        <div className="relative z-10 max-w-4xl mx-auto px-4 @md:px-8 pb-24">
           {/* WISHES DISPLAY (Slider / List) */}
           {wishes && wishes.filter((w: any) => w.isVisible !== false).length > 0 && (
             <motion.div 
@@ -941,7 +941,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
       </section>
 
       {/* 7. RSVP SECTION */}
-      <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.rsvpBgColor || 'var(--primary)' }}>
+      <section className="relative w-full py-24 px-4 @md:px-8 overflow-hidden" style={{ backgroundColor: data.rsvpBgColor || 'var(--primary)' }}>
         {renderBg(data.rsvpBgUrl, "")}
         {renderDynamicOrnaments(data.rsvpOrnaments)}
 
