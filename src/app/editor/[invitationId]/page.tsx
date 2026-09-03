@@ -19,7 +19,8 @@ export default async function EditorPage({ params }: EditorPageProps) {
 
   // If this invitation uses the cinematic 3D template, use the specialized editor
   if (invitation.templateId === "elegance-3d") {
-    return <ThreeDEditor invitation={invitation} />;
+    const { data: wishes } = await supabase.from('Guestbook').select('*').eq('invitationId', invitationId).order('createdAt', { ascending: false });
+    return <ThreeDEditor invitation={invitation} realWishes={wishes || []} />;
   }
 
   // Real app: fetch initial DB data here, and pass it to a Client Provider

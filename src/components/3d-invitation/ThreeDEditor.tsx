@@ -9,6 +9,7 @@ import FileUpload from "@/components/ui/FileUpload";
 
 interface ThreeDEditorProps {
   invitation: any;
+  realWishes?: any[];
 }
 
   const AccordionItem = ({ id, title, icon: Icon, children, activeTab, setActiveTab }: any) => {
@@ -192,7 +193,7 @@ interface ThreeDEditorProps {
     );
   };
 
-export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
+export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("cover");
   const [isCodeMode, setIsCodeMode] = useState(false);
@@ -898,7 +899,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
               </AccordionItem>
 
           {/* RSVP */}
-          <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="rsvp" title="RSVP Section" icon={Users}>
+          <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="rsvp" title="RSVP & Ucapan" icon={Users}>
             {isCodeMode ? <CodeEditorGroup formData={formData} onChange={handleChange} sectionId="rsvp" /> : (
               <>
                 <FileUpload label="Background Media" name="rsvpBgUrl" value={formData.rsvpBgUrl} onChange={handleUploadChange} placeholder="https://..." />
@@ -971,10 +972,7 @@ export default function ThreeDEditor({ invitation }: ThreeDEditorProps) {
               data={{...invitation.settingsJSON, ...formData}} 
               previewMode={previewMode} 
               invitationId={invitation.id}
-              wishes={[
-                { id: '1', name: 'John Doe', attendance: 'hadir', message: 'Selamat menempuh hidup baru! Semoga samawa selalu.' },
-                { id: '2', name: 'Jane Smith', attendance: 'tidak', message: 'Maaf tidak bisa hadir, tapi doa terbaik untuk kalian berdua.' }
-              ]}
+              wishes={realWishes}
             />
          </div>
       </div>
