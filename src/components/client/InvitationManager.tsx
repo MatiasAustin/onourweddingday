@@ -80,8 +80,18 @@ export function InvitationManager({ invitationId, invitationSlug, initialGuestbo
   };
 
   const copyLink = (name: string) => {
-    navigator.clipboard.writeText(generateLink(name));
-    alert(`Link for ${name} copied to clipboard!`);
+    const link = generateLink(name);
+    const message = `Bismillahirahmanirrahim.
+Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i ${name} untuk hadir dan memberikan doa restu pada acara pernikahan kami.
+
+Berikut adalah tautan undangan pernikahan kami:
+${link}
+
+Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir di acara kami.
+
+Terima kasih.`;
+    navigator.clipboard.writeText(message);
+    alert(`Pesan undangan untuk ${name} berhasil disalin!`);
   };
 
   return (
