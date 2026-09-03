@@ -799,17 +799,14 @@ export default function Experience({ data, invitationId, wishes = [], children, 
               whileInView="visible"
               viewport={{ once: true }}
             >
-              <h3 className="font-serif text-3xl mb-8 text-center" style={{ color: data.rsvpTitleColor || '#ffffff' }}>Ucapan & Doa</h3>
+              <h3 className="font-script text-6xl mb-8 text-center" style={{ color: data.rsvpTitleColor && data.rsvpTitleColor !== '#ffffff' ? data.rsvpTitleColor : 'var(--primary)' }}>Ucapan & Doa</h3>
               <div className="w-full flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory custom-scrollbar">
                 {wishes.filter((w: any) => w.isVisible !== false).map((wish: any) => (
-                  <div key={wish.id} className="w-[85vw] max-w-[320px] shrink-0 snap-center p-6 rounded-3xl border shadow-lg backdrop-blur-md" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.1)', color: data.rsvpFormTextColor || 'inherit', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
-                    <div className="flex items-center justify-between mb-4 pb-3 border-b" style={{ borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
+                  <div key={wish.id} className="w-[85vw] max-w-[320px] shrink-0 snap-center p-6 rounded-3xl border shadow-md backdrop-blur-md" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.7)', color: data.rsvpFormTextColor || 'var(--foreground)', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
+                    <div className="mb-3 pb-2 border-b" style={{ borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
                       <h4 className="font-serif font-bold text-xl tracking-wide">{wish.name}</h4>
-                      <span className="text-[9px] font-sans font-bold uppercase tracking-widest opacity-70 border px-3 py-1 rounded-full" style={{ borderColor: 'inherit' }}>
-                        {wish.attendance === 'hadir' ? 'Hadir' : 'Tidak Hadir'}
-                      </span>
                     </div>
-                    <p className="opacity-90 font-serif leading-relaxed line-clamp-4">{wish.message}</p>
+                    <p className="opacity-80 font-serif leading-relaxed line-clamp-4 text-sm">{wish.message}</p>
                   </div>
                 ))}
               </div>
