@@ -787,7 +787,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
         {/* WISHES DISPLAY IN GALLERY */}
         <div className="relative z-10 max-w-4xl mx-auto px-8 pb-24">
           {/* WISHES DISPLAY (Slider / List) */}
-          {wishes && wishes.length > 0 && (
+          {wishes && wishes.filter((w: any) => w.isVisible !== false).length > 0 && (
             <motion.div 
               className="mt-16 w-full"
               variants={fadeInUp}
@@ -797,7 +797,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             >
               <h3 className="font-serif text-3xl mb-8 text-center" style={{ color: data.rsvpTitleColor || '#ffffff' }}>Ucapan & Doa</h3>
               <div className="w-full flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory custom-scrollbar">
-                {wishes.map((wish: any) => (
+                {wishes.filter((w: any) => w.isVisible !== false).map((wish: any) => (
                   <div key={wish.id} className="w-[85vw] max-w-[320px] shrink-0 snap-center p-6 rounded-2xl border backdrop-blur-sm" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.1)', color: data.rsvpFormTextColor || '#ffffff', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}33` : 'rgba(255,255,255,0.2)' }}>
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="font-bold text-lg">{wish.name}</h4>

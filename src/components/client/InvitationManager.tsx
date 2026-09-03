@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { deleteGuestbookEntry, updateGuestList } from "@/app/actions/client";
-import { Trash2, Copy, Plus, X } from "lucide-react";
+import { deleteGuestbookEntry, updateGuestList, toggleGuestbookVisibility } from "@/app/actions/client";
+import { Trash2, Copy, Plus, X, Eye, EyeOff } from "lucide-react";
 
 interface InvitationManagerProps {
   invitationId: string;
@@ -17,11 +17,24 @@ export function InvitationManager({ invitationId, invitationSlug, initialGuestbo
   // Guestbook State
   const [guestbook, setGuestbook] = useState(initialGuestbook);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [isToggling, setIsToggling] = useState<string | null>(null);
 
   // Guest List State
   const [guestList, setGuestList] = useState<{ id: string, name: string }[]>(initialGuestList);
   const [newGuestName, setNewGuestName] = useState("");
   const [isSavingGuests, setIsSavingGuests] = useState(false);
+
+  const handleToggleVisibility = async (id: string, currentStatus: boolean) => {
+    setIsToggling(id);
+    const newStatus = currentStatus === false ? true : false;
+    const res = await toggleGuestbookVisibility(id, newStatus);
+    if (res.success) {
+      setGuestbook(guestbook.map(g => g.id === id ? { ...g, isVisible: newStatus } : g));
+    } else {
+      alert("Failed to update visibility");
+    }
+    setIsToggling(null);
+  };
 
   const handleDeleteWish = async (id: string) => {
     if (!confirm("Are you sure you want to delete this message?")) return;
@@ -98,19 +111,33 @@ export function InvitationManager({ invitationId, invitationSlug, initialGuestbo
             ) : (
               <div className="space-y-4">
                 {guestbook.map(entry => (
-                  <div key={entry.id} className="border border-secondary/30 rounded-xl p-4 flex justify-between items-start gap-4">
-                    <div>
-                      <h4 className="font-semibold">{entry.name}</h4>
+                  <div key={entry.id} className={`border rounded-xl p-4 flex justify-between items-start gap-4 ${entry.isVisible === false ? 'border-secondary/30 bg-secondary/10 opacity-70' : 'border-secondary/50 bg-white'}`}>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-semibold">{entry.name}</h4>
+                        {entry.isVisible === false && <span className="text-[10px] font-bold bg-secondary/20 px-2 py-0.5 rounded text-foreground/70 uppercase">Sembunyi</span>}
+                      </div>
                       <p className="text-sm text-foreground/60 mb-2">Attendance: {entry.attendance} • Guests: {entry.guestsCount}</p>
                       <p className="text-sm">{entry.message}</p>
                     </div>
-                    <button 
-                      onClick={() => handleDeleteWish(entry.id)}
-                      disabled={isDeleting === entry.id}
-                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button 
+                        onClick={() => handleToggleVisibility(entry.id, entry.isVisible)}
+                        disabled={isToggling === entry.id}
+                        className="p-2 text-foreground/70 hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50"
+                        title={entry.isVisible === false ? "Tampilkan Ucapan" : "Sembunyikan Ucapan"}
+                      >
+                        {entry.isVisible === false ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteWish(entry.id)}
+                        disabled={isDeleting === entry.id}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                        title="Hapus Ucapan"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

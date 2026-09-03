@@ -25,6 +25,28 @@ export async function deleteGuestbookEntry(entryId: string) {
   }
 }
 
+export async function toggleGuestbookVisibility(entryId: string, isVisible: boolean) {
+  try {
+    const supabase = await createClient();
+    
+    // Auth check
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Unauthorized");
+
+    const { error } = await supabase
+      .from('Guestbook')
+      .update({ isVisible })
+      .eq('id', entryId);
+
+    if (error) throw error;
+    
+    revalidatePath('/', 'layout');
+    return { success: true };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
 export async function updateGuestList(invitationId: string, guestList: any[]) {
   try {
     const supabase = await createClient();
