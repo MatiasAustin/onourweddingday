@@ -779,12 +779,14 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
             {isCodeMode ? <CodeEditorGroup formData={formData} onChange={handleChange} sectionId="countdown" /> : (
               <>
                 <InputField formData={formData} onChange={handleChange} label="Tanggal & Waktu (YYYY-MM-DDTHH:mm)" name="countdownDate" type="datetime-local" />
+                <InputField formData={formData} onChange={handleChange} label="Ukuran Angka (px/rem/em)" name="countdownNumSize" type="text" placeholder="e.g. 24px" />
+                <InputField formData={formData} onChange={handleChange} label="Ukuran Label Hari/Jam (px/rem/em)" name="countdownLblSize" type="text" placeholder="e.g. 10px" />
                 <InputField formData={formData} onChange={handleChange} label="Background Color" name="countdownBgColor" type="color" />
                 <InputField formData={formData} onChange={handleChange} label="Text Color" name="countdownTextColor" type="color" />
               </>
             )}
             <SectionOrnamentEditor sectionKey="countdown" formData={formData} onChange={handleChange} handleUploadChange={handleUploadChange} />
-              </AccordionItem>
+          </AccordionItem>
 
           {/* EVENTS */}
           <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="events" title="Detail Acara Section" icon={MapPin}>

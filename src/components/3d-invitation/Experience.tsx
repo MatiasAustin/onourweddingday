@@ -635,7 +635,14 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                   { label: "SECONDS", value: timeLeft.seconds }
                 ].map((item, idx) => (
                   <div key={idx} className="flex flex-col items-center justify-center w-[72px] h-[72px] @sm:w-20 @sm:h-20 @md:w-32 @md:h-32 border rounded-xl backdrop-blur-sm shrink-0" style={{ borderColor: data.secondaryColor ? `${data.secondaryColor}80` : 'rgba(197,160,89,0.5)', backgroundColor: 'rgba(0,0,0,0.1)' }}>
-                    <style>{`.cd-num { font-size: 16px; } .cd-lbl { font-size: 8px; letter-spacing: -0.05em; } @container (min-width: 768px) { .cd-num { font-size: 24px; } .cd-lbl { font-size: 11px; } }`}</style>
+                    <style>{`
+                        .cd-num { font-size: ${data.countdownNumSize || '24px'} !important; } 
+                        .cd-lbl { font-size: ${data.countdownLblSize || '10px'} !important; letter-spacing: 0.1em; } 
+                        @container (min-width: 768px) { 
+                          .cd-num { font-size: calc(${data.countdownNumSize || '24px'} * 1.5) !important; } 
+                          .cd-lbl { font-size: calc(${data.countdownLblSize || '10px'} * 1.2) !important; } 
+                        }
+                      `}</style>
                     <span className="font-serif font-bold mb-0.5 @md:mb-1 cd-num" style={{ color: data.countdownTextColor || '#ffffff' }}>{String(item.value).padStart(2, '0')}</span>
                     <span className="font-sans uppercase opacity-80 cd-lbl" style={{ color: data.countdownTextColor || '#ffffff' }}>{item.label}</span>
                   </div>
@@ -855,7 +862,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                   })
                   .slice(0, visibleWishesCount)
                   .map((wish: any) => (
-                    <div key={wish.id} className="w-full p-6 rounded-3xl border shadow-md backdrop-blur-md" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.7)', color: data.rsvpFormTextColor || 'var(--foreground)', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
+                    <div key={wish.id} className="w-full p-4 @md:p-6 rounded-2xl @md:rounded-3xl border shadow-md backdrop-blur-md" style={{ backgroundColor: data.rsvpFormBgColor || 'rgba(255,255,255,0.7)', color: data.rsvpFormTextColor || 'var(--foreground)', borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
                       <div className="mb-2 pb-2 border-b" style={{ borderColor: data.rsvpFormTextColor ? `${data.rsvpFormTextColor}20` : 'rgba(197,160,89,0.3)' }}>
                         <h4 className="guestbook-name">{wish.name}</h4>
                       </div>

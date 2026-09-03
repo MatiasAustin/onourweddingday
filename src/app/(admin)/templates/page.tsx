@@ -32,8 +32,8 @@ export default async function TemplatesPage() {
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-secondary/50 shadow-sm overflow-hidden">
-        <table className="w-full text-left border-collapse">
+      <div className="bg-white rounded-2xl border border-secondary/50 shadow-sm overflow-x-auto">
+        <table className="w-full min-w-[600px] text-left border-collapse">
           <thead>
             <tr className="border-b border-secondary/50 bg-secondary/10">
               <th className="px-6 py-4 text-sm font-semibold text-foreground">Name</th>

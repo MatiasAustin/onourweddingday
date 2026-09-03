@@ -48,8 +48,8 @@ export function InvitationsClient({ initialInvitations, users, templates }: any)
       </div>
 
       {/* Invitations Table */}
-      <div className="bg-white rounded-2xl border border-secondary/50 shadow-sm overflow-hidden">
-        <table className="w-full text-left border-collapse">
+      <div className="bg-white rounded-2xl border border-secondary/50 shadow-sm overflow-x-auto">
+        <table className="w-full min-w-[800px] text-left border-collapse">
           <thead>
             <tr className="bg-secondary/20 border-b border-secondary/50 text-sm text-foreground/60">
               <th className="px-6 py-4 font-medium">Title & Slug</th>
