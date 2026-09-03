@@ -833,16 +833,18 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             >
               <h3 className="font-script text-6xl mb-8 text-center" style={{ color: data.rsvpTitleColor && data.rsvpTitleColor !== '#ffffff' ? data.rsvpTitleColor : 'var(--primary)' }}>Ucapan & Doa</h3>
               
-              <div className="flex justify-between items-center mb-6">
-                <span className="text-sm opacity-60 font-sans">{wishes.filter((w: any) => w.isVisible !== false).length} Ucapan</span>
-                <select 
-                  value={wishesSort} 
-                  onChange={(e) => setWishesSort(e.target.value as 'newest'|'oldest')}
-                  className="bg-transparent border border-current opacity-70 text-sm px-2 py-1 rounded-md outline-none font-sans"
+              <div className="flex justify-between items-center mb-6 px-1">
+                <span className="text-sm opacity-60 font-sans tracking-wide">{wishes.filter((w: any) => w.isVisible !== false).length} Ucapan</span>
+                <button 
+                  onClick={() => setWishesSort(prev => prev === 'newest' ? 'oldest' : 'newest')}
+                  className="bg-transparent border opacity-70 hover:opacity-100 text-[10px] uppercase font-bold tracking-widest px-4 py-2 rounded-full outline-none font-sans flex items-center gap-2 transition-all"
+                  style={{ borderColor: 'inherit' }}
                 >
-                  <option value="newest" className="text-black">Terbaru</option>
-                  <option value="oldest" className="text-black">Terlama</option>
-                </select>
+                  {wishesSort === 'newest' ? 'Terbaru' : 'Terlama'}
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                  </svg>
+                </button>
               </div>
 
               <div className="w-full flex flex-col gap-4">
