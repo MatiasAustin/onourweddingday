@@ -255,6 +255,7 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
     
     // Quote
     quoteBgUrl: invitation.settingsJSON?.quoteBgUrl || "",
+    quoteImageUrl: invitation.settingsJSON?.quoteImageUrl || "",
     quoteBgColor: invitation.settingsJSON?.quoteBgColor || "#4A0E17",
     quoteTextColor: invitation.settingsJSON?.quoteTextColor || "#C5A059",
     quoteIconColor: invitation.settingsJSON?.quoteIconColor || "",
@@ -612,6 +613,7 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
               {/* QUOTE */}
               <AccordionItem activeTab={activeTab} setActiveTab={setActiveTab} id="quote" title="Kutipan (Quote)" icon={Type}>
                 <FileUpload label="Background Media" name="quoteBgUrl" value={formData.quoteBgUrl} onChange={handleUploadChange} placeholder="https://..." />
+                <FileUpload label="Quote Image (Below Text)" name="quoteImageUrl" value={formData.quoteImageUrl} onChange={handleUploadChange} placeholder="https://..." />
                 <div className="flex flex-col gap-4">
                   <InputField formData={formData} onChange={handleChange} label="Section Background Color" name="quoteBgColor" type="color" />
                   <InputField formData={formData} onChange={handleChange} label="Quote Text Color" name="quoteTextColor" type="color" />

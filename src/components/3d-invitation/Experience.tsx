@@ -521,25 +521,53 @@ export default function Experience({ data, invitationId, wishes = [], children, 
       </section>
 
       {/* 2. QUOTE SECTION */}
-      <section className="relative w-full py-24 px-8 overflow-hidden" style={{ backgroundColor: data.quoteBgColor || 'var(--bg-color)' }}>
+      <section className="relative w-full py-24 px-8 overflow-hidden flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: data.quoteBgColor || 'var(--bg-color)' }}>
         {renderBg(data.quoteBgUrl, "")}
 
         {renderDynamicOrnaments(data.quoteOrnaments)}
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
+        <div className="relative z-10 max-w-4xl mx-auto text-center w-full">
           <motion.div
-            variants={fadeInUp}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { staggerChildren: 0.4, delayChildren: 0.2 } }
+            }}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
           >
-            <Quote className="w-12 h-12 mx-auto mb-8 opacity-50" style={{ color: data.quoteIconColor || 'var(--secondary)' }} />
-            <p className="font-serif text-xl @md:text-2xl leading-relaxed italic opacity-80" style={{ color: data.quoteTextColor || 'var(--primary)' }}>
+            <motion.div variants={{ hidden: { opacity: 0, scale: 0.8 }, visible: { opacity: 0.5, scale: 1, transition: { duration: 1 } } }}>
+              <Quote className="w-12 h-12 mx-auto mb-8" style={{ color: data.quoteIconColor || 'var(--secondary)' }} />
+            </motion.div>
+            
+            <motion.p 
+              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 0.8, y: 0, transition: { duration: 1.2, ease: [0.25, 0.1, 0.25, 1] } } }}
+              className="font-serif text-xl @md:text-2xl leading-relaxed italic" 
+              style={{ color: data.quoteTextColor || 'var(--primary)' }}
+            >
               "{data.quoteText || "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang."}"
-            </p>
-            <p className="mt-6 font-sans font-semibold tracking-widest text-sm uppercase" style={{ color: data.quoteSourceColor || 'var(--secondary)' }}>
+            </motion.p>
+            
+            <motion.p 
+              variants={{ hidden: { opacity: 0, letterSpacing: "0em" }, visible: { opacity: 1, letterSpacing: "0.1em", transition: { duration: 1.5, ease: "easeOut" } } }}
+              className="mt-8 font-sans font-semibold text-sm uppercase" 
+              style={{ color: data.quoteSourceColor || 'var(--secondary)' }}
+            >
               {data.quoteSource || "Ar-Rum: 21"}
-            </p>
+            </motion.p>
+            
+            <motion.div 
+              variants={{ hidden: { opacity: 0, y: 40, filter: "blur(10px)" }, visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 1.5, ease: "easeOut" } } }}
+              className="mt-16 w-full max-w-md mx-auto relative group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-[2rem] z-10" />
+              <img 
+                src={data.quoteImageUrl || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop"} 
+                alt="Quote Image" 
+                className="w-full h-auto aspect-[3/4] object-cover rounded-[2rem] shadow-2xl ring-4 ring-white/10"
+              />
+            </motion.div>
+            
           </motion.div>
         </div>
         <CustomInjector html={data.customHtml_quote} css={data.customCss_quote} js={data.customJs_quote} />
