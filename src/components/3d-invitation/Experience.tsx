@@ -521,21 +521,22 @@ export default function Experience({ data, invitationId, wishes = [], children, 
       </section>
 
       {/* 2. QUOTE SECTION */}
-      <section className="relative w-full py-24 px-8 overflow-hidden flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: data.quoteBgColor || 'var(--bg-color)' }}>
+      <section className="relative w-full pt-24 overflow-hidden flex flex-col items-center justify-start min-h-screen" style={{ backgroundColor: data.quoteBgColor || 'var(--bg-color)' }}>
         {renderBg(data.quoteBgUrl, "")}
 
         {renderDynamicOrnaments(data.quoteOrnaments)}
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center w-full">
-          <motion.div
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { staggerChildren: 0.4, delayChildren: 0.2 } }
-            }}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-          >
+        <motion.div
+          className="relative z-10 w-full flex flex-col flex-grow"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.4, delayChildren: 0.2 } }
+          }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <div className="max-w-4xl mx-auto text-center px-8 pb-16 flex-grow flex flex-col justify-center">
             <motion.div variants={{ hidden: { opacity: 0, scale: 0.8 }, visible: { opacity: 0.5, scale: 1, transition: { duration: 1 } } }}>
               <Quote className="w-12 h-12 mx-auto mb-8" style={{ color: data.quoteIconColor || 'var(--secondary)' }} />
             </motion.div>
@@ -555,21 +556,20 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             >
               {data.quoteSource || "Ar-Rum: 21"}
             </motion.p>
-            
-            <motion.div 
-              variants={{ hidden: { opacity: 0, y: 40, filter: "blur(10px)" }, visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 1.5, ease: "easeOut" } } }}
-              className="mt-16 w-full max-w-md mx-auto relative group"
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-[2rem] z-10" />
-              <img 
-                src={data.quoteImageUrl || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop"} 
-                alt="Quote Image" 
-                className="w-full h-auto aspect-[3/4] object-cover rounded-[2rem] shadow-2xl ring-4 ring-white/10"
-              />
-            </motion.div>
-            
+          </div>
+          
+          <motion.div 
+            variants={{ hidden: { opacity: 0, y: 40, filter: "blur(10px)" }, visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 1.5, ease: "easeOut" } } }}
+            className="w-full relative mt-auto"
+          >
+            <img 
+              src={data.quoteImageUrl || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop"} 
+              alt="Quote Image" 
+              className="w-full h-auto object-cover block"
+            />
           </motion.div>
-        </div>
+        </motion.div>
+
         <CustomInjector html={data.customHtml_quote} css={data.customCss_quote} js={data.customJs_quote} />
       </section>
 
