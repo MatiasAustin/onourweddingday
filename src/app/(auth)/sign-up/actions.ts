@@ -23,6 +23,7 @@ export async function signup(formData: FormData) {
   if (authData.user) {
     try {
       await supabase.from('User').insert({
+        id: crypto.randomUUID(),
         supabaseId: authData.user.id,
         email: authData.user.email,
         role: 'CLIENT',
@@ -34,5 +35,5 @@ export async function signup(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
-  redirect('/dashboard')
+  redirect('/client-dashboard')
 }
