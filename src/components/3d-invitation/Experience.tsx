@@ -698,7 +698,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                   
                   <div className={`w-full @md:w-[45%] pl-8 @md:pl-0 mt-6 @md:mt-0 ${i % 2 === 0 ? '@md:pr-12' : '@md:pl-12'}`}>
                      {story.img && (
-                       <div className="rounded-2xl overflow-hidden shadow-xl aspect-video border-4" style={{ borderColor: 'rgba(255,255,255,0.5)' }}>
+                       <div className="rounded-2xl overflow-hidden shadow-xl aspect-square border-4" style={{ borderColor: 'rgba(255,255,255,0.5)' }}>
                          <img src={story.img} alt={story.title} className="w-full h-full object-cover" />
                        </div>
                      )}
