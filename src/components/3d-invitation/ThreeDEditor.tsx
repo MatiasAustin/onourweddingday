@@ -275,6 +275,7 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
     coupleTextColor: invitation.settingsJSON?.coupleTextColor || "",
     coupleAccentColor: invitation.settingsJSON?.coupleAccentColor || "",
     coupleFrameUrl: invitation.settingsJSON?.coupleFrameUrl || "",
+    coupleFrameScale: invitation.settingsJSON?.coupleFrameScale || "1",
     bridePhotoUrl: invitation.settingsJSON?.bridePhotoUrl || "",
     brideFullName: invitation.settingsJSON?.brideFullName || "Nova Nursaniah",
     brideChildOrder: invitation.settingsJSON?.brideChildOrder || "Putri ke-2",
@@ -644,6 +645,9 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
                 <InputField formData={formData} onChange={handleChange} label="Warna Aksen (Batas Foto & Dan)" name="coupleAccentColor" type="color" />
                 <InputField formData={formData} onChange={handleChange} label="Warna Teks Orang Tua" name="coupleTextColor" type="color" />
                 <FileUpload label="Upload PNG Frame Mempelai (Opsional)" name="coupleFrameUrl" value={formData.coupleFrameUrl} onChange={handleUploadChange} placeholder="https://..." />
+                {formData.coupleFrameUrl && (
+                  <InputField formData={formData} onChange={handleChange} label="Skala Frame Mempelai" name="coupleFrameScale" type="number" step="0.1" placeholder="e.g. 1.2" />
+                )}
                 <div className="space-y-6 mt-4">
                   <div className="p-4 bg-black/5 rounded-xl border">
                     <h4 className="font-bold mb-4 flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-pink-500" /> Mempelai Wanita</h4>

@@ -622,7 +622,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                   <div className="absolute inset-0 p-[20%]">
                     <img src={data.bridePhotoUrl || "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop"} alt="Bride" className="w-full h-full object-cover rounded-xl" />
                   </div>
-                  <img src={data.coupleFrameUrl} alt="Frame" className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-lg" />
+                  <img src={data.coupleFrameUrl} alt="Frame" className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-lg" style={{ transform: `scale(${data.coupleFrameScale || 1})` }} />
                 </div>
               ) : (
                 <div className="w-64 h-80 mx-auto rounded-t-full border-4 p-2 mb-6" style={{ borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'var(--secondary)' }}>
@@ -651,7 +651,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                   <div className="absolute inset-0 p-[20%]">
                     <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-xl" />
                   </div>
-                  <img src={data.coupleFrameUrl} alt="Frame" className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-lg" />
+                  <img src={data.coupleFrameUrl} alt="Frame" className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-lg" style={{ transform: `scale(${data.coupleFrameScale || 1})` }} />
                 </div>
               ) : (
                 <div className="w-64 h-80 mx-auto rounded-t-full border-4 p-2 mb-6" style={{ borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'var(--secondary)' }}>
