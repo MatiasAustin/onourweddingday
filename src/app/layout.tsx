@@ -13,10 +13,31 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "OnOurWeddingDay | Premium Digital Invitations",
-  description: "Create beautiful, modern, and elegant digital wedding invitations.",
-};
+import { createClient } from "@/utils/supabase/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  let title = "OnOurWeddingDay | Premium Digital Invitations";
+  let description = "Create beautiful, modern, and elegant digital wedding invitations.";
+  let icons = undefined;
+
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.storage.from('media').download('settings.json');
+    if (!error && data) {
+      const text = await data.text();
+      const settings = JSON.parse(text);
+      if (settings.siteName) title = settings.siteName;
+      if (settings.siteDescription) description = settings.siteDescription;
+      if (settings.faviconUrl) {
+        icons = { icon: settings.faviconUrl, shortcut: settings.faviconUrl, apple: settings.faviconUrl };
+      }
+    }
+  } catch (err) {
+    // silently fail
+  }
+
+  return { title, description, icons };
+}
 
 export default function RootLayout({
   children,

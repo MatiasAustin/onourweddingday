@@ -159,7 +159,12 @@ Terima kasih.`;
 
         {activeTab === 'guests' && (
           <div>
-            <h2 className="text-xl font-semibold mb-6">Manage Guest List</h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <h2 className="text-xl font-semibold">Manage Guest List</h2>
+              <span className="bg-secondary/20 text-primary font-medium px-4 py-1.5 rounded-full text-sm self-start sm:self-auto">
+                Total: {guestList.length} Tamu
+              </span>
+            </div>
             
             <form onSubmit={handleAddGuest} className="flex flex-col sm:flex-row gap-4 mb-8">
               <input 
@@ -183,9 +188,14 @@ Terima kasih.`;
               <p className="text-foreground/60">No guests added yet. Add a guest to generate a personalized link.</p>
             ) : (
               <div className="space-y-3">
-                {guestList.map(guest => (
+                {guestList.map((guest, index) => (
                   <div key={guest.id} className="flex flex-col sm:flex-row sm:items-center justify-between border border-secondary/30 rounded-xl p-4 gap-4">
-                    <div className="font-medium truncate max-w-full text-lg sm:text-base">{guest.name}</div>
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <span className="flex items-center justify-center bg-primary/10 text-primary font-bold rounded-lg w-8 h-8 shrink-0 text-sm">
+                        {index + 1}
+                      </span>
+                      <div className="font-medium truncate max-w-full text-lg sm:text-base">{guest.name}</div>
+                    </div>
                     <div className="flex items-center gap-2 w-full sm:w-auto">
                       <button 
                         onClick={() => copyLink(guest.name)}
