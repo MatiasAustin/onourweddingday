@@ -14,7 +14,7 @@ export default async function AdminLayout({
     redirect("/sign-in");
   }
 
-  const { data: dbUser } = await supabase.from('User').select('*').eq('email', user.email).single();
+  const { data: dbUser } = await supabase.from('User').select('*').eq('supabaseId', user.id).single();
   
   if (!dbUser || dbUser.role !== "ADMIN") {
     // Redirect non-admins to their specific dashboard
