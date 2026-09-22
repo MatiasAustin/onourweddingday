@@ -9,7 +9,7 @@ export default async function ClientInvitationPage({ params }: { params: Promise
   // Verify ownership
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return notFound();
-  const { data: dbUser } = await supabase.from('User').select('id').eq('supabaseId', user.id).single();
+  const { data: dbUser } = await supabase.from('User').select('id').eq('email', user.email).single();
   
   const { data: invitation } = await supabase
     .from('Invitation')
