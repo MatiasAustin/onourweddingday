@@ -1043,11 +1043,12 @@ export default function Experience({ data, invitationId, wishes = [], children, 
               )}
 
               {(data.giftAlamat || data.giftPenerima) && (
-                <div className="p-8 rounded-3xl border shadow-lg text-left" style={{ backgroundColor: data.giftCardBgColor || '#ffffff', color: data.giftCardTextColor || 'var(--primary)', borderColor: data.giftIconColor ? `${data.giftIconColor}4d` : 'var(--secondary)' }}>
-                  <h4 className="font-sans font-bold text-xl mb-4 text-center" style={{ color: data.giftCardTitleColor || 'inherit' }}>Kirim Kado</h4>
-                  <p className="font-bold">{data.giftPenerima}</p>
-                  <p className="mb-2 opacity-80">{data.giftHp}</p>
-                  <p className="font-serif opacity-80 text-sm leading-relaxed whitespace-pre-wrap">{data.giftAlamat}</p>
+                <div className="p-8 rounded-3xl border shadow-lg text-center" style={{ backgroundColor: data.giftCardBgColor || '#ffffff', color: data.giftCardTextColor || 'var(--primary)', borderColor: data.giftIconColor ? `${data.giftIconColor}4d` : 'var(--secondary)' }}>
+                  <h4 className="font-sans font-bold text-xl mb-5" style={{ color: data.giftCardTitleColor || 'inherit' }}>Kirim Kado</h4>
+                  <p className="font-sans font-semibold text-base mb-1" style={{ color: data.giftCardTitleColor || 'inherit' }}>{data.giftPenerima}</p>
+                  <p className="font-sans text-sm opacity-70 mb-4">{data.giftHp}</p>
+                  <div className="w-8 h-px mx-auto mb-4 opacity-30" style={{ backgroundColor: data.giftCardTitleColor || 'currentColor' }} />
+                  <p className="font-serif text-sm opacity-75 leading-relaxed">{data.giftAlamat}</p>
                 </div>
               )}
             </div>
