@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { updateInvitationSettings } from "@/app/editor/actions";
-import { Save, ExternalLink, ChevronDown, ChevronRight, Image as ImageIcon, MapPin, Users, Heart, Camera, Gift, Type, Layout, Palette, Code, Eye, Music, Smartphone, Tablet, Monitor, BookOpen } from "lucide-react";
+import { Save, ExternalLink, ChevronDown, ChevronRight, Image as ImageIcon, MapPin, Users, Heart, Camera, Gift, Type, Layout, Palette, Code, Eye, Music, Smartphone, Tablet, Monitor, BookOpen, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Experience from "./Experience";
 import FileUpload from "@/components/ui/FileUpload";
@@ -448,13 +448,22 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
     <div className="flex h-screen w-full overflow-hidden bg-background">
       {/* LEFT SIDEBAR: Editor Form */}
       <div className="w-[450px] flex-shrink-0 bg-white border-r border-secondary/50 flex flex-col h-full z-20 shadow-xl overflow-hidden relative">
-        <div className="p-6 border-b border-secondary/30 bg-white/90 backdrop-blur-md z-30 flex items-center justify-between">
-          <div>
-            <h1 className="font-serif text-2xl font-semibold text-foreground">Editor</h1>
-            <p className="text-foreground/60 text-xs mt-1 truncate max-w-[200px]">{invitation.title}</p>
+        <div className="p-4 border-b border-secondary/30 bg-white/90 backdrop-blur-md z-30 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <Link
+              href="/client-dashboard"
+              className="p-2 rounded-xl bg-secondary/10 hover:bg-secondary/30 text-foreground/60 hover:text-primary transition-colors flex-shrink-0"
+              title="Kembali ke Dashboard"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </Link>
+            <div className="min-w-0">
+              <h1 className="font-serif text-xl font-semibold text-foreground leading-tight">Editor</h1>
+              <p className="text-foreground/60 text-xs truncate max-w-[160px]">{invitation.title}</p>
+            </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <button 
               onClick={toggleCodeMode}
               className={`p-2 rounded-xl transition-colors ${isCodeMode ? 'bg-gray-900 text-white' : 'bg-secondary/10 text-foreground hover:bg-secondary/30'}`}
