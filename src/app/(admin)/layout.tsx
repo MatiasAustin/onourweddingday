@@ -14,8 +14,12 @@ export default async function AdminLayout({
     redirect("/sign-in");
   }
 
-  const { data: dbUser } = await supabase.from('User').select('*').eq('supabaseId', user.id).single();
+  const { data: dbUser, error } = await supabase.from('User').select('*').eq('supabaseId', user.id).single();
   
+  console.log("Admin Layout Auth User ID:", user.id);
+  console.log("Admin Layout DB User:", dbUser);
+  console.log("Admin Layout Error:", error);
+
   if (!dbUser || dbUser.role !== "ADMIN") {
     // Redirect non-admins to their specific dashboard
     redirect("/client-dashboard");
