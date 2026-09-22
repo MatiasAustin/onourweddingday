@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Paintbrush } from "lucide-react";
+import SiteLogo from "@/components/ui/SiteLogo";
 
 
 const navigation = [
   { name: "Dashboard", href: "/client-dashboard", icon: LayoutDashboard },
-  { name: "My Invitations", href: "/client-dashboard/invitations", icon: Paintbrush },
 ];
 
 export function Sidebar() {
@@ -18,9 +18,7 @@ export function Sidebar() {
       {/* Desktop Sidebar */}
       <div className="hidden md:flex h-screen w-64 flex-col border-r border-secondary/50 bg-background/50 backdrop-blur-xl shrink-0">
         <div className="flex h-20 shrink-0 items-center px-6 border-b border-secondary/50">
-          <Link href="/" className="font-serif text-2xl font-semibold text-primary">
-            OOWD Client
-          </Link>
+          <SiteLogo type="client" textClassName="text-2xl" />
         </div>
         
         <nav className="flex flex-1 flex-col px-4 py-6 overflow-y-auto space-y-2">
@@ -55,9 +53,7 @@ export function Sidebar() {
       {/* Mobile Bottom Navigation & Top Header */}
       <div className="md:hidden flex flex-col shrink-0">
         <div className="flex h-16 shrink-0 items-center px-4 border-b border-secondary/50 bg-background">
-          <Link href="/" className="font-serif text-xl font-semibold text-primary">
-            OOWD Client
-          </Link>
+          <SiteLogo type="client" textClassName="text-xl" />
           <div className="ml-auto">
             <form action="/auth/signout" method="post">
               <button type="submit" className="text-sm font-medium text-red-500 px-3 py-1.5 rounded-lg border border-red-200">

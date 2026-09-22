@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
+import SiteLogo from "@/components/ui/SiteLogo";
 
 export default async function Navbar() {
   const supabase = await createClient();
@@ -18,10 +19,7 @@ export default async function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 sm:h-20">
           <div className="flex items-center shrink-0">
-            <Link href="/" className="font-serif text-xl sm:text-2xl font-bold text-primary tracking-tight">
-              <span className="hidden sm:inline">OnOurWeddingDay</span>
-              <span className="sm:hidden">OOWD</span>
-            </Link>
+            <SiteLogo type="public" textClassName="text-xl sm:text-2xl" />
           </div>
           
           <div className="hidden md:flex items-center space-x-8">

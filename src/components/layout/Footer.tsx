@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SiteLogo from "@/components/ui/SiteLogo";
 
 export default function Footer() {
   return (
@@ -6,9 +7,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
-            <h2 className="font-serif text-3xl font-semibold text-primary mb-6">
-              OnOurWeddingDay
-            </h2>
+            <SiteLogo type="public" textClassName="text-3xl mb-6 block" />
             <p className="text-foreground/70 max-w-sm mb-6 leading-relaxed">
               Create beautiful, modern, and elegant digital wedding invitations that leave a lasting impression on your guests.
             </p>

@@ -1,3 +1,4 @@
+import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { BlockRenderer } from "@/components/blocks/BlockRenderer";
@@ -9,6 +10,59 @@ interface InvitationPageProps {
     invitationSlug: string;
   }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export async function generateMetadata(
+  { params }: InvitationPageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { invitationSlug } = await params;
+  const supabase = await createClient();
+
+  try {
+    const { data } = await supabase
+      .from('Invitation')
+      .select('title, settingsJSON')
+      .eq('slug', invitationSlug)
+      .eq('status', 'PUBLISHED')
+      .single();
+
+    if (data) {
+      const settings = data.settingsJSON || {};
+      const title = data.title || "Wedding Invitation";
+      const description = `The Wedding of ${settings.brideName || 'Bride'} & ${settings.groomName || 'Groom'}`;
+      const ogImage = settings.coverDesktopBgUrl || settings.coverMobileBgUrl || settings.heroBgUrl;
+
+      const metadata: Metadata = {
+        title,
+        description,
+        openGraph: {
+          title,
+          description,
+          type: "website",
+        },
+        twitter: {
+          card: "summary_large_image",
+          title,
+          description,
+        }
+      };
+
+      if (ogImage) {
+        metadata.openGraph!.images = [{ url: ogImage }];
+        metadata.twitter!.images = [ogImage];
+      }
+
+      return metadata;
+    }
+  } catch (error) {
+    // Return default metadata if error
+  }
+
+  return {
+    title: "Wedding Invitation",
+    description: "You're invited to our wedding",
+  };
 }
 
 export default async function InvitationPage({ params, searchParams }: InvitationPageProps) {
