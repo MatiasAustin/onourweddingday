@@ -275,7 +275,8 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
     coupleTextColor: invitation.settingsJSON?.coupleTextColor || "",
     coupleAccentColor: invitation.settingsJSON?.coupleAccentColor || "",
     coupleFrameUrl: invitation.settingsJSON?.coupleFrameUrl || "",
-    coupleFrameScale: invitation.settingsJSON?.coupleFrameScale || "1",
+    coupleFrameWidth: invitation.settingsJSON?.coupleFrameWidth || "",
+    coupleFrameHeight: invitation.settingsJSON?.coupleFrameHeight || "",
     bridePhotoUrl: invitation.settingsJSON?.bridePhotoUrl || "",
     brideFullName: invitation.settingsJSON?.brideFullName || "Nova Nursaniah",
     brideChildOrder: invitation.settingsJSON?.brideChildOrder || "Putri ke-2",
@@ -646,7 +647,10 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
                 <InputField formData={formData} onChange={handleChange} label="Warna Teks Orang Tua" name="coupleTextColor" type="color" />
                 <FileUpload label="Upload PNG Frame Mempelai (Opsional)" name="coupleFrameUrl" value={formData.coupleFrameUrl} onChange={handleUploadChange} placeholder="https://..." />
                 {formData.coupleFrameUrl && (
-                  <InputField formData={formData} onChange={handleChange} label="Skala Frame Mempelai" name="coupleFrameScale" type="number" step="0.1" placeholder="e.g. 1.2" />
+                  <div className="grid grid-cols-2 gap-2">
+                    <InputField formData={formData} onChange={handleChange} label="Lebar Frame (px)" name="coupleFrameWidth" type="number" placeholder="e.g. 320" />
+                    <InputField formData={formData} onChange={handleChange} label="Tinggi Frame (px)" name="coupleFrameHeight" type="number" placeholder="e.g. 420" />
+                  </div>
                 )}
                 <div className="space-y-6 mt-4">
                   <div className="p-4 bg-black/5 rounded-xl border">

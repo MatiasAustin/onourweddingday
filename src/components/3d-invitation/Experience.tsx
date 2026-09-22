@@ -608,9 +608,9 @@ export default function Experience({ data, invitationId, wishes = [], children, 
               }}>In the warmth of tradition and the blessing of our parents, we begin a new home together.</p>
           </motion.div>
 
-          <div className="flex flex-col @md:flex-row justify-center items-center gap-16 @md:gap-32">
+          <div className="flex flex-col @md:flex-row justify-center items-center gap-16 @md:gap-32 w-full px-4">
             <motion.div 
-              className={`text-center ${data.coupleFrameUrl ? 'p-8 @md:p-12 rounded-[40px] border shadow-sm w-full max-w-md' : ''}`}
+              className={`text-center w-full max-w-sm mx-auto ${data.coupleFrameUrl ? 'p-8 @md:p-12 rounded-[40px] border shadow-sm' : ''}`}
               style={data.coupleFrameUrl ? { backgroundColor: data.coupleBgColor || 'var(--bg-color)', borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'rgba(200,162,76,0.3)' } : {}}
               variants={fadeInUp}
               initial="hidden"
@@ -618,11 +618,16 @@ export default function Experience({ data, invitationId, wishes = [], children, 
               viewport={{ once: true }}
             >
               {data.coupleFrameUrl ? (
-                <div className="relative w-64 @md:w-80 mx-auto aspect-[3/4] mb-8">
+                <div className="relative mx-auto mb-8" style={{
+                  width: data.coupleFrameWidth ? `${data.coupleFrameWidth}px` : '256px',
+                  height: data.coupleFrameHeight ? `${data.coupleFrameHeight}px` : 'auto',
+                  aspectRatio: (!data.coupleFrameHeight) ? '3/4' : undefined,
+                  maxWidth: '100%',
+                }}>
                   <div className="absolute inset-0 p-[20%]">
                     <img src={data.bridePhotoUrl || "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop"} alt="Bride" className="w-full h-full object-cover rounded-xl" />
                   </div>
-                  <img src={data.coupleFrameUrl} alt="Frame" className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-lg" style={{ transform: `scale(${data.coupleFrameScale || 1})` }} />
+                  <img src={data.coupleFrameUrl} alt="Frame" className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-lg" />
                 </div>
               ) : (
                 <div className="w-64 h-80 mx-auto rounded-t-full border-4 p-2 mb-6" style={{ borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'var(--secondary)' }}>
@@ -639,7 +644,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
             <span className="font-script text-7xl" style={{ color: data.coupleAccentColor || 'var(--secondary)' }}>&</span>
 
             <motion.div 
-              className={`text-center ${data.coupleFrameUrl ? 'p-8 @md:p-12 rounded-[40px] border shadow-sm w-full max-w-md' : ''}`}
+              className={`text-center w-full max-w-sm mx-auto ${data.coupleFrameUrl ? 'p-8 @md:p-12 rounded-[40px] border shadow-sm' : ''}`}
               style={data.coupleFrameUrl ? { backgroundColor: data.coupleBgColor || 'var(--bg-color)', borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'rgba(200,162,76,0.3)' } : {}}
               variants={fadeInUp}
               initial="hidden"
@@ -647,11 +652,16 @@ export default function Experience({ data, invitationId, wishes = [], children, 
               viewport={{ once: true }}
             >
               {data.coupleFrameUrl ? (
-                <div className="relative w-64 @md:w-80 mx-auto aspect-[3/4] mb-8">
+                <div className="relative mx-auto mb-8" style={{
+                  width: data.coupleFrameWidth ? `${data.coupleFrameWidth}px` : '256px',
+                  height: data.coupleFrameHeight ? `${data.coupleFrameHeight}px` : 'auto',
+                  aspectRatio: (!data.coupleFrameHeight) ? '3/4' : undefined,
+                  maxWidth: '100%',
+                }}>
                   <div className="absolute inset-0 p-[20%]">
                     <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-xl" />
                   </div>
-                  <img src={data.coupleFrameUrl} alt="Frame" className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-lg" style={{ transform: `scale(${data.coupleFrameScale || 1})` }} />
+                  <img src={data.coupleFrameUrl} alt="Frame" className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-lg" />
                 </div>
               ) : (
                 <div className="w-64 h-80 mx-auto rounded-t-full border-4 p-2 mb-6" style={{ borderColor: data.coupleAccentColor ? `${data.coupleAccentColor}4d` : 'var(--secondary)' }}>
