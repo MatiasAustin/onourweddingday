@@ -80,12 +80,7 @@ export default function SignUpPage({
           )}
 
           <div className="mt-4">
-            <button
-              type="submit"
-              className="w-full bg-primary text-white py-3 rounded-xl font-medium hover:bg-primary-light transition-colors shadow-sm"
-            >
-              Sign Up
-            </button>
+            <SubmitButton />
           </div>
         </form>
         
@@ -94,5 +89,28 @@ export default function SignUpPage({
         </p>
       </div>
     </div>
+  );
+}
+
+import { useFormStatus } from "react-dom";
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-full bg-primary text-white py-3 rounded-xl font-medium hover:bg-primary-light transition-colors shadow-sm disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+    >
+      {pending ? (
+        <>
+          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          Processing...
+        </>
+      ) : (
+        "Sign Up"
+      )}
+    </button>
   );
 }
