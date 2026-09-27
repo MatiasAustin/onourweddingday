@@ -276,6 +276,7 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
     coupleAccentColor: invitation.settingsJSON?.coupleAccentColor || "",
     coupleFrameUrl: invitation.settingsJSON?.coupleFrameUrl || "",
     coupleFrameSize: invitation.settingsJSON?.coupleFrameSize || "",
+    couplePhotoSize: invitation.settingsJSON?.couplePhotoSize || "",
     bridePhotoUrl: invitation.settingsJSON?.bridePhotoUrl || "",
     brideFullName: invitation.settingsJSON?.brideFullName || "Nova Nursaniah",
     brideChildOrder: invitation.settingsJSON?.brideChildOrder || "Putri ke-2",
@@ -655,20 +656,37 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
                 <InputField formData={formData} onChange={handleChange} label="Warna Teks Orang Tua" name="coupleTextColor" type="color" />
                 <FileUpload label="Upload PNG Frame Mempelai (Opsional)" name="coupleFrameUrl" value={formData.coupleFrameUrl} onChange={handleUploadChange} placeholder="https://..." />
                 {formData.coupleFrameUrl && (
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-semibold text-foreground/80 tracking-wide uppercase">
-                      Ukuran Frame
-                    </label>
-                    <input
-                      type="range"
-                      name="coupleFrameSize"
-                      min="150"
-                      max="600"
-                      value={formData.coupleFrameSize || 256}
-                      onChange={handleChange}
-                      className="w-full accent-primary"
-                    />
-                    <div className="text-xs text-foreground/50 text-right">{formData.coupleFrameSize || 256}px</div>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-semibold text-foreground/80 tracking-wide uppercase">
+                        Ukuran Frame
+                      </label>
+                      <input
+                        type="range"
+                        name="coupleFrameSize"
+                        min="150"
+                        max="600"
+                        value={formData.coupleFrameSize || 256}
+                        onChange={handleChange}
+                        className="w-full accent-primary"
+                      />
+                      <div className="text-xs text-foreground/50 text-right">{formData.coupleFrameSize || 256}px</div>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-semibold text-foreground/80 tracking-wide uppercase">
+                        Ukuran Foto Mempelai
+                      </label>
+                      <input
+                        type="range"
+                        name="couplePhotoSize"
+                        min="100"
+                        max="400"
+                        value={formData.couplePhotoSize || 180}
+                        onChange={handleChange}
+                        className="w-full accent-primary"
+                      />
+                      <div className="text-xs text-foreground/50 text-right">{formData.couplePhotoSize || 180}px</div>
+                    </div>
                   </div>
                 )}
                 <div className="space-y-6 mt-4">

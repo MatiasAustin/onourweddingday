@@ -622,7 +622,10 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                   width: data.coupleFrameSize ? `${data.coupleFrameSize}px` : '256px',
                   maxWidth: '100%',
                 }}>
-                  <div className="absolute inset-0 p-[20%]">
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{
+                    width: data.couplePhotoSize ? `${data.couplePhotoSize}px` : '180px',
+                    aspectRatio: '3/4',
+                  }}>
                     <img src={data.bridePhotoUrl || "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop"} alt="Bride" className="w-full h-full object-cover rounded-xl" />
                   </div>
                   <img src={data.coupleFrameUrl} alt="Frame" className="relative w-full h-auto object-contain pointer-events-none drop-shadow-lg" />
@@ -654,7 +657,10 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                   width: data.coupleFrameSize ? `${data.coupleFrameSize}px` : '256px',
                   maxWidth: '100%',
                 }}>
-                  <div className="absolute inset-0 p-[20%]">
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{
+                    width: data.couplePhotoSize ? `${data.couplePhotoSize}px` : '180px',
+                    aspectRatio: '3/4',
+                  }}>
                     <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-xl" />
                   </div>
                   <img src={data.coupleFrameUrl} alt="Frame" className="relative w-full h-auto object-contain pointer-events-none drop-shadow-lg" />
