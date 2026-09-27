@@ -15,7 +15,11 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
-    redirect('/sign-in?message=Could not authenticate user')
+    let errorMsg = error.message;
+    if (error.message.includes('Invalid login credentials')) {
+      errorMsg = 'Email atau password salah.';
+    }
+    redirect(`/sign-in?message=${encodeURIComponent(errorMsg)}`)
   }
 
   // Fetch user role after successful login

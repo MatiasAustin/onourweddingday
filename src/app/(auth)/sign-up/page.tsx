@@ -1,28 +1,56 @@
+'use client'
+
 import { signup } from "./actions";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { PasswordInput } from "@/components/PasswordInput";
+import { useState, use } from "react";
 
-export default async function SignUpPage({
+export default function SignUpPage({
   searchParams,
 }: {
   searchParams: Promise<{ message: string }>;
 }) {
-  const { message } = await searchParams;
+  const { message } = use(searchParams);
+  const [errorMsg, setErrorMsg] = useState(message || "");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(e.currentTarget);
+    const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirmPassword") as string;
+
+    if (password !== confirmPassword) {
+      e.preventDefault();
+      setErrorMsg("Passwords do not match");
+      return;
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-secondary/10 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-secondary/10 px-4 py-12">
       <Link href="/" className="absolute top-8 left-8 p-2 bg-white rounded-full shadow-sm hover:bg-secondary/20 transition-colors text-foreground/60 hover:text-primary">
         <ArrowLeft className="w-5 h-5" />
       </Link>
 
-      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-secondary/50">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-secondary/50 my-auto">
         <div className="text-center mb-8">
           <h1 className="font-serif text-3xl font-bold text-primary tracking-tight mb-2">Create Account</h1>
           <p className="text-foreground/60 text-sm">Join us to start planning your perfect day.</p>
         </div>
 
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" action={signup} onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-foreground/80" htmlFor="fullName">Full Name</label>
+            <input
+              id="fullName"
+              name="fullName"
+              type="text"
+              placeholder="John Doe"
+              required
+              className="w-full px-4 py-2.5 rounded-xl border border-secondary/50 bg-secondary/5 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+            />
+          </div>
+
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-foreground/80" htmlFor="email">Email</label>
             <input
@@ -37,18 +65,23 @@ export default async function SignUpPage({
 
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-foreground/80" htmlFor="password">Password</label>
-            <PasswordInput />
+            <PasswordInput name="password" />
           </div>
 
-          {message && (
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-foreground/80" htmlFor="confirmPassword">Confirm Password</label>
+            <PasswordInput name="confirmPassword" />
+          </div>
+
+          {errorMsg && (
             <div className="p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm font-medium text-center">
-              {message}
+              {errorMsg}
             </div>
           )}
 
           <div className="mt-4">
             <button
-              formAction={signup}
+              type="submit"
               className="w-full bg-primary text-white py-3 rounded-xl font-medium hover:bg-primary-light transition-colors shadow-sm"
             >
               Sign Up

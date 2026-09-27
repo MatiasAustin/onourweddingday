@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-export function PasswordInput() {
+export function PasswordInput({ name = "password", id = "password" }: { name?: string; id?: string }) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="relative">
       <input
-        id="password"
-        name="password"
+        id={id}
+        name={name}
         type={showPassword ? "text" : "password"}
         placeholder="••••••••"
         required
