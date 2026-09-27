@@ -140,6 +140,10 @@ export default function Experience({ data, invitationId, wishes = [], children, 
   const [rsvpStatus, setRsvpStatus] = useState<null | 'success' | 'error'>(null);
   const [visibleWishesCount, setVisibleWishesCount] = useState(3);
   const [wishesSort, setWishesSort] = useState<'newest' | 'oldest'>('newest');
+
+  const frameWidth = parseInt(data.coupleFrameSize || '256', 10);
+  const photoWidth = parseInt(data.couplePhotoSize || '180', 10);
+  const photoPercentage = (photoWidth / frameWidth) * 100;
   const [galleryIndex, setGalleryIndex] = useState(0);
   
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -623,7 +627,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                   maxWidth: '100%',
                 }}>
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{
-                    width: data.couplePhotoSize ? `${data.couplePhotoSize}px` : '180px',
+                    width: `${photoPercentage}%`,
                     aspectRatio: '3/4',
                   }}>
                     <img src={data.bridePhotoUrl || "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop"} alt="Bride" className="w-full h-full object-cover rounded-xl" />
@@ -658,7 +662,7 @@ export default function Experience({ data, invitationId, wishes = [], children, 
                   maxWidth: '100%',
                 }}>
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{
-                    width: data.couplePhotoSize ? `${data.couplePhotoSize}px` : '180px',
+                    width: `${photoPercentage}%`,
                     aspectRatio: '3/4',
                   }}>
                     <img src={data.groomPhotoUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-xl" />
