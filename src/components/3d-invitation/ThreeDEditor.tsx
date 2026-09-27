@@ -275,8 +275,7 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
     coupleTextColor: invitation.settingsJSON?.coupleTextColor || "",
     coupleAccentColor: invitation.settingsJSON?.coupleAccentColor || "",
     coupleFrameUrl: invitation.settingsJSON?.coupleFrameUrl || "",
-    coupleFrameWidth: invitation.settingsJSON?.coupleFrameWidth || "",
-    coupleFrameHeight: invitation.settingsJSON?.coupleFrameHeight || "",
+    coupleFrameSize: invitation.settingsJSON?.coupleFrameSize || "",
     bridePhotoUrl: invitation.settingsJSON?.bridePhotoUrl || "",
     brideFullName: invitation.settingsJSON?.brideFullName || "Nova Nursaniah",
     brideChildOrder: invitation.settingsJSON?.brideChildOrder || "Putri ke-2",
@@ -656,9 +655,20 @@ export default function ThreeDEditor({ invitation, realWishes = [] }: ThreeDEdit
                 <InputField formData={formData} onChange={handleChange} label="Warna Teks Orang Tua" name="coupleTextColor" type="color" />
                 <FileUpload label="Upload PNG Frame Mempelai (Opsional)" name="coupleFrameUrl" value={formData.coupleFrameUrl} onChange={handleUploadChange} placeholder="https://..." />
                 {formData.coupleFrameUrl && (
-                  <div className="grid grid-cols-2 gap-2">
-                    <InputField formData={formData} onChange={handleChange} label="Lebar Frame (px)" name="coupleFrameWidth" type="number" placeholder="e.g. 320" />
-                    <InputField formData={formData} onChange={handleChange} label="Tinggi Frame (px)" name="coupleFrameHeight" type="number" placeholder="e.g. 420" />
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-foreground/80 tracking-wide uppercase">
+                      Ukuran Frame
+                    </label>
+                    <input
+                      type="range"
+                      name="coupleFrameSize"
+                      min="150"
+                      max="600"
+                      value={formData.coupleFrameSize || 256}
+                      onChange={handleChange}
+                      className="w-full accent-primary"
+                    />
+                    <div className="text-xs text-foreground/50 text-right">{formData.coupleFrameSize || 256}px</div>
                   </div>
                 )}
                 <div className="space-y-6 mt-4">
