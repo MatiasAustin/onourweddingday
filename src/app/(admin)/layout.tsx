@@ -14,7 +14,15 @@ export default async function AdminLayout({
     redirect("/sign-in");
   }
 
-  const { data: dbUser, error } = await supabase.from('User').select('*').eq('supabaseId', user.id).single();
+  let { data: dbUser, error } = await supabase.from('User').select('*').eq('supabaseId', user.id).single();
+  
+  if (!dbUser && user.email) {
+    const { data: userByEmail } = await supabase.from('User').select('*').eq('email', user.email).single();
+    if (userByEmail) {
+      await supabase.from('User').update({ supabaseId: user.id }).eq('id', userByEmail.id);
+      dbUser = { ...userByEmail, supabaseId: user.id };
+    }
+  }
   
   console.log("Admin Layout Auth User ID:", user.id);
   console.log("Admin Layout DB User:", dbUser);

@@ -21,7 +21,15 @@ export async function login(formData: FormData) {
   // Fetch user role after successful login
   const { data: { user } } = await supabase.auth.getUser()
   if (user) {
-    const { data: dbUser } = await supabase.from('User').select('role').eq('supabaseId', user.id).single()
+    let { data: dbUser } = await supabase.from('User').select('id, role').eq('supabaseId', user.id).single()
+    
+    if (!dbUser && user.email) {
+      const { data: userByEmail } = await supabase.from('User').select('id, role').eq('email', user.email).single();
+      if (userByEmail) {
+        await supabase.from('User').update({ supabaseId: user.id }).eq('id', userByEmail.id);
+        dbUser = userByEmail;
+      }
+    }
     
     revalidatePath('/', 'layout')
     

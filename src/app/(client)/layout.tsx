@@ -14,8 +14,16 @@ export default async function ClientLayout({
     redirect("/sign-in");
   }
 
-  const { data: dbUser } = await supabase.from('User').select('*').eq('supabaseId', user.id).single();
+  let { data: dbUser } = await supabase.from('User').select('*').eq('supabaseId', user.id).single();
   
+  if (!dbUser && user.email) {
+    const { data: userByEmail } = await supabase.from('User').select('*').eq('email', user.email).single();
+    if (userByEmail) {
+      await supabase.from('User').update({ supabaseId: user.id }).eq('id', userByEmail.id);
+      dbUser = { ...userByEmail, supabaseId: user.id };
+    }
+  }
+
   if (!dbUser || dbUser.role === "ADMIN") {
     // If admin, maybe redirect to /dashboard
     if (dbUser?.role === "ADMIN") redirect("/dashboard");

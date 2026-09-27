@@ -10,7 +10,14 @@ export default async function Navbar() {
 
   let dbUser = null;
   if (user) {
-    const { data } = await supabase.from('User').select('role').eq('supabaseId', user.id).single();
+    let { data } = await supabase.from('User').select('id, role').eq('supabaseId', user.id).single();
+    if (!data && user.email) {
+      const { data: userByEmail } = await supabase.from('User').select('id, role').eq('email', user.email).single();
+      if (userByEmail) {
+        // Just read here, update happens in layout/login
+        data = userByEmail;
+      }
+    }
     dbUser = data;
   }
 
