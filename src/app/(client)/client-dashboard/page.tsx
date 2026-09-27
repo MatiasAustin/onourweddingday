@@ -8,7 +8,14 @@ export default async function ClientDashboardPage() {
 
   if (!user) return null;
 
-  const { data: dbUser } = await supabase.from('User').select('id').eq('supabaseId', user.id).single();
+  let { data: dbUser } = await supabase.from('User').select('id, email').eq('supabaseId', user.id).single();
+
+  if (!dbUser && user.email) {
+    const { data: userByEmail } = await supabase.from('User').select('id, email').eq('email', user.email).single();
+    if (userByEmail) {
+      dbUser = userByEmail;
+    }
+  }
 
   const { data: invitations } = await supabase
     .from('Invitation')
